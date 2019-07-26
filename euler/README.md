@@ -1,10 +1,10 @@
 ## <p align="center"> Project Euler Menu </p>
 
-Click on the Problem ID to go to the code solution
+#### Click on the "Solution" to go to the code solution
 
-Click on the arrow to go to the problem statement on the Project Euler website
+#### Click on the problem name to go to the problem statement on the Project Euler website
 
-The answers and time of execution can be found in results.json (answers are partially blurred with respect to Project Euler's proper etiquette)
+#### The answers and time of execution can be found in `results.json` (answers are partially blurred with respect to Project Euler's proper etiquette)
 
 <br/><br/>
 
