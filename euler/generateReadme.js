@@ -17,7 +17,7 @@ stream.once('open', async (fd) => {
   stream.write('(answers are partially blurred with respect to Project Euler\'s proper etiquette)');
   stream.write('\n\n<br/><br/>\n\n');
   stream.write('## <p align="center"> Solutions </p>');
-  stream.write('\n\n');
+  stream.write('\n');
   await generateMenu();
   stream.write('\n\n');
   stream.write('<a href="#">Go to top</a>');
