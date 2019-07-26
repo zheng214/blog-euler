@@ -9,11 +9,11 @@ const stream = fs.createWriteStream('README.md');
 stream.once('open', async (fd) => {
   stream.write('PROJECT EULER MENU');
   stream.write('<br/><br/>\n');
-  stream.write('Click on the Problem ID to go to the code solution');
+  stream.write('* Click on the Problem ID to go to the code solution');
   stream.write('<br/>\n');
-  stream.write('Click on the arrow to go to the problem statement on the  Project Euler website');
+  stream.write('* Click on the arrow to go to the problem statement on the  Project Euler website');
   stream.write('<br/>\n');
-  stream.write('The answers and time of execution can be found in results.json ');
+  stream.write('* The answers and time of execution can be found in results.json ');
   stream.write('(answers are partially blurred with respect to Project Euler\'s proper etiquette)');
   stream.write('<br/><br/>\n');
   await generateMenu();
