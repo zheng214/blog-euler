@@ -1,4 +1,4 @@
-### <p align="center"> Project Euler Menu </p>
+## <p align="center"> Project Euler Menu </p>
 
 #
 
