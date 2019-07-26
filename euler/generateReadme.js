@@ -27,9 +27,7 @@ stream.once('open', async (fd) => {
 function generateMenu() {
   return new Promise((resolve) => {
     fs.readdir('.', async (err, files) => {
-      await Promise.each(files, async (file) => {
-        await generateFileMenu(file);
-      });
+      await Promise.each(files, async file => generateFileMenu(file));
       resolve();
     });
   });
