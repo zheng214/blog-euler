@@ -1,7 +1,5 @@
 ## <p align="center"> Project Euler Menu </p>
 
-#
-
 Click on the Problem ID to go to the code solution
 
 Click on the arrow to go to the problem statement on the Project Euler website
