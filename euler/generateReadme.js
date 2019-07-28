@@ -88,7 +88,9 @@ function generateFileMenu(file) {
             const eulerURL = eulerURLTemplate
               .replace('{problem}', problemID);
 
-            stream.write(`**Problem ${problemID}** [ [Solution](${githubURL}) | [${problemName} :arrow_upper_right:](${eulerURL}) ]: \n`);
+            stream.write('<span style=\'font-family:"Lucida Console", Monaco, monospace;\'>');
+            stream.write(`**Problem ${problemID}** [ [Solution](${githubURL}) | [${problemName} :arrow_upper_right:](${eulerURL}) ]: `);
+            stream.write('</span> \n');
             stream.write(questionCapture);
             stream.write('<br/><br/>\n');
 
