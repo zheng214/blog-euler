@@ -12,6 +12,9 @@ const problemID = process.argv[2].replace(/[^\d]+$/g, '');
 const eulerCollection = require(`./${Math.ceil(problemID / 10)}`);
 
 global.utils = require('./utils');
+global.fs = require('fs');
+global.path = require('path');
+
 
 const start = performance.now();
 const result = eulerCollection[`e${process.argv[2]}`].call();

@@ -1,3 +1,28 @@
+// outputs an array containing the prime factorization of each associated index eg.:
+// n = 2 -> 2^1 out: [0,0,1]
+// n = 3 -> 3^1 out: [0,0,0,1]
+// n = 4 -> 2^2 out: [0,0,2]
+// n = 5 -> 5^1 out: [0,0,0,0,0,1]
+// n = 6 -> 2^1 * 3^1  out: [0,0,1,1]
+// n = 8 -> 2^3 out: [0,0,3]
+// n = 18 -> 2^1 * 3^2 out: [0,0,1,2]
+// the first two elements will always be empty
+function listPrimeFactors(n) {
+  let dividend = n;
+  let divisor = 2;
+  const computedFactors = [];
+  while (dividend > 1) {
+    let power = 0;
+    while (dividend % divisor === 0) {
+      dividend /= divisor;
+      power++;
+    }
+    computedFactors[divisor] = power;
+    divisor++;
+  }
+  return computedFactors;
+}
+
 function gcd(a, b) {
   const smaller = a < b ? a : b;
   const bigger = a < b ? b : a;
@@ -111,7 +136,39 @@ function generateFactTable(n) {
   return table;
 }
 
+// generate a table of triangle numbers no greater than n
+function generateTriangleNumbersTable(n) {
+  const table = {};
+  let triangle = 1;
+  let incr = 1;
+  while (triangle < n) {
+    table[triangle] = true;
+    incr++;
+    triangle += incr;
+  }
+  return table;
+}
+
+// return the nth polygonal(with s sides) number
+// e.g. n = 4, s = 3 returns the 4th triangle number
+// e.g. n = 11, s = 5 returns the 11th pentagonal number
+function toPolygonal(n, s) {
+  return (s - 2) * n * (n - 1) / 2 + n;
+}
+
+// check if a number is triangular
+function isTriangular(n) {
+  return (Math.sqrt(1 + 8 * n) - 1) % 2 === 0;
+}
+
+// check if a number is pentagonal
+function isPentagonal(n) {
+  // obtained using quadratic rule
+  return (1 + Math.sqrt(1 + 24 * n)) % 6 === 0;
+}
+
 module.exports = {
+  listPrimeFactors,
   gcd,
   isCoprime,
   getProperDivisors,
@@ -119,4 +176,8 @@ module.exports = {
   reduceLCT,
   fact,
   generateFactTable,
+  generateTriangleNumbersTable,
+  toPolygonal,
+  isTriangular,
+  isPentagonal,
 };

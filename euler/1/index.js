@@ -118,7 +118,7 @@ module.exports = {
     // (2) "merge" that factorization into totalPrimeFactors by checking if the computed power is higher than the power already in the array
     // (3) after all merging is done, the totalPrimeFactors will contain the prime factorization of our answer
     for (let n = 2; n <= 20; n++) {
-      const primeFactors = computePrimeFactors(n); // (1)
+      const primeFactors = utils.listPrimeFactors(n); // (1)
       // we start at 2 since the first two elements are always empty
       for (let factor = 2; factor < primeFactors.length; factor++) {
         const computedPower = primeFactors[factor];
@@ -133,31 +133,6 @@ module.exports = {
       // by definition of totalPrimeFactors, the indexes represent the bases of the prime factorization
       return power ? acc * (base ** power) : acc;
     }, 1);
-
-    // outputs an array containing the prime factorization of each associated index eg.:
-    // n = 2 -> 2^1 out: [0,0,1]
-    // n = 3 -> 3^1 out: [0,0,0,1]
-    // n = 4 -> 2^2 out: [0,0,2]
-    // n = 5 -> 5^1 out: [0,0,0,0,0,1]
-    // n = 6 -> 2^1 * 3^1  out: [0,0,1,1]
-    // n = 8 -> 2^3 out: [0,0,3]
-    // n = 18 -> 2^1 * 3^2 out: [0,0,1,2]
-    // the first two elements will always be empty
-    function computePrimeFactors(n) {
-      let dividend = n;
-      let divisor = 2;
-      const computedFactors = [];
-      while (dividend > 1) {
-        let power = 0;
-        while (dividend % divisor === 0) {
-          dividend /= divisor;
-          power++;
-        }
-        computedFactors[divisor] = power;
-        divisor++;
-      }
-      return computedFactors;
-    }
   },
 
   /**

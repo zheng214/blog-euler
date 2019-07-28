@@ -1,10 +1,10 @@
 ## <p align="center"> Project Euler Menu </p>
 
-#### Click on the "Solution" to go to the code solution
+Click on the "Solution" to go to the code solution
 
-#### Click on the problem name to go to the problem statement on the Project Euler website
+Click on the problem name to go to the problem statement on the Project Euler website
 
-#### The answers and time of execution can be found in `results.json` (answers are partially blurred with respect to Project Euler's proper etiquette)
+The answers and time of execution can be found in `results.json` (answers are partially blurred with respect to Project Euler's proper etiquette)
 
 <br/><br/>
 
@@ -21,22 +21,22 @@
 **Problem 4** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/1/index.js#L51-L107) | [Largest palindrome product :arrow_upper_right:](https://projecteuler.net/problem=4) ]: 
   Find the largest palindrome made from the product of two 3-digit numbers.
 <br/><br/>
-**Problem 5** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/1/index.js#L109-L161) | [Smallest multiple :arrow_upper_right:](https://projecteuler.net/problem=5) ]: 
+**Problem 5** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/1/index.js#L109-L136) | [Smallest multiple :arrow_upper_right:](https://projecteuler.net/problem=5) ]: 
   What is the smallest positive number that is evenly divisible by all of the numbers from 1 to 20?
 <br/><br/>
-**Problem 6** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/1/index.js#L163-L179) | [Sum square difference :arrow_upper_right:](https://projecteuler.net/problem=6) ]: 
+**Problem 6** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/1/index.js#L138-L154) | [Sum square difference :arrow_upper_right:](https://projecteuler.net/problem=6) ]: 
   Find the difference between the sum of the squares of the first one hundred natural numbers and the square of the sum.
 <br/><br/>
-**Problem 7** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/1/index.js#L181-L195) | [10001st prime :arrow_upper_right:](https://projecteuler.net/problem=7) ]: 
+**Problem 7** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/1/index.js#L156-L170) | [10001st prime :arrow_upper_right:](https://projecteuler.net/problem=7) ]: 
   What is the 10001st prime number?
 <br/><br/>
-**Problem 8** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/1/index.js#L197-L228) | [Largest product in a series :arrow_upper_right:](https://projecteuler.net/problem=8) ]: 
+**Problem 8** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/1/index.js#L172-L203) | [Largest product in a series :arrow_upper_right:](https://projecteuler.net/problem=8) ]: 
   Find the thirteen adjacent digits in the 1000-digit number that have the greatest product.
 <br/><br/>
-**Problem 9** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/1/index.js#L230-L248) | [Special Pythagorean triplet :arrow_upper_right:](https://projecteuler.net/problem=9) ]: 
+**Problem 9** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/1/index.js#L205-L223) | [Special Pythagorean triplet :arrow_upper_right:](https://projecteuler.net/problem=9) ]: 
   There exists exactly one Pythagorean triplet for which a + b + c = 1000. Find the product abc.
 <br/><br/>
-**Problem 10** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/1/index.js#L250-L290) | [Summation of primes :arrow_upper_right:](https://projecteuler.net/problem=10) ]: 
+**Problem 10** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/1/index.js#L225-L265) | [Summation of primes :arrow_upper_right:](https://projecteuler.net/problem=10) ]: 
   Find the sum of all the primes below two million.
 <br/><br/>
 **Problem 11** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/2/index.js#L2-L30) | [Largest product in a grid :arrow_upper_right:](https://projecteuler.net/problem=11) ]: 
@@ -69,34 +69,34 @@
 **Problem 20** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/2/index.js#L365-L399) | [Factorial digit sum :arrow_upper_right:](https://projecteuler.net/problem=20) ]: 
   Find the sum of the digits in the number 100!
 <br/><br/>
-**Problem 21** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/3/index.js#L5-L33) | [Amicable numbers :arrow_upper_right:](https://projecteuler.net/problem=21) ]: 
+**Problem 21** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/3/index.js#L2-L30) | [Amicable numbers :arrow_upper_right:](https://projecteuler.net/problem=21) ]: 
   Let d(n) be defined as the sum of proper divisors of n (numbers less than n which divide evenly into n).
 <br/><br/>
-**Problem 22** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/3/index.js#L35-L61) | [Names scores :arrow_upper_right:](https://projecteuler.net/problem=22) ]: 
+**Problem 22** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/3/index.js#L32-L58) | [Names scores :arrow_upper_right:](https://projecteuler.net/problem=22) ]: 
   What is the total of all the name scores in the file?
 <br/><br/>
-**Problem 23** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/3/index.js#L63-L100) | [Non-abundant sums :arrow_upper_right:](https://projecteuler.net/problem=23) ]: 
+**Problem 23** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/3/index.js#L60-L97) | [Non-abundant sums :arrow_upper_right:](https://projecteuler.net/problem=23) ]: 
   A number n is called deficient if the sum of its proper divisors is less than n and it is called abundant if this sum exceeds n.
 <br/><br/>
-**Problem 24** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/3/index.js#L102-L149) | [Lexicographic permutations :arrow_upper_right:](https://projecteuler.net/problem=24) ]: 
+**Problem 24** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/3/index.js#L99-L146) | [Lexicographic permutations :arrow_upper_right:](https://projecteuler.net/problem=24) ]: 
   What is the millionth lexicographic permutation of the digits 0, 1, 2, 3, 4, 5, 6, 7, 8 and 9?
 <br/><br/>
-**Problem 25** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/3/index.js#L151-L193) | [1000-digit Fibonacci number :arrow_upper_right:](https://projecteuler.net/problem=25) ]: 
+**Problem 25** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/3/index.js#L148-L190) | [1000-digit Fibonacci number :arrow_upper_right:](https://projecteuler.net/problem=25) ]: 
   What is the index of the first term in the Fibonacci sequence to contain 1000 digits?
 <br/><br/>
-**Problem 26** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/3/index.js#L195-L237) | [Reciprocal cycles :arrow_upper_right:](https://projecteuler.net/problem=26) ]: 
+**Problem 26** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/3/index.js#L192-L234) | [Reciprocal cycles :arrow_upper_right:](https://projecteuler.net/problem=26) ]: 
   Find the value of d < 1000 for which 1/d contains the longest recurring cycle in its decimal fraction part.
 <br/><br/>
-**Problem 27** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/3/index.js#L240-L289) | [Quadratic primes :arrow_upper_right:](https://projecteuler.net/problem=27) ]: 
+**Problem 27** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/3/index.js#L237-L286) | [Quadratic primes :arrow_upper_right:](https://projecteuler.net/problem=27) ]: 
   Find the product of the coefficients, a and b, for the quadratic expression that produces the maximum number of
 <br/><br/>
-**Problem 28** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/3/index.js#L291-L317) | [Number spiral diagonals :arrow_upper_right:](https://projecteuler.net/problem=28) ]: 
+**Problem 28** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/3/index.js#L288-L314) | [Number spiral diagonals :arrow_upper_right:](https://projecteuler.net/problem=28) ]: 
   What is the sum of the numbers on the diagonals in a 1001 by 1001 spiral formed in the same way?
 <br/><br/>
-**Problem 29** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/3/index.js#L319-L354) | [Distinct powers :arrow_upper_right:](https://projecteuler.net/problem=29) ]: 
+**Problem 29** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/3/index.js#L316-L351) | [Distinct powers :arrow_upper_right:](https://projecteuler.net/problem=29) ]: 
   How many distinct terms are in the sequence generated by a^b for 2 ≤ a ≤ 100 and 2 ≤ b ≤ 100?
 <br/><br/>
-**Problem 30** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/3/index.js#L356-L420) | [Digit fifth powers :arrow_upper_right:](https://projecteuler.net/problem=30) ]: 
+**Problem 30** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/3/index.js#L353-L417) | [Digit fifth powers :arrow_upper_right:](https://projecteuler.net/problem=30) ]: 
   Find the sum of all the numbers that can be written as the sum of fifth powers of their digits.
 <br/><br/>
 **Problem 31** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/4/index.js#L2-L60) | [Coin sums :arrow_upper_right:](https://projecteuler.net/problem=31) ]: 
@@ -132,6 +132,24 @@
 <br/><br/>
 **Problem 41** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/5/index.js#L2-L31) | [Pandigital prime :arrow_upper_right:](https://projecteuler.net/problem=41) ]: 
   What is the largest n-digit pandigital prime that exists?
+<br/><br/>
+**Problem 42** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/5/index.js#L33-L57) | [Coded Triangle numbers :arrow_upper_right:](https://projecteuler.net/problem=42) ]: 
+  Using p042_words.txt, a 16K text file containing nearly two-thousand common English words,
+<br/><br/>
+**Problem 43** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/5/index.js#L59-L113) | [Sub-string divisibility :arrow_upper_right:](https://projecteuler.net/problem=43) ]: 
+  Find the sum of all 0 to 9 pandigital numbers with this property.
+<br/><br/>
+**Problem 44** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/5/index.js#L115-L140) | [Pentagon numbers :arrow_upper_right:](https://projecteuler.net/problem=44) ]: 
+  Find the pair of pentagonal numbers, Pj and Pk, for which their sum and difference are pentagonal
+<br/><br/>
+**Problem 45** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/5/index.js#L142-L161) | [Triangular, pentagonal, and hexagonal :arrow_upper_right:](https://projecteuler.net/problem=45) ]: 
+  Find the next triangle number that is also pentagonal and hexagonal.
+<br/><br/>
+**Problem 46** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/5/index.js#L163-L199) | [Goldbach's other conjecture :arrow_upper_right:](https://projecteuler.net/problem=46) ]: 
+  What is the smallest odd composite that cannot be written as the sum of a prime and twice a square?
+<br/><br/>
+**Problem 47** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/5/index.js#L201-L259) | [Distinct primes factors :arrow_upper_right:](https://projecteuler.net/problem=47) ]: 
+  Find the first four consecutive integers to have four distinct prime factors each. What is the first of these numbers?
 <br/><br/>
 
 
