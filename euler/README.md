@@ -39,6 +39,35 @@ The answers and time of execution can be found in `results.json` (answers are pa
 **Problem 10** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/1/index.js#L225-L265) | [Summation of primes :arrow_upper_right:](https://projecteuler.net/problem=10) ]: 
   Find the sum of all the primes below two million.
 <br/><br/>
+**Problem 41** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/5/index.js#L2-L31) | [Pandigital prime :arrow_upper_right:](https://projecteuler.net/problem=41) ]: 
+  What is the largest n-digit pandigital prime that exists?
+<br/><br/>
+**Problem 42** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/5/index.js#L33-L57) | [Coded Triangle numbers :arrow_upper_right:](https://projecteuler.net/problem=42) ]: 
+  Using p042_words.txt, a 16K text file containing nearly two-thousand common English words,
+<br/><br/>
+**Problem 43** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/5/index.js#L59-L113) | [Sub-string divisibility :arrow_upper_right:](https://projecteuler.net/problem=43) ]: 
+  Find the sum of all 0 to 9 pandigital numbers with this property.
+<br/><br/>
+**Problem 44** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/5/index.js#L115-L140) | [Pentagon numbers :arrow_upper_right:](https://projecteuler.net/problem=44) ]: 
+  Find the pair of pentagonal numbers, Pj and Pk, for which their sum and difference are pentagonal
+<br/><br/>
+**Problem 45** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/5/index.js#L142-L161) | [Triangular, pentagonal, and hexagonal :arrow_upper_right:](https://projecteuler.net/problem=45) ]: 
+  Find the next triangle number that is also pentagonal and hexagonal.
+<br/><br/>
+**Problem 46** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/5/index.js#L163-L199) | [Goldbach's other conjecture :arrow_upper_right:](https://projecteuler.net/problem=46) ]: 
+  What is the smallest odd composite that cannot be written as the sum of a prime and twice a square?
+<br/><br/>
+**Problem 47** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/5/index.js#L201-L259) | [Distinct primes factors :arrow_upper_right:](https://projecteuler.net/problem=47) ]: 
+  Find the first four consecutive integers to have four distinct prime factors each. What is the first of these numbers?
+<br/><br/>
+**Problem 48** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/5/index.js#L261-L287) | [Self powers :arrow_upper_right:](https://projecteuler.net/problem=48) ]: 
+  Find the last ten digits of the series, 1¹ + 2² + 3³ + ... + 1000¹⁰⁰⁰.
+<br/><br/>
+**Problem 49** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/5/index.js#L289-L335) | [Prime permutations :arrow_upper_right:](https://projecteuler.net/problem=49) ]: 
+<br/><br/>
+**Problem 50** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/5/index.js#L337-L381) | [Consecutive prime sum :arrow_upper_right:](https://projecteuler.net/problem=50) ]: 
+  Which prime, below one-million, can be written as the sum of the most consecutive primes?
+<br/><br/>
 **Problem 11** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/2/index.js#L2-L30) | [Largest product in a grid :arrow_upper_right:](https://projecteuler.net/problem=11) ]: 
   What is the greatest product of four adjacent numbers in the same direction (up, down, left, right, diagonal) in the 20×20 grid?
 <br/><br/>
@@ -129,27 +158,6 @@ The answers and time of execution can be found in `results.json` (answers are pa
 **Problem 40** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/4/index.js#L528-L582) | [Champernowne's constant :arrow_upper_right:](https://projecteuler.net/problem=40) ]: 
   If d_n represents the nth digit of the fractional part, find the value of the following expression.
   d_1 × d_10 × d_100 × d_1000 × d_10000 × d_100000 × d_1000000
-<br/><br/>
-**Problem 41** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/5/index.js#L2-L31) | [Pandigital prime :arrow_upper_right:](https://projecteuler.net/problem=41) ]: 
-  What is the largest n-digit pandigital prime that exists?
-<br/><br/>
-**Problem 42** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/5/index.js#L33-L57) | [Coded Triangle numbers :arrow_upper_right:](https://projecteuler.net/problem=42) ]: 
-  Using p042_words.txt, a 16K text file containing nearly two-thousand common English words,
-<br/><br/>
-**Problem 43** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/5/index.js#L59-L113) | [Sub-string divisibility :arrow_upper_right:](https://projecteuler.net/problem=43) ]: 
-  Find the sum of all 0 to 9 pandigital numbers with this property.
-<br/><br/>
-**Problem 44** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/5/index.js#L115-L140) | [Pentagon numbers :arrow_upper_right:](https://projecteuler.net/problem=44) ]: 
-  Find the pair of pentagonal numbers, Pj and Pk, for which their sum and difference are pentagonal
-<br/><br/>
-**Problem 45** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/5/index.js#L142-L161) | [Triangular, pentagonal, and hexagonal :arrow_upper_right:](https://projecteuler.net/problem=45) ]: 
-  Find the next triangle number that is also pentagonal and hexagonal.
-<br/><br/>
-**Problem 46** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/5/index.js#L163-L199) | [Goldbach's other conjecture :arrow_upper_right:](https://projecteuler.net/problem=46) ]: 
-  What is the smallest odd composite that cannot be written as the sum of a prime and twice a square?
-<br/><br/>
-**Problem 47** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/5/index.js#L201-L259) | [Distinct primes factors :arrow_upper_right:](https://projecteuler.net/problem=47) ]: 
-  Find the first four consecutive integers to have four distinct prime factors each. What is the first of these numbers?
 <br/><br/>
 
 

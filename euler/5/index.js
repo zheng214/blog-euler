@@ -212,7 +212,7 @@ module.exports = {
    * @question Find the first four consecutive integers to have four distinct prime factors each. What is the first of these numbers?
    */
   e47() {
-    const first1000Primes = Object.keys(utils.generatePrimeTable(1000));
+    const first1000Primes = Object.keys(utils.generatePrimeTable(1000)); // assume for now that we don't need prime factors over 1000
     let first = 2 * 3 * 5 * 7;
     while (first < 1000000) {
       const second = first + 1;
@@ -254,6 +254,128 @@ module.exports = {
           }
           quotient /= primeFactor;
         }
+      }
+    }
+  },
+
+  /**
+   * Problem 48 Self powers
+   * The series, 1¹ + 2² + 3³ + ... + 10¹⁰ = 10405071317.
+   *
+   * @question Find the last ten digits of the series, 1¹ + 2² + 3³ + ... + 1000¹⁰⁰⁰.
+   */
+  e48() {
+    let result = 0;
+    for (let i = 1; i <= 1000; i++) {
+      result = getLast10Digits(result) + getSelfPower(i);
+    }
+    return result;
+
+    function getSelfPower(n) {
+      // returns the last 10 digits of n^n
+      if (n % 10 === 0) {
+        // if n = 10 * k, then n^n = (k*10)^(k*10) = (k*10)^k * 10^(k*10) = C * 10^(k*10) => last 10 digits will be 0s
+        return 0;
+      }
+      return [...Array(n - 1)].reduce(acc => getLast10Digits(acc) * n, n);
+    }
+
+    function getLast10Digits(n) {
+      // returns the last 10 digits of a number
+      return +n.toString().slice(-10);
+    }
+  },
+
+  /**
+   * Problem 49 Prime permutations
+   * The arithmetic sequence, 1487, 4817, 8147, in which each of the terms increases by 3330, is unusual in two ways:
+   * (i) each of the three terms are prime, and,
+   * (ii) each of the 4-digit numbers are permutations of one another.
+   *
+   * @problem There are no arithmetic sequences made up of three 1-, 2-, or 3-digit primes, exhibiting this property, but there is
+   * @problem one other 4-digit increasing sequence. What 12-digit number do you form by concatenating the three terms in this sequence?
+   */
+  e49() {
+    // we generate all primes under 10000, for each prime generated we sort their digits from lower to higher, and classify them in a table
+
+    // Equivalence Class table, the key represents the equivalence class number (e.g 1478)
+    // And the value will be the list of primes in that equivalence class
+    // e.g. for 1478, the value will be [ '1487', '1847', '4817', '4871', '7481', '7841', '8147', '8741' ]
+    const permutationClassTable = {};
+    const fourDigitPrimes = Object.keys(utils.generatePrimeTable(10000)).filter(x => x >= 1000);
+    for (let i = 0; i < fourDigitPrimes.length; i++) {
+      const sortedDigits = fourDigitPrimes[i].toString().split('').sort().join('');
+      const permutations = permutationClassTable[sortedDigits];
+      if (permutations) {
+        permutationClassTable[sortedDigits].push(fourDigitPrimes[i]);
+      } else {
+        permutationClassTable[sortedDigits] = [fourDigitPrimes[i]];
+      }
+    }
+
+    // now that we have our equivalence class table, we loop over the keys and for each key, we check the list of corresponding primes
+    // for whether or not one number is the average of 2 other numbers
+    const keys = Object.keys(permutationClassTable);
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      if (key !== '1478') { // this answer is given in problem statement
+        const primes = permutationClassTable[key];
+        if (primes.length >= 3) {
+          for (let j = 0; j < primes.length - 2; j++) {
+            for (let k = j + 2; k < primes.length; k++) {
+              const avg = (+primes[j] + +primes[k]) / 2;
+              if (primes.includes(avg.toString())) {
+                return `${primes[j]}${avg}${primes[k]}`;
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+
+  /**
+   * Problem 50 Consecutive prime sum
+   * The prime 41, can be written as the sum of six consecutive primes:
+   * 41 = 2 + 3 + 5 + 7 + 11 + 13
+   * This is the longest sum of consecutive primes that adds to a prime below one-hundred.
+   * The longest sum of consecutive primes below one-thousand that adds to a prime, contains 21 terms, and is equal to 953.
+   * @question Which prime, below one-million, can be written as the sum of the most consecutive primes?
+   */
+  e50() {
+    // we begin by generating the list of primes under 1 million
+    const primesTable = utils.generatePrimeTable(1000000);
+    const primesList = Object.keys(primesTable).map(x => +x);
+    // next we determine the upper bound for the number of consecutive primes s.t. their sum does not exceed one million
+    const upperConsec = [...primesList].reduce(
+      (sum, curr, i, arr) => {
+        if (sum >= 1000000) {
+          // if sum exceeds one million, returns the number of terms and exit from the reducer
+          arr.splice(1);
+          return i;
+        }
+        return sum + curr;
+      },
+    ); // spoiler: the upper bound is 547
+
+    let largestSum = 0;
+
+    // t := number of terms in the sum
+    // for each t, we sum t consecutive primes and check if their sum is also prime
+    // if it is we store that number and continue checking for the current t
+    // once we are done we just return the largest sum obtained at the current t
+    for (let t = upperConsec; t >= 21; t--) {
+      let j = 0;
+      let sum = utils.sumArray(primesList.slice(j, j + t));
+      while (sum < 1000000) {
+        if (primesTable[sum] && sum > largestSum) {
+          largestSum = sum;
+        }
+        j++;
+        sum = utils.sumArray(primesList.slice(j, j + t));
+      }
+      if (largestSum > 0) {
+        return largestSum;
       }
     }
   },
