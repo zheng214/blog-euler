@@ -101,6 +101,8 @@ function generateFileMenu(file) {
       lineStreamer.on('close', async () => {
         resolve();
       });
+    } else {
+      resolve();
     }
   });
 }
