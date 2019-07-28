@@ -159,6 +159,3 @@ The answers and time of execution can be found in `results.json` (answers are pa
 **Problem 50** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/5/index.js#L337-L381) | [Consecutive prime sum :arrow_upper_right:](https://projecteuler.net/problem=50) ]: 
   Which prime, below one-million, can be written as the sum of the most consecutive primes?
 <br/><br/>
-
-
-<a href="#">Go to top</a>
