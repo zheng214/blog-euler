@@ -155,6 +155,8 @@ The answers and time of execution can be found in `results.json` (answers are pa
   Find the last ten digits of the series, 1¹ + 2² + 3³ + ... + 1000¹⁰⁰⁰.
 <br/><br/>
 **Problem 49** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/5/index.js#L289-L335) | [Prime permutations :arrow_upper_right:](https://projecteuler.net/problem=49) ]: 
+  There are no arithmetic sequences made up of three 1-, 2-, or 3-digit primes, exhibiting this property, but there is
+  one other 4-digit increasing sequence. What 12-digit number do you form by concatenating the three terms in this sequence?
 <br/><br/>
 **Problem 50** [ [Solution](https://github.com/zheng214/euler/blob/master/euler/5/index.js#L337-L381) | [Consecutive prime sum :arrow_upper_right:](https://projecteuler.net/problem=50) ]: 
   Which prime, below one-million, can be written as the sum of the most consecutive primes?

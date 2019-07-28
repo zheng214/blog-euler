@@ -292,8 +292,8 @@ module.exports = {
    * (i) each of the three terms are prime, and,
    * (ii) each of the 4-digit numbers are permutations of one another.
    *
-   * @problem There are no arithmetic sequences made up of three 1-, 2-, or 3-digit primes, exhibiting this property, but there is
-   * @problem one other 4-digit increasing sequence. What 12-digit number do you form by concatenating the three terms in this sequence?
+   * @question There are no arithmetic sequences made up of three 1-, 2-, or 3-digit primes, exhibiting this property, but there is
+   * @question one other 4-digit increasing sequence. What 12-digit number do you form by concatenating the three terms in this sequence?
    */
   e49() {
     // we generate all primes under 10000, for each prime generated we sort their digits from lower to higher, and classify them in a table
