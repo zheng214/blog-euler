@@ -90,7 +90,8 @@ function generateFileMenu(file) {
             const eulerURL = eulerURLTemplate
               .replace('{problem}', problemID);
 
-            stream.write(`**${problemID}.** [${problemName}](${eulerURL}) | ${questionCapture} | [Solution](${githubURL})`);
+            stream.write(`**${problemID}.** [${problemName}](${eulerURL}) | ${questionCapture} | `);
+            stream.write(`[Solution  <img src="./js.png" width="15px" height="15px" vertical-align="middle"/>](${githubURL})`);
             stream.write('<br/><br/>\n');
 
             isInSolution = false;
