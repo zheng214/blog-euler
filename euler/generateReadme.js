@@ -18,8 +18,8 @@ stream.once('open', async (fd) => {
   stream.write('\n\n<br/><br/>\n\n');
   stream.write('## <p align="center"> Solutions </p>');
   stream.write('\n');
-  stream.write('**Problem** | **Description** | **Solution**  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  \n');
-  stream.write('------------|-----------------|------------- \n');
+  stream.write('**Problem** | **Description** | **Solution**  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;');
+  stream.write('\n ------------|-----------------|------------- \n');
   await generateMenu();
   stream.write('\n\n');
   stream.write('<a href="#">Go to top</a>');
