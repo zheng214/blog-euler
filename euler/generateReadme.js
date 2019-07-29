@@ -91,7 +91,7 @@ function generateFileMenu(file) {
               .replace('{problem}', problemID);
 
             stream.write(`**${problemID}.** [${problemName}](${eulerURL}) | ${questionCapture} | `);
-            stream.write(`[Solution  <img src="./js.png" width="15px" height="15px" vertical-align="middle"/>](${githubURL})`);
+            stream.write(`[Solution](${githubURL})`);
             stream.write('<br/><br/>\n');
 
             isInSolution = false;
