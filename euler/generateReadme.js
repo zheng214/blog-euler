@@ -18,6 +18,8 @@ stream.once('open', async (fd) => {
   stream.write('\n\n<br/><br/>\n\n');
   stream.write('## <p align="center"> Solutions </p>');
   stream.write('\n');
+  stream.write('**Problem** | **Description** | **Solution** \n');
+  stream.write('------------|-----------------|------------- \n');
   await generateMenu();
   stream.write('\n\n');
   stream.write('<a href="#">Go to top</a>');
@@ -63,7 +65,7 @@ function generateFileMenu(file) {
         // matches the question statement
         const questionMatch = line.match(/@question (.+)$/);
         if (questionMatch) {
-          questionCapture += `  ${questionMatch[1]}\n`;
+          questionCapture += ` ${questionMatch[1]}`;
         }
 
         // matches the start of the solution
@@ -88,10 +90,7 @@ function generateFileMenu(file) {
             const eulerURL = eulerURLTemplate
               .replace('{problem}', problemID);
 
-            stream.write('<span style=\'font-family:"Lucida Console", Monaco, monospace;\'>');
-            stream.write(`**Problem ${problemID}** [ [Solution](${githubURL}) | [${problemName} :arrow_upper_right:](${eulerURL}) ]: `);
-            stream.write('</span> \n');
-            stream.write(questionCapture);
+            stream.write(`**${problemID}.** [${problemName} :arrow_upper_right:](${eulerURL}) | ${questionCapture} | [Solution](${githubURL})`);
             stream.write('<br/><br/>\n');
 
             isInSolution = false;
