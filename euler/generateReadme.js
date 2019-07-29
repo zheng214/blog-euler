@@ -65,7 +65,7 @@ function generateFileMenu(file) {
         // matches the question statement
         const questionMatch = line.match(/@question (.+)$/);
         if (questionMatch) {
-          questionCapture += ` ${questionMatch[1]}`;
+          questionCapture += ` ${questionMatch[1]}<br/>`;
         }
 
         // matches the start of the solution
