@@ -9,7 +9,7 @@ The answers and time of execution can be found in `results.json` (answers are pa
 <br/><br/>
 
 ## <p align="center"> Solutions </p>
-**Problem** | **Description** | **Solution**  &nbsp;&nbsp;&nbsp;       
+**Problem** | **Description** | **Solution**  &nbsp; &nbsp; &nbsp; 
 ------------|-----------------|------------- 
 **1.** [Multiples of 3 and 5](https://projecteuler.net/problem=1) |  Find the sum of all the multiples of 3 or 5 below 1000.<br/> | [Solution  <img src="./js.png" width="15px" height="15px" vertical-align="middle"/>](https://github.com/zheng214/euler/blob/master/euler/1/index.js#L2-L15)<br/><br/>
 **2.** [Even Fibonacci numbers](https://projecteuler.net/problem=2) |  Find the sum of the even-valued Fibonacci numbers whose values do not exceed four million<br/> | [Solution  <img src="./js.png" width="15px" height="15px" vertical-align="middle"/>](https://github.com/zheng214/euler/blob/master/euler/1/index.js#L17-L31)<br/><br/>
