@@ -1,3 +1,16 @@
+/**
+ * @file arithmetic.js
+ * @overview contains helper functions for basic operations (factorization, divisibility, number properties, etc.)
+ */
+
+function isOdd(number) {
+  return !!(number & 1);
+}
+
+function isEven(number) {
+  return !(number & 1);
+}
+
 // outputs an array containing the prime factorization of each associated index eg.:
 // n = 2 -> 2^1 out: [0,0,1]
 // n = 3 -> 3^1 out: [0,0,0,1]
@@ -112,30 +125,6 @@ function reduceLCT(numerator, denominator) {
   return subOne ? [a, b] : [b, a];
 }
 
-// return n!
-function fact(n) {
-  if (n === 0 || n === 1) {
-    return 1;
-  }
-  let result = 1;
-  for (let i = 2; i <= n; i++) {
-    result *= i;
-  }
-  return result;
-}
-
-
-// generate a table of n: n! key-value pairs
-function generateFactTable(n) {
-  const table = {
-    0: 1,
-  };
-  for (let i = 1; i <= n; i++) {
-    table[i] = table[i - 1] * i;
-  }
-  return table;
-}
-
 // generate a table of triangle numbers no greater than n
 function generateTriangleNumbersTable(n) {
   const table = {};
@@ -168,14 +157,14 @@ function isPentagonal(n) {
 }
 
 module.exports = {
+  isOdd,
+  isEven,
   listPrimeFactors,
   gcd,
   isCoprime,
   getProperDivisors,
   computeSumOfDivisors,
   reduceLCT,
-  fact,
-  generateFactTable,
   generateTriangleNumbersTable,
   toPolygonal,
   isTriangular,

@@ -1,4 +1,36 @@
 /**
+ * @file combinatorics.js
+ * @overview contains helper functions for computing combinations (factorials, permutations, binomial combinations, etc.)
+ */
+
+const lang = require('./lang');
+
+// return n!
+function fact(n) {
+  if (n === 0 || n === 1) {
+    return 1;
+  }
+  let result = 1;
+  for (let i = 2; i <= n; i++) {
+    result *= i;
+  }
+  return result;
+}
+
+
+// generate a table of n: n! key-value pairs
+function generateFactTable(n) {
+  const table = {
+    0: 1,
+  };
+  for (let i = 1; i <= n; i++) {
+    table[i] = table[i - 1] * i;
+  }
+  return table;
+}
+
+
+/**
  * @function convertToFactorialBase
  * @description converts a number into its factorial representation
  * @param {Number} n the number to convert
@@ -58,7 +90,56 @@ function getLexicographicPermutation(arr, n) {
   return [...result, ...remainingElements];
 }
 
+// return n choose p
+function choose(n, p) {
+  return fact(n) / (fact(n - p) * fact(p));
+}
+
+// input: 2 arrays a1, a2 of length l1 and l2
+// output: array of length ((l1 + l2) choose l1) of all combinations of elements of a1 and a2, where elements of the same array
+// are considered to be similar
+// e.g. a1 = [0,1], a2 = [2,2]
+// result = [
+//  [0, 1, 2, 2], [0, 2, 1, 2], [0, 2, 2, 1], [2, 0, 1, 2], [2, 0, 2, 1], [2, 2, 0, 1]
+// ]
+function computeBinomialCombinations(a1, a2) {
+  const combinations = [];
+  const f1 = [...lang.toArray(a1)];
+  const f2 = [...lang.toArray(a2)]; // formatted
+  let baseArr = f2;
+  let insertArr = f1;
+  if ((f1.length + 1) ** f2.length < (f2.length + 1) ** f1.length) { // minimize loop count
+    baseArr = f1;
+    insertArr = f2;
+  }
+  const equivalenceTable = {};
+
+  // generate the table of unique insert rules
+  for (let i = 0; i < (baseArr.length + 1) ** insertArr.length; i++) {
+    const insertRule = i.toString(baseArr.length + 1);
+    if (!equivalenceTable[insertRule.split('').sort().join('')]) {
+      equivalenceTable[insertRule.padStart(insertArr.length, '0')] = true;
+    }
+  }
+
+  // for each insert rule, insert the elements of insertArr into baseArr according to rules, then push result to combinations
+  const insertRules = Object.keys(equivalenceTable);
+  for (let i = 0; i < insertRules.length; i++) {
+    const elevatedBase = [[], ...baseArr.map(x => [x])];
+    const insertRule = insertRules[i];
+    insertRule.split('').forEach((insertIndex, idx) => {
+      elevatedBase[+insertIndex].push(insertArr[idx]);
+    });
+    combinations.push(elevatedBase.reduce((acc, curr) => [...acc, ...curr]));
+  }
+  return combinations;
+}
+
 module.exports = {
+  fact,
+  generateFactTable,
   convertToFactorialBase,
   getLexicographicPermutation,
+  choose,
+  computeBinomialCombinations,
 };

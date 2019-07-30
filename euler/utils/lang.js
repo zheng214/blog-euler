@@ -1,3 +1,9 @@
+/**
+ * @file lang.js
+ * @overview contains helper functions for string/number formatting, checking properties of a string/number, etc.
+ */
+
+
 // superscripts ¹ ² ³ ⁴ ⁵ ⁶ ⁷ ⁸ ⁹ ⁰
 // subscripts ₀ ₁ ₂ ₃ ₄ ₅ ₆ ₇ ₈ ₉
 
@@ -17,6 +23,18 @@ function containsDuplicate(input) {
   }
 }
 
+// type converter
+function toArray(param) {
+  if (typeof param === 'number') {
+    return param.toString().split('');
+  }
+  if (typeof param === 'string') {
+    return param.split('');
+  }
+  return param;
+}
+
 module.exports = {
   containsDuplicate,
+  toArray,
 };

@@ -1,10 +1,7 @@
-function isOdd(number) {
-  return !!(number & 1);
-}
-
-function isEven(number) {
-  return !(number & 1);
-}
+/**
+ * @file common.js
+ * @overview contains helper functions for code that are often used/repeated
+ */
 
 // sum over all elements of an array
 function sumArray(arr, f = x => x, init = 0) {
@@ -41,8 +38,6 @@ function insertElementSorted(arr, element, insertLeft = (e, a) => e < a) {
 }
 
 module.exports = {
-  isOdd,
-  isEven,
   sumArray,
   contains,
   insertElementSorted,

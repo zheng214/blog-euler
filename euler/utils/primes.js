@@ -1,3 +1,8 @@
+/**
+ * @file primes.js
+ * @overview contains helper functions related to prime numbers
+ */
+
 function isPrime(n) {
   if (n < 2) {
     return false;
