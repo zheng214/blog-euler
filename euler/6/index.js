@@ -45,10 +45,4 @@ module.exports = {
     // from the list of candidates, return the family with the smallest member
     return Math.min(candidates.map(x => x[0]));
   },
-
-  e51x() {
-    const a1 = [0, 1];
-    const a2 = [2, 2, 2];
-    return utils.computeBinomialCombinations(a1, a2);
-  }
 };
