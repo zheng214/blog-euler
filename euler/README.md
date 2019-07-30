@@ -61,7 +61,7 @@ The answers and time of execution can be found in `results.json` (answers are pa
 **48.** [Self powers](https://projecteuler.net/problem=48) |  Find the last ten digits of the series, 1¹ + 2² + 3³ + ... + 1000¹⁰⁰⁰. | [Solution](https://github.com/zheng214/euler/blob/master/euler/5/index.js#L261-L287)<br/><br/>
 **49.** [Prime permutations](https://projecteuler.net/problem=49) |  There are no arithmetic sequences made up of three 1-, 2-, or 3-digit primes, exhibiting this property, but there is one other 4-digit increasing sequence. What 12-digit number do you form by concatenating the three terms in this sequence? | [Solution](https://github.com/zheng214/euler/blob/master/euler/5/index.js#L289-L335)<br/><br/>
 **50.** [Consecutive prime sum](https://projecteuler.net/problem=50) |  Which prime, below one-million, can be written as the sum of the most consecutive primes? | [Solution](https://github.com/zheng214/euler/blob/master/euler/5/index.js#L337-L381)<br/><br/>
-**undefined.** [undefined](https://projecteuler.net/problem=undefined) |  Find the smallest prime which, by replacing part of the number (not necessarily adjacent digits) with the same digit, is part of an eight prime value family. | [Solution](https://github.com/zheng214/euler/blob/master/euler/6/index.js#Lundefined-L47)<br/><br/>
+**51.** [Prime digit replacements](https://projecteuler.net/problem=51) |  Find the smallest prime which, by replacing part of the number (not necessarily adjacent digits) with the same digit, is part of an eight prime value family. | [Solution](https://github.com/zheng214/euler/blob/master/euler/6/index.js#L2-L47)<br/><br/>
 
 
 <a href="#">Go to top</a>
