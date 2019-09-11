@@ -54,7 +54,7 @@ function generateFileMenu(file) {
       // tracks the difference of "{" and "}" inside a solution. bracketBalance === 0 marks the end of the solution
       let bracketBalance;
       let isInSolution = false;
-      lineStreamer.on('line', async (line) => {
+      lineStreamer.on('line', (line) => {
         // matches the start of problem description
         const problemStartMatch = line.match(/Problem (\d{1,3})[^\w]*(\w.+)$/);
         if (problemStartMatch) {
@@ -100,7 +100,7 @@ function generateFileMenu(file) {
         }
         currentLine++;
       });
-      lineStreamer.on('close', async () => {
+      lineStreamer.on('close', () => {
         resolve();
       });
     } else {

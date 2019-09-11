@@ -95,15 +95,14 @@ function choose(n, p) {
   return fact(n) / (fact(n - p) * fact(p));
 }
 
-// input: 2 arrays a1, a2 of length l1 and l2
-// output: array of length ((l1 + l2) choose l1) of all combinations of elements of a1 and a2, where elements of the same array
+// input: 2 arrays a1, a2 of length l1 and l2, respectively
+// output: array of length ((l1 + l2) choose l1) of all combinations of elements of a1 and a2, where elements within the same array
 // are considered to be similar
 // e.g. a1 = [0,1], a2 = [2,2]
 // result = [
 //  [0, 1, 2, 2], [0, 2, 1, 2], [0, 2, 2, 1], [2, 0, 1, 2], [2, 0, 2, 1], [2, 2, 0, 1]
 // ]
 function computeBinomialCombinations(a1, a2) {
-  const combinations = [];
   const f1 = [...lang.toArray(a1)];
   const f2 = [...lang.toArray(a2)]; // formatted
   let baseArr = f2;
@@ -112,6 +111,7 @@ function computeBinomialCombinations(a1, a2) {
     baseArr = f1;
     insertArr = f2;
   }
+
   const equivalenceTable = {};
 
   // generate the table of unique insert rules
@@ -124,6 +124,8 @@ function computeBinomialCombinations(a1, a2) {
 
   // for each insert rule, insert the elements of insertArr into baseArr according to rules, then push result to combinations
   const insertRules = Object.keys(equivalenceTable);
+  const combinations = [];
+
   for (let i = 0; i < insertRules.length; i++) {
     const elevatedBase = [[], ...baseArr.map(x => [x])];
     const insertRule = insertRules[i];
@@ -132,6 +134,7 @@ function computeBinomialCombinations(a1, a2) {
     });
     combinations.push(elevatedBase.reduce((acc, curr) => [...acc, ...curr]));
   }
+
   return combinations;
 }
 
