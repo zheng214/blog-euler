@@ -1,6 +1,8 @@
 ## <p align="center"> Project Euler Menu </p>
 
-Click on the "Solution" to go to the code solution
+Each numbered folder contains 10 solutions
+
+Click on any of the "Solution" link below to go to the code solution
 
 Click on the problem name to go to the problem statement on the Project Euler website
 

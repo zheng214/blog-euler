@@ -9,7 +9,9 @@ const stream = fs.createWriteStream('README.md');
 stream.once('open', async (fd) => {
   stream.write('## <p align="center"> Project Euler Menu </p>');
   stream.write('\n\n');
-  stream.write('Click on the "Solution" to go to the code solution');
+  stream.write('Each numbered folder contains 10 solutions');
+  stream.write('\n\n');
+  stream.write('Click on any of the "Solution" link below to go to the code solution');
   stream.write('\n\n');
   stream.write('Click on the problem name to go to the problem statement on the Project Euler website');
   stream.write('\n\n');
