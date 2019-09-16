@@ -238,8 +238,8 @@ module.exports = {
     // output: score of hand, which is an array of size up to 6
     // first element is the rank of the hand, where 9: straight flush, 8: four of a kind, etc.
     // second element is the value of the first type within that rank, ie. a hand with 4 aces will have value 13, a hand with 4 kings value 12, etc.
-    // third element is the value of the second type within that rank, ie. if both players have 2 pair of aces, then we compare the second highest value
-    // etc.
+    // third element is the value of the second type within that rank, ie. if both players have 2 pair of aces and 3 singles, then we compare the
+    // second highest value etc.
     function evaluateHand(hand) {
       const cards = hand.split(' ');
       // FLUSH check
