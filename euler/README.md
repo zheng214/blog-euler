@@ -66,7 +66,6 @@ The answers and time of execution can be found in `results.json` (answers are pa
 **51.** [Prime digit replacements](https://projecteuler.net/problem=51) |  Find the smallest prime which, by replacing part of the number (not necessarily adjacent digits) with the same digit, is part of an eight prime value family. | [Solution](https://github.com/zheng214/euler/blob/master/euler/6/index.js#L2-L47)<br/><br/>
 **52.** [Permuted multiples](https://projecteuler.net/problem=52) |  Find the smallest positive integer, x, such that 2x, 3x, 4x, 5x, and 6x, contain the same digits. | [Solution](https://github.com/zheng214/euler/blob/master/euler/6/index.js#L49-L121)<br/><br/>
 **53.** [Combinatorics selections](https://projecteuler.net/problem=53) |  How many, not necessarily distinct, values of C(n, r) for 1 ≤ n ≤ 100, are greater than one-million? | [Solution](https://github.com/zheng214/euler/blob/master/euler/6/index.js#L123-L161)<br/><br/>
-**54.** [Poker hands](https://projecteuler.net/problem=54) |  How many hands does Player 1 win? | [Solution](https://github.com/zheng214/euler/blob/master/euler/6/index.js#L163-L195)<br/><br/>
 
 
 <a href="#">Go to top</a>

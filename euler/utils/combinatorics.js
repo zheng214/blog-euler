@@ -97,7 +97,7 @@ function choose(n, p) {
 
 // input: 2 arrays a1, a2 of length l1 and l2, respectively
 // output: array of length ((l1 + l2) choose l1) of all combinations of elements of a1 and a2, where elements within the same array
-// are considered to be similar
+// are considered to be similar, and their order is preserved
 // e.g. a1 = [0,1], a2 = [2,2]
 // result = [
 //  [0, 1, 2, 2], [0, 2, 1, 2], [0, 2, 2, 1], [2, 0, 1, 2], [2, 0, 2, 1], [2, 2, 0, 1]

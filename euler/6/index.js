@@ -191,6 +191,142 @@ module.exports = {
    * @question How many hands does Player 1 win?
    */
   e54() {
+    // list of possible ranks
+    const RANKS = [2, 3, 4, 5, 6, 7, 8, 9, 'T', 'J', 'Q', 'K', 'A'];
 
+    // generate the list of combinations of straights and all their combinations
+    // the keys of the table are the valid combinations of strings of 5 characters (not necessarily in order) which form a straight, ie. J8TQ9
+    // the value of each key is the highest rank of that straight
+    // note: this method may not be the fastest solution for this problem, but it is much more scalable (eg. 1 million hands instead of 1000)
+    const STRAIGHTS_TABLE = ['A', ...RANKS].reduce( // ace to ace
+      (table, curr, index, arr) => {
+        if (curr === 'J') {
+          arr.splice(1);
+        }
+        const highest = index + 5;
+        const base = arr.slice(index, index + 5);
+        for (let i = 0; i <= 120; i++) {
+          table[utils.getLexicographicPermutation(base, i).join('')] = highest;
+        }
+        return table;
+      },
+      {},
+    );
+
+    const GAMES = fs.readFileSync(path.join(__dirname, 'p054_poker.txt')).toString().split('\n');
+
+    return GAMES.reduce((p1Score, currentGame) => {
+      const [p1Hand, p2Hand] = [currentGame.substring(0, 14), currentGame.substring(15, 29)];
+      if (!p1Hand) { // end of games
+        return p1Score;
+      }
+      const [p1HandValue, p2HandValue] = [evaluateHand(p1Hand), evaluateHand(p2Hand)];
+      for (let i = 0; i < p1HandValue.length; i++) {
+        if (p1HandValue[i] > p2HandValue[i]) {
+          return p1Score + 1;
+        }
+        if (p1HandValue[i] < p2HandValue[i]) {
+          return p1Score;
+        }
+      }
+    }, 0);
+
+    // input: string of 5 cards, separated by a space
+    // output: score of hand, which is an array of size up to 6
+    // first element is the rank of the hand, where 9: straight flush, 8: four of a kind, etc.
+    // second element is the value of the first type within that rank, ie. a hand with 4 aces will have value 13, a hand with 4 kings value 12, etc.
+    // third element is the value of the second type within that rank, ie. if both players have 2 pair of aces, then we compare the second highest value
+    // etc.
+    function evaluateHand(hand) {
+      const cards = hand.split(' ');
+      // FLUSH check
+      // check if every card has the same suit as the first card
+      const firstSuit = cards[0].charAt(1);
+      const isFlush = cards.every(card => card.charAt(1) === firstSuit);
+
+      // STRAIGHT check
+      // check the generated table of all possible straights
+      const highestStraight = STRAIGHTS_TABLE[cards.map(card => card.charAt(0)).join('')] || false;
+
+      // same of a kind table, keys are the ranks, values are the number of occurences of that rank
+      const rankTable = cards.reduce((table, currentCard) => {
+        const rank = currentCard.charAt(0);
+        table[rank] = table[rank] ? table[rank] + 1 : 1;
+        return table;
+      }, {});
+
+      // inverted table of above, keys are occurrences and corresponding values are the ranks that fit that occurrence
+      const occurencesTable = Object.entries(rankTable).reduce((table, [key, value]) => {
+        if (table[value]) {
+          table[value].push(key);
+        } else {
+          table[value] = [key];
+        }
+        return table;
+      }, {});
+
+      // now that we have all the variables we need, we attempt to match a hand with each hand type from strongest to weakest
+
+      // STRAIGHT FLUSH
+      if (highestStraight && isFlush) {
+        return [9, getRank(highestStraight)];
+      }
+
+      // FOUR OF A KIND
+      if (occurencesTable['4']) {
+        return [8, getRank(occurencesTable['4'][0]), getRank(occurencesTable['1'])];
+      }
+
+      // FULL HOUSE
+      if (occurencesTable['3'] && occurencesTable['2']) {
+        return [7, getRank(occurencesTable['3'][0]), getRank(occurencesTable['2'][0])];
+      }
+
+      // FLUSH
+      if (isFlush) {
+        return [6, ...occurencesTable['1'].map(getRank).sort(sortBiggest)];
+      }
+
+      // STRAIGHT
+      if (highestStraight) {
+        return [5, getRank(highestStraight)];
+      }
+
+      // THREE OF A KIND
+      if (occurencesTable['3']) {
+        return [4, getRank(occurencesTable['3'][0]), ...occurencesTable['1'].map(getRank).sort(sortBiggest)];
+      }
+
+      // TWO PAIRS
+      if (occurencesTable['2'] && occurencesTable['2'].length === 2) {
+        return [3, ...occurencesTable['2'].map(getRank).sort(sortBiggest), getRank(occurencesTable['1'][0])];
+      }
+
+      // ONE PAIR
+      if (occurencesTable['2']) {
+        return [2, getRank(occurencesTable['2'][0]), ...occurencesTable['1'].map(getRank).sort(sortBiggest)];
+      }
+
+      // HIGH CARD
+      return [1, ...occurencesTable['1'].map(getRank).sort(sortBiggest)];
+    }
+
+    function sortBiggest(a, b) {
+      return b - a;
+    }
+
+    // returns the numerical rank of a card from a character
+    function getRank(card) {
+      if (+card) {
+        return +card;
+      }
+      return {
+        T: 10,
+        J: 11,
+        Q: 12,
+        K: 13,
+        A: 14,
+      }[card];
+    }
   },
 };
