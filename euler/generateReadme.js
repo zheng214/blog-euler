@@ -78,8 +78,8 @@ function generateFileMenu(file) {
         }
 
         if (isInSolution) {
-          const leftBrackets = (line.split('//')[0].match(/\{/) || []).length;
-          const rightBrackets = (line.split('//')[0].match(/\}/) || []).length;
+          const leftBrackets = (line.split('//')[0].match(/\{/g) || []).length;
+          const rightBrackets = (line.split('//')[0].match(/\}/g) || []).length;
           bracketBalance = bracketBalance + leftBrackets - rightBrackets;
           if (bracketBalance === 0) { // end of problem, write all content of problem
             const githubURLTemplate = 'https://github.com/zheng214/euler/blob/master/euler/{folder}/index.js#L{start}-L{end}';
