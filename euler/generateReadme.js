@@ -87,6 +87,9 @@ function generateFileMenu(file) {
         if (questionMatch && !functionMatch) {
           const isPrevLineQuestion = prevLine.match('@question');
           const statement = line.replace(/(^.+\*)/, '');
+          if (problemID === '5') {
+            console.log({ isPrevLineQuestion, statement })
+          }
           if (isPrevLineQuestion) {
             // 2nd @question
             questionLines.push(statement.replace('@question', ''));
