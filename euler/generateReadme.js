@@ -129,7 +129,7 @@ function generateFileMenu(file) {
             const eulerURL = eulerURLTemplate
               .replace('{problem}', problemID);
 
-            const breakProblemQuestion = problemDetails.length && problemDetails[problemDetails.length - 1] ? '<br/>' : '';
+            const breakProblemQuestion = problemDetails.length && problemDetails[problemDetails.length - 1] ? '<br/><br/>' : '';
             console.log({ problemID, breakProblemQuestion })
             stream.write(`**${problemID}.** [${problemName}](${eulerURL}) | `);
             stream.write(`${problemDetails.join('<br/>')}${breakProblemQuestion}${questionLines.join('<br/>')} | `);
