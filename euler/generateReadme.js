@@ -141,7 +141,7 @@ function generateFileMenu(file) {
             stream.write(`${problemDetails.join('<br/>')}${breakProblemQuestion}${questionLines.join('<br/>')} | `);
             stream.write(`${results[problemID].answer} | `);
             stream.write(`${results[problemID].time} | `);
-            stream.write(`[:link:](${eulerURL})`);
+            stream.write(`[:arrow_upper_right:](${eulerURL})`);
 
             stream.write('<br/><br/>\n');
 
