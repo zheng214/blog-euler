@@ -13,16 +13,16 @@ stream.once('open', async (fd) => {
   stream.write('\n\n');
   stream.write('Each numbered folder contains 10 solutions');
   stream.write('\n\n');
-  stream.write('Click on any of the "Solution" link below to go to the code solution');
+  stream.write('Click on any of the external link below to go to problem statement on the Project Euler website');
   stream.write('\n\n');
-  stream.write('Click on the problem name to go to the problem statement on the Project Euler website');
+  stream.write('Click on the problem name to go to the code solution');
   stream.write('\n\n');
   stream.write('The answers and time of execution can be found in `results.json` ');
   stream.write('(answers are partially blurred with respect to Project Euler\'s proper etiquette)');
   stream.write('\n\n<br/><br/>\n\n');
   stream.write('## <p align="center"> Problems & Solutions </p>');
   stream.write('\n');
-  stream.write('**Problem** | **Description**| **Result** | **Time** | **Solution**');
+  stream.write('**Problem** | **Description**| **Result** | **Time** | **Ext. Link**');
   stream.write('\n ------------|----------------|------------|----------|---------- \n');
   await generateMenu();
   stream.write('\n\n');
@@ -137,11 +137,11 @@ function generateFileMenu(file) {
               breakProblemQuestion = problemDetails[problemDetails.length - 1] ? '<br/><br/>' : '<br/>';
             }
 
-            stream.write(`**${problemID}.** [${problemName}](${eulerURL}) | `);
+            stream.write(`**${problemID}.** [${problemName}](${githubURL}) | `);
             stream.write(`${problemDetails.join('<br/>')}${breakProblemQuestion}${questionLines.join('<br/>')} | `);
             stream.write(`${results[problemID].answer} | `);
             stream.write(`${results[problemID].time} | `);
-            stream.write(`[Solution](${githubURL})`);
+            stream.write(`[:link:](${eulerURL})`);
 
             stream.write('<br/><br/>\n');
 
