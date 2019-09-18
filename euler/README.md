@@ -10,7 +10,7 @@ The answers and time of execution can be found in `results.json` (answers are pa
 
 <br/><br/>
 
-## <p align="center"> Solutions </p>
+## <p align="center"> Problems & Solutions </p>
 **Problem** | **Description**| **Result** | **Time** | **Solution**
  ------------|----------------|------------|----------|---------- 
 **1.** [Multiples of 3 and 5](https://projecteuler.net/problem=1) |  <strong>Question:</strong> Find the sum of all the multiples of 3 or 5 below 1000. | 233*** | 0.211ms | [Solution](https://github.com/zheng214/euler/blob/master/euler/1/index.js#L2-L15)<br/><br/>

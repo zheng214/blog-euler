@@ -20,7 +20,7 @@ stream.once('open', async (fd) => {
   stream.write('The answers and time of execution can be found in `results.json` ');
   stream.write('(answers are partially blurred with respect to Project Euler\'s proper etiquette)');
   stream.write('\n\n<br/><br/>\n\n');
-  stream.write('## <p align="center"> Solutions </p>');
+  stream.write('## <p align="center"> Problems & Solutions </p>');
   stream.write('\n');
   stream.write('**Problem** | **Description**| **Result** | **Time** | **Solution**');
   stream.write('\n ------------|----------------|------------|----------|---------- \n');
