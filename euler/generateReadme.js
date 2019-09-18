@@ -48,16 +48,20 @@ function generateFileMenu(file) {
       });
 
       let currentLine = 1;
+      let prevLine = '';
 
       // store line number and title of a problem
       let startLine;
       let problemID;
       let problemName;
-      let questionCapture = ''; // can be multiline
 
       // store description of a problem
       let inDescription = false;
       let problemDescriptionLines = [];
+
+      // store question statement
+      let questionCapture = ''; // can be multiline
+      let questionLines = [];
 
       // track the difference of "{" and "}" inside a solution. bracketBalance === 0 marks the end of the solution
       let bracketBalance;
@@ -73,16 +77,32 @@ function generateFileMenu(file) {
           inDescription = true;
         }
 
+        // matches question statement
+        const questionMatch = line.match(/@question/);
+        if (questionMatch) {
+          const isPrevLineQuestion = prevLine.match('@question');
+          const statement = line.replace(/(^.+\*)/, '');
+          if (isPrevLineQuestion) {
+            // 2nd @question
+            questionLines.push(statement.replace('@question', ''));
+          } else if (!prevLine.split('*')[1]) {
+            // empty prevLine (good)
+            questionLines.push(`${statement.replace('@question', '<strong>Question:</strong>')}`);
+          } else {
+            // non-empty prevLine (bad)
+            questionLines.push(`${statement.replace('@question', '<br/><strong>Question:</strong>')}`);
+          }
+        }
+
         // matches the start of the solution
         const functionMatch = line.match(/e\d{1,3}\(\) \{/);
 
         // if line does not match title or start of solution, then it must be in description
-        if (!problemStartMatch && !functionMatch && inDescription) {
+        if (!problemStartMatch && !questionMatch && inDescription) {
           // skip extra line (*/) at then end of every problem description
           if (!line.match(/\*\//)) {
             const statement = line
-              .replace(/(^.+\*)/, '')
-              .replace('@question', '<strong>Question:</strong>');
+              .replace(/(^.+\*)/, '');
             problemDescriptionLines.push(statement);
           }
         }
@@ -110,22 +130,23 @@ function generateFileMenu(file) {
             const eulerURL = eulerURLTemplate
               .replace('{problem}', problemID);
 
-            const problemDescription = `${problemDescriptionLines.join('<br/>')}`;
-
             stream.write(`**${problemID}.** [${problemName}](${eulerURL}) | `);
-            stream.write(`${problemDescription} | `);
+            stream.write(`${problemDescriptionLines.join('<br/>')}${questionLines.join('<br/>')} | `);
             stream.write(`${results[problemID].answer} | `);
             stream.write(`${results[problemID].time} | `);
             stream.write(`[Solution](${githubURL})`);
+
             stream.write('<br/><br/>\n');
 
             // exiting solution
             inSolution = false;
             questionCapture = '';
             problemDescriptionLines = [];
+            questionLines = [];
           }
         }
         currentLine++;
+        prevLine = line;
       });
       lineStreamer.on('close', () => {
         resolve();
