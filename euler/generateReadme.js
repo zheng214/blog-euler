@@ -129,10 +129,12 @@ function generateFileMenu(file) {
             const eulerURL = eulerURLTemplate
               .replace('{problem}', problemID);
 
-            const breakProblemQuestion = problemDetails.length
-              ? problemDetails[problemDetails.length - 1] ? '<br/><br/>' : '<br/>' 
-              : '';
-            console.log({ problemID, breakProblemQuestion })
+            // add line break between problem and question
+            let breakProblemQuestion = '';
+            if (problemDetails.length) {
+              breakProblemQuestion = problemDetails[problemDetails.length - 1] ? '<br/><br/>' : '<br/>';
+            }
+
             stream.write(`**${problemID}.** [${problemName}](${eulerURL}) | `);
             stream.write(`${problemDetails.join('<br/>')}${breakProblemQuestion}${questionLines.join('<br/>')} | `);
             stream.write(`${results[problemID].answer} | `);
