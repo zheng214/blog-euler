@@ -74,23 +74,16 @@ function generateFileMenu(file) {
         }
 
         // matches the question statement
-        const questionMatch = line.match(/@question (.+)$/);
-        // console.log({ line, problemStartMatch, questionMatch, inDescription })
         // if line does not match title or question, then it must be in description
-        if (!problemStartMatch && !questionMatch && inDescription) {
+        if (!problemStartMatch && inDescription) {
           problemDescriptionLines.push(line);
-        }
-
-        if (questionMatch) {
-          questionCapture += ` ${questionMatch[1]}`;
-          // exiting description
-          inDescription = false;
         }
 
         // matches the start of the solution
         const functionMatch = line.match(/e\d{1,3}\(\) \{/);
         if (functionMatch) {
           // entering solution
+          inDescription = false;
           bracketBalance = 0;
           inSolution = true;
         }
@@ -111,10 +104,7 @@ function generateFileMenu(file) {
             const eulerURL = eulerURLTemplate
               .replace('{problem}', problemID);
 
-            let problemDescription = questionCapture;
-            if (problemDescriptionLines.length) {
-              problemDescription = `<details><summary>${questionCapture}</summary>${problemDescriptionLines.join('<br/>')}</details>`;
-            }
+            const problemDescription = `${problemDescriptionLines.join('<br/>')}`;
 
             stream.write(`**${problemID}.** [${problemName}](${eulerURL}) | `);
             stream.write(`${problemDescription} | `);
