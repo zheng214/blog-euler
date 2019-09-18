@@ -90,8 +90,11 @@ function generateFileMenu(file) {
           if (isPrevLineQuestion) {
             // 2nd @question
             questionLines.push(statement.replace('@question', ''));
+          } else if (prevLine.split('*')[1] && !prevLine.match(/Problem (\d{1,3})[^\w]*(\w.+)$/)) {
+            // prevLine is non-empty AND not the title, need to add a line break
+            questionLines.push(`${statement.replace('@question', '<br/><strong>Question:</strong>')}`);
           } else {
-            // non-empty prevLine (bad)
+            // empty or title, no need to add line break
             questionLines.push(`${statement.replace('@question', '<strong>Question:</strong>')}`);
           }
         }
@@ -130,7 +133,7 @@ function generateFileMenu(file) {
               .replace('{problem}', problemID);
 
             stream.write(`**${problemID}.** [${problemName}](${eulerURL}) | `);
-            stream.write(`${problemDescriptionLines.join('<br/>')}<br/>${questionLines.join('<br/>')} | `);
+            stream.write(`${problemDescriptionLines.join('<br/>')}${questionLines.join('<br/>')} | `);
             stream.write(`${results[problemID].answer} | `);
             stream.write(`${results[problemID].time} | `);
             stream.write(`[Solution](${githubURL})`);
