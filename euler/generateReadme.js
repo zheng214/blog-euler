@@ -6,6 +6,8 @@ const Promise = require('bluebird');
 
 const stream = fs.createWriteStream('README.md');
 
+const results = require('./results.json');
+
 stream.once('open', async (fd) => {
   stream.write('## <p align="center"> Project Euler Menu </p>');
   stream.write('\n\n');
@@ -20,8 +22,8 @@ stream.once('open', async (fd) => {
   stream.write('\n\n<br/><br/>\n\n');
   stream.write('## <p align="center"> Solutions </p>');
   stream.write('\n');
-  stream.write('**Problem** | **Description** | **Solution**');
-  stream.write('\n ------------|-----------------|------------- \n');
+  stream.write('**Problem** | **Description**| **Result** | **Time** | **Solution**');
+  stream.write('\n ------------|----------------|------------|----------|---------- \n');
   await generateMenu();
   stream.write('\n\n');
   stream.write('<a href="#">Go to top</a>');
@@ -73,7 +75,7 @@ function generateFileMenu(file) {
 
         // matches the question statement
         const questionMatch = line.match(/@question (.+)$/);
-
+        // console.log({ line, problemStartMatch, questionMatch, inDescription })
         // if line does not match title or question, then it must be in description
         if (!problemStartMatch && !questionMatch && inDescription) {
           problemDescriptionLines.push(line);
@@ -114,7 +116,10 @@ function generateFileMenu(file) {
               problemDescription = `<details><summary>${questionCapture}</summary>${problemDescriptionLines.join('<br/>')}</details>`;
             }
 
-            stream.write(`**${problemID}.** [${problemName}](${eulerURL}) | ${problemDescription} | `);
+            stream.write(`**${problemID}.** [${problemName}](${eulerURL}) | `);
+            stream.write(`${problemDescription} | `);
+            stream.write(`${results[problemID].answer} | `);
+            stream.write(`${results[problemID].time} | `);
             stream.write(`[Solution](${githubURL})`);
             stream.write('<br/><br/>\n');
 
