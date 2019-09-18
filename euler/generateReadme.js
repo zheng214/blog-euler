@@ -90,7 +90,7 @@ function generateFileMenu(file) {
           if (isPrevLineQuestion) {
             // 2nd @question
             questionLines.push(statement.replace('@question', ''));
-          } else if (!prevLine.split('*')[1] || prevLine.match(problemStartMatch)) {
+          } else if (!prevLine.split('*')[1] || prevLine.match(/Problem (\d{1,3})[^\w]*(\w.+)$/)) {
             // empty prevLine (good)
             questionLines.push(`${statement.replace('@question', '<br/><strong>Question:</strong>')}`);
           } else {
