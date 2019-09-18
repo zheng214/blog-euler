@@ -70,6 +70,13 @@ function generateFileMenu(file) {
       lineStreamer.on('line', (line) => {
         // matches the start of problem description
         const problemStartMatch = !inDescription && !inSolution && line.match(/Problem (\d{1,3})[^\w]*(\w.+)$/);
+
+        // matches question statement
+        const questionMatch = line.match(/@question/);
+
+        // matches the start of the solution
+        const functionMatch = line.match(/e\d{1,3}\(\) \{/);
+
         if (problemStartMatch) {
           [, problemID, problemName] = problemStartMatch;
           startLine = currentLine - 1;
@@ -77,9 +84,7 @@ function generateFileMenu(file) {
           inDescription = true;
         }
 
-        // matches question statement
-        const questionMatch = line.match(/@question/);
-        if (questionMatch) {
+        if (questionMatch && !functionMatch) {
           const isPrevLineQuestion = prevLine.match('@question');
           const statement = line.replace(/(^.+\*)/, '');
           if (isPrevLineQuestion) {
@@ -93,9 +98,6 @@ function generateFileMenu(file) {
             questionLines.push(`${statement.replace('@question', '<br/><strong>Question:</strong>')}`);
           }
         }
-
-        // matches the start of the solution
-        const functionMatch = line.match(/e\d{1,3}\(\) \{/);
 
         // if line does not match title or start of solution, then it must be in description
         if (!problemStartMatch && !questionMatch && inDescription) {
