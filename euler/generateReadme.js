@@ -73,14 +73,15 @@ function generateFileMenu(file) {
           inDescription = true;
         }
 
-        // matches the question statement
-        // if line does not match title or question, then it must be in description
-        if (!problemStartMatch && inDescription) {
-          problemDescriptionLines.push(line);
-        }
-
         // matches the start of the solution
         const functionMatch = line.match(/e\d{1,3}\(\) \{/);
+
+        // if line does not match title or start of solution, then it must be in description
+        if (!problemStartMatch && !functionMatch && inDescription) {
+          const statement = line.replace(/(^.+\*)/, '');
+          problemDescriptionLines.push(statement);
+        }
+
         if (functionMatch) {
           // entering solution
           inDescription = false;
