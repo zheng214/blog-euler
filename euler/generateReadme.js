@@ -133,7 +133,13 @@ function generateFileMenu(file) {
               .replace('{problem}', problemID);
 
             if (problemDescriptionLines[problemDescriptionLines.length - 1]) {
+              if (problemID === '5') {
+                console.log('b4', { questionLines })
+              }
               questionLines.shift('<br/>');
+              if (problemID === '5') {
+                console.log('after', { questionLines })
+              }
             }
             if (problemID === '5') {
               console.log({ problemDescriptionLines, questionLines })
