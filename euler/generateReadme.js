@@ -82,7 +82,7 @@ function generateFileMenu(file) {
           if (!line.match(/\*\//)) {
             const statement = line
               .replace(/(^.+\*)/, '')
-              .replace('@problem', '<strong>Problem:</strong>');
+              .replace('@question', '<strong>Question:</strong>');
             problemDescriptionLines.push(statement);
           }
         }
