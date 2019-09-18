@@ -78,8 +78,13 @@ function generateFileMenu(file) {
 
         // if line does not match title or start of solution, then it must be in description
         if (!problemStartMatch && !functionMatch && inDescription) {
-          const statement = line.replace(/(^.+\*)/, '');
-          problemDescriptionLines.push(statement);
+          // skip extra line (*/) at then end of every problem description
+          if (!line.match(/\*\//)) {
+            const statement = line
+              .replace(/(^.+\*)/, '')
+              .replace('@problem', '<strong>Problem:</strong>');
+            problemDescriptionLines.push(statement);
+          }
         }
 
         if (functionMatch) {
