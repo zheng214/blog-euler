@@ -90,9 +90,6 @@ function generateFileMenu(file) {
           if (isPrevLineQuestion) {
             // 2nd @question
             questionLines.push(statement.replace('@question', ''));
-          } else if (prevLine.split('*')[1] && !prevLine.match(/Problem (\d{1,3})[^\w]*(\w.+)$/)) {
-            // prevLine is non-empty AND not the title, need to add a line break
-            questionLines.push(`${statement.replace('@question', '<br/><strong>Question:</strong>')}`);
           } else {
             // empty or title, no need to add line break
             questionLines.push(`${statement.replace('@question', '<strong>Question:</strong>')}`);
@@ -132,6 +129,12 @@ function generateFileMenu(file) {
             const eulerURL = eulerURLTemplate
               .replace('{problem}', problemID);
 
+            if (problemDescriptionLines[problemDescriptionLines.length - 1]) {
+              questionLines.shift('<br/>');
+            }
+            if (problemID === '14') {
+              console.log({ problemDescriptionLines, questionLines })
+            }
             stream.write(`**${problemID}.** [${problemName}](${eulerURL}) | `);
             stream.write(`${problemDescriptionLines.join('<br/>')}${questionLines.join('<br/>')} | `);
             stream.write(`${results[problemID].answer} | `);
