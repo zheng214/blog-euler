@@ -129,10 +129,10 @@ function generateFileMenu(file) {
             const eulerURL = eulerURLTemplate
               .replace('{problem}', problemID);
 
-            if (problemDescriptionLines[problemDescriptionLines.length - 1]) {
+            if (problemDescriptionLines.length) {
               questionLines.unshift('<br/>');
             }
-            if (problemID === '5') {
+            if (problemID === '18' || problemID === '17') {
               console.log({ problemDescriptionLines, questionLines })
             }
             stream.write(`**${problemID}.** [${problemName}](${eulerURL}) | `);
