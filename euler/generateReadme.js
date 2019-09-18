@@ -92,10 +92,10 @@ function generateFileMenu(file) {
             questionLines.push(statement.replace('@question', ''));
           } else if (!prevLine.split('*')[1] || prevLine.match(problemStartMatch)) {
             // empty prevLine (good)
-            questionLines.push(`${statement.replace('@question', '<strong>Question:</strong>')}`);
+            questionLines.push(`${statement.replace('@question', '<br/><strong>Question:</strong>')}`);
           } else {
             // non-empty prevLine (bad)
-            questionLines.push(`${statement.replace('@question', '<br/></br>Question:')}`);
+            questionLines.push(`${statement.replace('@question', '</br>Question:')}`);
           }
         }
 
