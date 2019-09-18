@@ -55,7 +55,7 @@ function generateFileMenu(file) {
 
       // store description of a problem
       let inDescription = false;
-      const problemDescriptionLines = [];
+      let problemDescriptionLines = [];
 
       // track the difference of "{" and "}" inside a solution. bracketBalance === 0 marks the end of the solution
       let bracketBalance;
@@ -121,6 +121,7 @@ function generateFileMenu(file) {
             // exiting solution
             inSolution = false;
             questionCapture = '';
+            problemDescriptionLines = [];
           }
         }
         currentLine++;
