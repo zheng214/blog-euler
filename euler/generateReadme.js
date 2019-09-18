@@ -68,7 +68,7 @@ function generateFileMenu(file) {
       let inSolution = false;
 
       lineStreamer.on('line', (line) => {
-        line = line.replace(/|/, '\\|');
+        line = line.replace(/\|/g, '\\|');
         // matches the start of problem description
         const problemStartMatch = !inDescription && !inSolution && line.match(/Problem (\d{1,3})[^\w]*(\w.+)$/);
 
