@@ -90,12 +90,12 @@ function generateFileMenu(file) {
           if (isPrevLineQuestion) {
             // 2nd @question
             questionLines.push(statement.replace('@question', ''));
-          } else if (!prevLine.split('*')[1]) {
+          } else if (!prevLine.split('*')[1] || prevLine.match(problemStartMatch)) {
             // empty prevLine (good)
             questionLines.push(`${statement.replace('@question', '<strong>Question:</strong>')}`);
           } else {
             // non-empty prevLine (bad)
-            questionLines.push(`${statement.replace('@question', '<br/>Question:')}`);
+            questionLines.push(`${statement.replace('@question', '<br/></br>Question:')}`);
           }
         }
 
