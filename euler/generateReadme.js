@@ -111,7 +111,7 @@ function generateFileMenu(file) {
 
             let problemDescription = questionCapture;
             if (problemDescriptionLines.length) {
-              problemDescription = `<details><summary>${questionCapture}</summary>${problemDescriptionLines.split('<br/>')}</details>`;
+              problemDescription = `<details><summary>${questionCapture}</summary>${problemDescriptionLines.join('<br/>')}</details>`;
             }
 
             stream.write(`**${problemID}.** [${problemName}](${eulerURL}) | ${problemDescription} | `);
