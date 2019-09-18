@@ -47,41 +47,58 @@ function generateFileMenu(file) {
 
       let currentLine = 1;
 
-      // memorized line number and content of a problem
+      // store line number and title of a problem
       let startLine;
       let problemID;
       let problemName;
       let questionCapture = ''; // can be multiline
 
-      // tracks the difference of "{" and "}" inside a solution. bracketBalance === 0 marks the end of the solution
+      // store description of a problem
+      let inDescription = false;
+      const problemDescriptionLines = [];
+
+      // track the difference of "{" and "}" inside a solution. bracketBalance === 0 marks the end of the solution
       let bracketBalance;
-      let isInSolution = false;
+      let inSolution = false;
+
       lineStreamer.on('line', (line) => {
         // matches the start of problem description
-        const problemStartMatch = line.match(/Problem (\d{1,3})[^\w]*(\w.+)$/);
+        const problemStartMatch = !inDescription && !inSolution && line.match(/Problem (\d{1,3})[^\w]*(\w.+)$/);
         if (problemStartMatch) {
           [, problemID, problemName] = problemStartMatch;
           startLine = currentLine - 1;
+          // entering description
+          inDescription = true;
         }
 
         // matches the question statement
         const questionMatch = line.match(/@question (.+)$/);
+
+        // if line does not match title or question, then it must be in description
+        if (!problemStartMatch && !questionMatch && inDescription) {
+          problemDescriptionLines.push(line);
+        }
+
         if (questionMatch) {
           questionCapture += ` ${questionMatch[1]}`;
+          // exiting description
+          inDescription = false;
         }
 
         // matches the start of the solution
         const functionMatch = line.match(/e\d{1,3}\(\) \{/);
         if (functionMatch) {
+          // entering solution
           bracketBalance = 0;
-          isInSolution = true;
+          inSolution = true;
         }
 
-        if (isInSolution) {
+        if (inSolution) {
           const leftBrackets = (line.split('//')[0].match(/\{/g) || []).length;
           const rightBrackets = (line.split('//')[0].match(/\}/g) || []).length;
           bracketBalance = bracketBalance + leftBrackets - rightBrackets;
-          if (bracketBalance === 0) { // end of problem, write all content of problem
+          if (bracketBalance === 0) {
+            // end of problem, write all stored content of problem
             const githubURLTemplate = 'https://github.com/zheng214/euler/blob/master/euler/{folder}/index.js#L{start}-L{end}';
             const githubURL = githubURLTemplate
               .replace('{folder}', file)
@@ -92,11 +109,17 @@ function generateFileMenu(file) {
             const eulerURL = eulerURLTemplate
               .replace('{problem}', problemID);
 
-            stream.write(`**${problemID}.** [${problemName}](${eulerURL}) | ${questionCapture} | `);
+            let problemDescription = questionCapture;
+            if (problemDescriptionLines.length) {
+              problemDescription = `<details><summary>${questionCapture}</summary>${problemDescriptionLines.split('<br/>')}</details>`;
+            }
+
+            stream.write(`**${problemID}.** [${problemName}](${eulerURL}) | ${problemDescription} | `);
             stream.write(`[Solution](${githubURL})`);
             stream.write('<br/><br/>\n');
 
-            isInSolution = false;
+            // exiting solution
+            inSolution = false;
             questionCapture = '';
           }
         }
