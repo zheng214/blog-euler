@@ -92,7 +92,7 @@ function generateFileMenu(file) {
             questionLines.push(statement.replace('@question', ''));
           } else if (prevLine.split('*')[1] && !prevLine.match(/Problem (\d{1,3})[^\w]*(\w.+)$/)) {
             // prevLine is non-empty AND not the title, need to add a line break
-            questionLines.push(`${statement.replace('@question', '<br/><strong>Question:</strong>')}`);
+            questionLines.push(`${statement.replace('@question', '<br/><br/><strong>Question:</strong>')}`);
           } else {
             // empty or title, no need to add line break
             questionLines.push(`${statement.replace('@question', '<strong>Question:</strong>')}`);
