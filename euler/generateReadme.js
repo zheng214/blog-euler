@@ -95,7 +95,7 @@ function generateFileMenu(file) {
             questionLines.push(`${statement.replace('@question', '<strong>Question:</strong>')}`);
           } else {
             // non-empty prevLine (bad)
-            questionLines.push(`${statement.replace('@question', '<br/><strong>Question:</strong>')}`);
+            questionLines.push(`${statement.replace('@question', '<br/>Question:')}`);
           }
         }
 
