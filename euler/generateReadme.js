@@ -57,7 +57,7 @@ function generateFileMenu(file) {
 
       // store description of a problem
       let inDescription = false;
-      let problemDescriptionLines = [];
+      let problemDetails = [];
 
       // store question statement
       let questionCapture = ''; // can be multiline
@@ -102,7 +102,7 @@ function generateFileMenu(file) {
           if (!line.match(/\*\//)) {
             const statement = line
               .replace(/(^.+\*)/, '');
-            problemDescriptionLines.push(statement);
+            problemDetails.push(statement);
           }
         }
 
@@ -129,10 +129,10 @@ function generateFileMenu(file) {
             const eulerURL = eulerURLTemplate
               .replace('{problem}', problemID);
 
-            const breakProblemQuestion = problemDescriptionLines.length ? '<br/>' : '';
+            const breakProblemQuestion = problemDetails.length && problemDetails[problemDetails.length - 1] ? '<br/>' : '';
 
             stream.write(`**${problemID}.** [${problemName}](${eulerURL}) | `);
-            stream.write(`${problemDescriptionLines.join('<br/>')}${breakProblemQuestion}${questionLines.join('<br/>')} | `);
+            stream.write(`${problemDetails.join('<br/>')}${breakProblemQuestion}${questionLines.join('<br/>')} | `);
             stream.write(`${results[problemID].answer} | `);
             stream.write(`${results[problemID].time} | `);
             stream.write(`[Solution](${githubURL})`);
@@ -142,7 +142,7 @@ function generateFileMenu(file) {
             // exiting solution
             inSolution = false;
             questionCapture = '';
-            problemDescriptionLines = [];
+            problemDetails = [];
             questionLines = [];
           }
         }
