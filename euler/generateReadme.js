@@ -19,7 +19,7 @@ stream.once('open', async (fd) => {
   stream.write('\n\n');
   stream.write('Click on any of the external link below to go to problem statement on the Project Euler website');
   stream.write('\n\n');
-  stream.write('The answers and time of execution can be found in the table below` ');
+  stream.write('The answers and time of execution can be found in the table below ');
   stream.write('(answers are partially blurred with respect to Project Euler\'s proper etiquette)');
   stream.write('\n\n<br/><br/>\n\n');
   stream.write('## <p align="center"> Problems & Solutions </p>');

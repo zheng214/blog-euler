@@ -8,7 +8,7 @@ Click on the problem name to go to the code solution
 
 Click on any of the external link below to go to problem statement on the Project Euler website
 
-The answers and time of execution can be found in the table below` (answers are partially blurred with respect to Project Euler's proper etiquette)
+The answers and time of execution can be found in the table below (answers are partially blurred with respect to Project Euler's proper etiquette)
 
 <br/><br/>
 
