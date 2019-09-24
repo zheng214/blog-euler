@@ -2,11 +2,13 @@
 
 Each numbered folder contains 10 solutions
 
-Click on any of the external link below to go to problem statement on the Project Euler website
+All solutions are run from the command line (eg. `node main 51`)
 
 Click on the problem name to go to the code solution
 
-The answers and time of execution can be found in `results.json` (answers are partially blurred with respect to Project Euler's proper etiquette)
+Click on any of the external link below to go to problem statement on the Project Euler website
+
+The answers and time of execution can be found in the table below` (answers are partially blurred with respect to Project Euler's proper etiquette)
 
 <br/><br/>
 

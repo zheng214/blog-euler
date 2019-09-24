@@ -13,11 +13,13 @@ stream.once('open', async (fd) => {
   stream.write('\n\n');
   stream.write('Each numbered folder contains 10 solutions');
   stream.write('\n\n');
-  stream.write('Click on any of the external link below to go to problem statement on the Project Euler website');
+  stream.write('All solutions are run from the command line (eg. `node main 51`)');
   stream.write('\n\n');
   stream.write('Click on the problem name to go to the code solution');
   stream.write('\n\n');
-  stream.write('The answers and time of execution can be found in `results.json` ');
+  stream.write('Click on any of the external link below to go to problem statement on the Project Euler website');
+  stream.write('\n\n');
+  stream.write('The answers and time of execution can be found in the table below` ');
   stream.write('(answers are partially blurred with respect to Project Euler\'s proper etiquette)');
   stream.write('\n\n<br/><br/>\n\n');
   stream.write('## <p align="center"> Problems & Solutions </p>');
@@ -68,7 +70,7 @@ function generateFileMenu(file) {
       let inSolution = false;
 
       lineStreamer.on('line', (line) => {
-        // escape pipe characters
+        // escape pipe characters (md table formatting)
         line = line.replace(/\|/g, '\\|');
         // matches the start of problem description
         const problemStartMatch = !inDescription && !inSolution && line.match(/Problem (\d{1,3})[^\w]*(\w.+)$/);
