@@ -1,6 +1,6 @@
 ## <p align="center"> Project Euler Menu </p>
 
-This repository contains my solutions to the problems of Project Euler ([Official website](https://projecteuler.net/about) [Wikipedia](https://en.wikipedia.org/wiki/Project_Euler))
+This repository contains my solutions to the problems of Project Euler ([Official website](https://projecteuler.net/about) / [Wikipedia](https://en.wikipedia.org/wiki/Project_Euler))
 
 Each numbered folder contains 10 solutions
 

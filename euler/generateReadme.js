@@ -11,8 +11,8 @@ const results = require('./results.json');
 stream.once('open', async (fd) => {
   stream.write('## <p align="center"> Project Euler Menu </p>');
   stream.write('\n\n');
-  stream.write('This repository contains my solutions to the problems of Project Euler ([Official website](https://projecteuler.net/about) ');
-  stream.write('[Wikipedia](https://en.wikipedia.org/wiki/Project_Euler))');
+  stream.write('This repository contains my solutions to the problems of Project Euler ');
+  stream.write('([Official website](https://projecteuler.net/about) / [Wikipedia](https://en.wikipedia.org/wiki/Project_Euler))');
   stream.write('\n\n');
   stream.write('Each numbered folder contains 10 solutions');
   stream.write('\n\n');
