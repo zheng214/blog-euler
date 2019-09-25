@@ -34,7 +34,18 @@ function toArray(param) {
   return param;
 }
 
+// flips a number, eg. 196 => 691
+function flip(number) {
+  return +number.toString().split('').reverse().join('');
+}
+
+function isPalindrome(number) {
+  return number.toString().split('').reverse().join('') === number.toString();
+}
+
 module.exports = {
   containsDuplicate,
   toArray,
+  flip,
+  isPalindrome,
 };
