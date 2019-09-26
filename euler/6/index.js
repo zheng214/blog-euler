@@ -391,4 +391,79 @@ module.exports = {
 
     return Object.keys(lychrelNumbers).filter(x => x <= 10000).length;
   },
+
+  /**
+   * Problem 56 Powerful digit sum
+   *
+   * A googol (10^100) is a massive number: one followed by one-hundred zeros;
+   * 100^100 is almost unimaginably large: one followed by two-hundred zeros.
+   * Despite their size, the sum of the digits in each number is only 1.
+   *
+   * @question Considering natural numbers of the form, ab, where a, b < 100, what is the maximum digital sum?
+   */
+  e56() {
+    const expTable = [...Array(99)].map((x, i) => [(i + 1).toString()]); // initialize
+    let largestDigitSum = 0;
+
+    expTable.forEach((column, colIndex) => {
+      const base = colIndex + 1;
+      // each column i contains the result of [i ^ 1, i ^ 2, ..., i ^ 99]
+      // we will skip numbers < 10 and multiples of 10
+      if (base < 10 || base % 10 === 0) {
+        return null;
+      }
+      for (let exp = 1; exp <= 99; exp++) {
+        const result = longMultiply(column[exp - 1], base.toString());
+        const digitSum = utils.sumArray(result, x => +x);
+        if (digitSum > largestDigitSum) {
+          largestDigitSum = digitSum;
+        }
+        column.push(result.reverse().join(''));
+      }
+    });
+
+    return largestDigitSum;
+
+    // takes 2 strings of numbers as params, returns an array containing the digits of the product of the 2 numbers
+    // multiplies the 2 numbers using long multiplication
+    function longMultiply(a, b) {
+      const mTable = {};
+      const [n1, n2] = [a.split('').reverse(), b.split('').reverse()];
+      const partialResultsTable = n2.reduce(
+        (acc, curr, idx) => {
+          if (curr) {
+            const power = idx;
+            const results = mTable[curr] || n1.map(x => x * curr);
+            mTable[curr] = results;
+            results.forEach((partialProduct, i) => {
+              if (!acc[power + i + 1]) acc[power + i + 1] = [];
+              if (partialProduct < 10) {
+                acc[power + i].push(partialProduct);
+              } else {
+                acc[power + i].push(partialProduct.toString().split('')[1]);
+                acc[power + i + 1].push(partialProduct.toString().split('')[0]);
+              }
+            });
+          }
+          return acc;
+        },
+        [[]],
+      );
+      // add the digits with respect to their positions
+      return consolidatePartialResults(partialResultsTable);
+    }
+
+    function consolidatePartialResults(table) {
+      const flatResults = [];
+      let carry = 0;
+      for (let columnIndex = 0; columnIndex < table.length; columnIndex++) {
+        const col = table[columnIndex];
+        const sum = (col.reduce((a, c) => +c + a, 0) + +carry).toString();
+        const retainedDigit = sum.slice(-1);
+        carry = sum.slice(0, sum.length - 1);
+        flatResults.push(retainedDigit);
+      }
+      return flatResults;
+    }
+  },
 };
