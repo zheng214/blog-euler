@@ -413,7 +413,8 @@ module.exports = {
         return null;
       }
       for (let exp = 1; exp <= 99; exp++) {
-        const result = longMultiply(column[exp - 1], base.toString());
+        const result = BigInt(column[exp - 1]) * BigInt(base);
+        // const result = longMultiply(column[exp - 1], base.toString());
         const digitSum = utils.sumArray(result, x => +x);
         if (digitSum > largestDigitSum) {
           largestDigitSum = digitSum;
@@ -426,6 +427,7 @@ module.exports = {
 
     // takes 2 strings of numbers as params, returns an array containing the digits of the product of the 2 numbers
     // multiplies the 2 numbers using long multiplication
+    // is obsolete when BigInt gets pass stage 3
     function longMultiply(a, b) {
       const mTable = {};
       const [n1, n2] = [a.split('').reverse(), b.split('').reverse()];
@@ -465,5 +467,40 @@ module.exports = {
       }
       return flatResults;
     }
+  },
+
+  /**
+   * Problem 57 Square root convergents
+   * It is possible to show that the square root of two can be expressed as an infinite continued fraction.
+   * sqrt(2) = 1 + 1 / (2 + 1 / (2 + 1 / (2 + ...)))
+   *
+   * By expanding for the first three iterations. we get:
+   *
+   * 1 + 1 / 2 = 3/2 = 1.5
+   * 1 + 1 / (2 + 1 / 2) = 7/5 = 1.4
+   * 1 + 1 / (2 + 1 / (2 + 1 / 2)) = 17/12 = 1.41666
+   *
+   * The next three expansions are 41/29, 99/70, and 239/169, but the 8th expansion, 1393/985, is the first exmaple where the number of digits
+   * in the numerator exceeds the number of digits in the denominator.
+   *
+   * @question In the first one-thousand expansions, how many fractions contain a numerator with more digits than the denominator?
+   */
+  e57() {
+    let currentExpansion = [3n, 2n];
+    let numeratorDigitExcessCount = 0;
+
+    for (let i = 1; i < 1000; i++) {
+      currentExpansion = computeNextCF(currentExpansion);
+      if (currentExpansion[0].toString().length > currentExpansion[1].toString().length) {
+        numeratorDigitExcessCount++;
+      }
+    }
+
+    // compute the next continued fraction expansion based on the current expansion
+    function computeNextCF([n, d]) {
+      return [2n * d + n, d + n];
+    }
+
+    return numeratorDigitExcessCount;
   },
 };
