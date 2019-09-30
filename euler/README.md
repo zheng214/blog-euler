@@ -4,8 +4,6 @@ This repository contains my solutions to the problems of Project Euler (<a href=
 
 Each numbered folder contains 10 solutions
 
-Each numbered folder contains 10 solutions
-
 All solutions are run from the command line (eg. `node main 51`)
 
 Click on the problem name to go to the code solution

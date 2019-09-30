@@ -16,8 +16,6 @@ stream.once('open', async (fd) => {
   stream.write('\n\n');
   stream.write('Each numbered folder contains 10 solutions');
   stream.write('\n\n');
-  stream.write('Each numbered folder contains 10 solutions');
-  stream.write('\n\n');
   stream.write('All solutions are run from the command line (eg. `node main 51`)');
   stream.write('\n\n');
   stream.write('Click on the problem name to go to the code solution');
