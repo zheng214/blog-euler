@@ -16,6 +16,16 @@ function isPrime(n) {
     return false;
   }
 
+  const lastDigit = n % 10;
+  if (lastDigit === 5) {
+    return false;
+  }
+
+  const sumOfDigit = utils.sumArray(n.toString().split(''), x => +x);
+  if (sumOfDigit % 3 === 0) {
+    return false;
+  }
+
   let divisor = Math.floor(Math.sqrt(n));
   if (!(divisor & 1)) {
     divisor--;
