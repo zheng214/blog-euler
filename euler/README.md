@@ -4,13 +4,13 @@ This repository contains my solutions to the problems of Project Euler (<a href=
 
 Each numbered folder contains 10 solutions
 
-All solutions can be run from the command line (eg. `node main 51` will execute the solution program for Problem 51)
+All solutions can be run from the **command line** (eg. `node main 51` will execute the solution program for Problem 51)
 
 Click on the **problem title** to go to the **code solution**
 
 Click the **Official Link** to go to the **official problem statement** on the Project Euler website
 
-The answers and time of execution can be found in the table below (answers are partially blurred with respect to Project Euler's proper etiquette)
+The **answers** and **time of execution** can be found in the table below (answers are partially blurred with respect to Project Euler's proper etiquette)
 
 <br/><br/>
 

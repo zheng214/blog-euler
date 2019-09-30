@@ -17,13 +17,13 @@ stream.once('open', async (fd) => {
   stream.write('\n\n');
   stream.write('Each numbered folder contains 10 solutions');
   stream.write('\n\n');
-  stream.write('All solutions can be run from the command line (eg. `node main 51` will execute the solution program for Problem 51)');
+  stream.write('All solutions can be run from the **command line** (eg. `node main 51` will execute the solution program for Problem 51)');
   stream.write('\n\n');
   stream.write('Click on the **problem title** to go to the **code solution**');
   stream.write('\n\n');
   stream.write('Click the **Official Link** to go to the **official problem statement** on the Project Euler website');
   stream.write('\n\n');
-  stream.write('The answers and time of execution can be found in the table below ');
+  stream.write('The **answers** and **time of execution** can be found in the table below ');
   stream.write('(answers are partially blurred with respect to Project Euler\'s proper etiquette)');
   stream.write('\n\n<br/><br/>\n\n');
   stream.write('## <p align="center"> Problems & Solutions </p>');
