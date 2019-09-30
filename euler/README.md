@@ -1,8 +1,8 @@
 ## <p align="center"> Project Euler Menu </p>
 
-This repository contains my solutions to the problems of Project Euler (<a href="https://projecteuler.net/about" title="https://projecteuler.net/about">Official website</a> / <a href="https://en.wikipedia.org/wiki/Project_Euler" title="https://en.wikipedia.org/wiki/Project_Euler">Wikipedia</a>)
+**This repository contains my solutions to the problems of Project Euler** (<a href="https://projecteuler.net/about" title="https://projecteuler.net/about">Official website</a> / <a href="https://en.wikipedia.org/wiki/Project_Euler" title="https://en.wikipedia.org/wiki/Project_Euler">Wikipedia</a>)
 
-Each numbered folder contains 10 solutions
+Each numbered folder contains **10** solutions. The solutions are ordered (ie. `1/` contains 1-10, `2/` contains 11-20, etc.)
 
 All solutions can be run from the **command line** (eg. `node main 51` will execute the solution program for Problem 51)
 
