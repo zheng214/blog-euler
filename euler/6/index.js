@@ -600,6 +600,7 @@ module.exports = {
     }
 
     function isAsciiValid(ascii) {
+      // include all characters that can be typed on a standard english keyboard, except fractions, tab, and the following: \{}|`~^_
       return (ascii >= 32 && ascii <= 90) || (ascii >= 97 && ascii <= 122) || ascii === 91 || ascii === 93;
     }
 
@@ -628,5 +629,113 @@ module.exports = {
     diameter is 1. And by similar reasoning I have likewise been able to determine the sums of the subsequent series in which the exponents are even numbers.
     */
     return utils.sumArray(plaintext);
+  },
+
+  /**
+   * Problem 60 Prime pair sets
+   *
+   * The primes 3, 7, 109, and 673, are quite remarkable. By taking any two primes and concatenating them in any order the result will always be prime.
+   * For example, taking 7 and 109, both 7109 and 1097 are prime. The sum of these four primes, 792, represents the lowest sum for a set of four primes
+   * with this property.
+   *
+   * @question Find the lowest sum for a set of five primes for which any two primes concatenate to produce another prime.
+   */
+  e60() {
+    // we start by generating 1 million primes, hopefully we can find our answer within those primes
+    const PRIMES_TABLE = utils.generatePrimeTable(1000000);
+    delete PRIMES_TABLE['2'];
+    delete PRIMES_TABLE['5'];
+    const PRIMES_ARR = Object.keys(PRIMES_TABLE);
+    const largestGeneratedPrime = PRIMES_ARR[PRIMES_ARR.length - 1];
+
+    const pairCounts = {};
+
+    // we then classify those primes into families
+    // for all families, all the members must form a prime when concatenated with any other prime of the same family
+    // we will run the algorithm a family of size of 5 is found, then keep running the algorithm until the current prime is larger than the sum of that family
+
+    const matchingPairsTable = {};
+    const matchingTriplesTable = {};
+    const matchingQuadsTable = {};
+    const matchingQuintsTable = {};
+    const log = (a1, a2, ...args) => ((a1 === a2) ? console.log(...args) : () => null);
+    for (let i = 0; i < PRIMES_ARR.length; i++) {
+      const prime = PRIMES_ARR[i];
+      const newMatchingPairs = {};
+      for (let j = 0; j < i; j++) {
+        const smallerPrime = PRIMES_ARR[j];
+        if (doesMatch(smallerPrime, prime)) {
+          newMatchingPairs[`${smallerPrime}|${prime}`] = true;
+          pairCounts[smallerPrime] = pairCounts[smallerPrime] ? ++pairCounts[smallerPrime] : 1;
+        }
+      }
+
+      const newMatchingTriples = {};
+      const matchingPairs = Object.keys(matchingPairsTable);
+      for (let ii = 0; ii < matchingPairs.length; ii++) {
+        const pair = matchingPairs[ii];
+        const [left, right] = pair.split('|');
+        if (!newMatchingPairs[`${left}|${prime}`]) {
+          log(prime, 5197, 'incrementing', left, pairCounts[left])
+          ii += (pairCounts[left] - 1);
+          continue;
+        }
+        if (newMatchingPairs[`${right}|${prime}`]) {
+          newMatchingTriples[`${pair}|${prime}`] = true;
+        }
+      }
+
+      if (prime == 5197) {
+        console.log({pairCounts, newMatchingTriples})
+      }
+      // matchingPairs.forEach((pair, idx) => {
+      //   const [left, right] = pair.split('|');
+      //   if (!newMatchingPairs[`${left}|${prime}`]) {
+      //     idx += (pairCounts[left] - 1);
+      //     return null;
+      //   }
+      //   if (newMatchingPairs[`${right}|${prime}`]) {
+      //     newMatchingTriples[`${pair}|${prime}`] = true;
+      //   }
+      // });
+
+      const newMatchingQuads = {};
+      const matchingTriples = Object.keys(matchingTriplesTable);
+      matchingTriples.forEach((triple) => {
+        if (triple.split('|').every(part => newMatchingPairs[`${part}|${prime}`])) {
+          newMatchingQuads[`${triple}|${prime}`] = true;
+        }
+      });
+
+
+      const newMatchingQuints = {};
+      const matchingQuads = Object.keys(matchingQuadsTable);
+      matchingQuads.forEach((quad) => {
+        if (quad.split('|').every(part => newMatchingPairs[`${part}|${prime}`])) {
+          newMatchingQuints[`${quad}|${prime}`] = true;
+        }
+      });
+      Object.assign(matchingPairsTable, newMatchingPairs);
+      Object.assign(matchingTriplesTable, newMatchingTriples);
+      Object.assign(matchingQuadsTable, newMatchingQuads);
+      Object.assign(matchingQuintsTable, newMatchingQuints);
+      if (Object.keys(matchingQuintsTable).length && prime > 2500) {
+        console.log('HURAAAAAAAAAAAAAAAA')
+        console.log(matchingQuintsTable)
+        break;
+      }
+    }
+    // returns true if a member can be accepted into a family
+    function doesMatch(oldPrime, newPrime) {
+      const concat1 = concat(+oldPrime, +newPrime);
+      const concat2 = concat(+newPrime, +oldPrime);
+      return (concat1 > largestGeneratedPrime || concat2 > largestGeneratedPrime
+        ? utils.isPrime(concat1) && utils.isPrime(concat2)
+        : PRIMES_TABLE[concat1] && PRIMES_TABLE[concat2]);
+    }
+
+    function concat(n1, n2) {
+      return n1 * (10 ** n2.toString().length) + n2;
+    }
   },
 };

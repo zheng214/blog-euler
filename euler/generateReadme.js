@@ -15,7 +15,8 @@ stream.once('open', async (fd) => {
   stream.write('(<a href="https://projecteuler.net/about" title="https://projecteuler.net/about">Official website</a> / ');
   stream.write('<a href="https://en.wikipedia.org/wiki/Project_Euler" title="https://en.wikipedia.org/wiki/Project_Euler">Wikipedia</a>)');
   stream.write('\n\n');
-  stream.write('Each numbered folder contains **10** solutions. The solutions are ordered (ie. `1/` contains 1-10, `2/` contains 11-20, etc.)');
+  stream.write('Each numbered folder contains **10** solutions.');
+  stream.write('The solutions are ordered (ie. `1/index.js` solves problems 1-10, `2/index.js` solves problems 11-20, etc.)');
   stream.write('\n\n');
   stream.write('All solutions can be run from the **command line** (eg. `node main 51` will execute the solution program for Problem 51)');
   stream.write('\n\n');
