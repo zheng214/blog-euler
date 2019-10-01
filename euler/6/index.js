@@ -672,11 +672,18 @@ module.exports = {
 
       const newMatchingTriples = {};
       const matchingPairs = Object.keys(matchingPairsTable);
+      if (prime == 5197) {
+        console.log(matchingPairs.length);
+      }
+      let skipped = false;
       for (let ii = 0; ii < matchingPairs.length; ii++) {
         const pair = matchingPairs[ii];
         const [left, right] = pair.split('|');
+        if (prime == 5197) {
+          console.log({ skipped, ii, pair, previousPair: pair[ii - 1] });
+        }
         if (!newMatchingPairs[`${left}|${prime}`]) {
-          log(prime, 5197, 'incrementing', left, pairCounts[left])
+          skipped = true;
           ii += (pairCounts[left] - 1);
           continue;
         }
@@ -685,9 +692,9 @@ module.exports = {
         }
       }
 
-      if (prime == 5197) {
-        console.log({pairCounts, newMatchingTriples})
-      }
+      // if (prime == 5197) {
+      //   console.log({pairCounts, newMatchingTriples})
+      // }
       // matchingPairs.forEach((pair, idx) => {
       //   const [left, right] = pair.split('|');
       //   if (!newMatchingPairs[`${left}|${prime}`]) {
