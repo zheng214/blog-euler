@@ -182,7 +182,7 @@ module.exports = {
   /**
    * Problem 64 Odd period square roots
    *
-   * [tldr; Generate the leading digits of the continued fraction form of the square roots](https://projecteuler.net/problem=64)
+   * [tldr; Generate the leading digits of the continued fraction form of the square roots and detect repeating digits](https://projecteuler.net/problem=64)
    * @question How many continued fractions for N≤10000 have an odd period?
    */
   e64() {
