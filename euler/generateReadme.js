@@ -25,7 +25,7 @@ stream.once('open', async (fd) => {
   stream.write('Click the **Official Link** to go to the **official problem statement** on the Project Euler website');
   stream.write('\n\n');
   stream.write('The **answers** and **time of execution** can be found in the table below ');
-  stream.write('(answers are partially blurred with respect to Project Euler\'s proper etiquette)');
+  stream.write('(answers are partially blurred with respect to Project Euler\'s etiquette)');
   stream.write('\n\n<br/><br/>\n\n');
   stream.write('## <p align="center"> Problems & Solutions </p>');
   stream.write('\n');

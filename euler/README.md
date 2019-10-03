@@ -10,7 +10,7 @@ Click on the **problem title** to go to the **code solution**
 
 Click the **Official Link** to go to the **official problem statement** on the Project Euler website
 
-The **answers** and **time of execution** can be found in the table below (answers are partially blurred with respect to Project Euler's proper etiquette)
+The **answers** and **time of execution** can be found in the table below (answers are partially blurred with respect to Project Euler's etiquette)
 
 <br/><br/>
 
