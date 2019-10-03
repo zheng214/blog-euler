@@ -240,4 +240,38 @@ module.exports = {
     return answer;
   },
 
+  /**
+   * Problem 65 Convergents of e
+   * [tldr; Find ith element from a sequence of partial continued fraction](https://projecteuler.net/problem=65)
+   *
+   * @question Find the sum of digits in the numerator of the 100th convergent of the continued fraction e
+   */
+  e65() {
+    function getNthLeadingInteger(n) {
+      if (n < 3) {
+        return n;
+      }
+
+      if (n % 3 === 2) {
+        return 2 * (Math.floor(n / 3) + 1);
+      }
+
+      return 1;
+    }
+
+    const target = 100;
+    let numerator = 1;
+    let denominator = getNthLeadingInteger(target - 1);
+    for (let i = target - 1; i >= 1; i--) {
+      const nextLeadingInteger = getNthLeadingInteger(i - 1);
+      [numerator, denominator] = [BigInt(denominator), BigInt(nextLeadingInteger) * BigInt(denominator) + BigInt(numerator)];
+    }
+
+    numerator += (denominator * 2n); // add leading constant
+    return utils.sumArray(numerator.toString().split(''), n => +n);
+  },
+
+  /**
+   * Problem 66 Diophantine equation
+   */
 };
