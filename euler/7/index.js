@@ -273,5 +273,294 @@ module.exports = {
 
   /**
    * Problem 66 Diophantine equation
+   *
+   * Consider quadratic Diophantine equations of the form: x^2 - D * y^2 = 1
+   * For example, when D=13, the minimal solution in x is 649^2 – 13×180^2 = 1.
+   * It can be assumed that there are no solutions in positive integers when D is square.
+   *
+   * By finding minimal solutions in x for D = {2, 3, 5, 6, 7}, we obtain the following:
+   *
+   * 3^2 – 2×2^2 = 1
+   * 2^2 – 3×1^2 = 1
+   * 9^2 – 5×4^2 = 1
+   * 5^2 – 6×2^2 = 1
+   * 8^2 – 7×3^2 = 1
+   * Hence, by considering minimal solutions in x for D ≤ 7, the largest x is obtained when D=5.
+   *
+   * @question Find the value of D ≤ 1000 in minimal solutions of x for which the largest value of x is obtained.
    */
+  e66() {
+    // to solve for (x,y) for any D, we need to:
+    // 1. find the sequence of leading digits for the continued fractions of sqrt(D)
+    // 2. from the list above, expand continued fractions until a solution is found
+
+    let largestSolution = 0n;
+    let ANSWER = 0;
+    // we combine the previous 2 solutions to achieve the steps above
+    for (let D = 2; D <= 1000; D++) {
+      // find leading digits
+      const sqrt = Math.sqrt(D);
+      const floor = Math.floor(sqrt);
+      if (sqrt === floor) {
+        continue;
+      }
+      let repetitionFound = false; // if a repetition has been found, we can exit the loop (explained below)
+
+      // Step 1: Sequence of leading digits
+      const leadingDigits = [];
+
+      let isolatedInteger = floor; // leading digit of our current iteration
+      let normalizedDenominator; // the denominator as a result of normalization
+      let initialNumerator = 1; // the normalized and reduced denominator (by the initial numerator) of the previous iteration
+      let denominatorOffset = floor; // the offset found in the denominator as a result of isolating the leading integer from the previous iteration
+
+      while (!repetitionFound) {
+        // normalize
+        normalizedDenominator = D - (denominatorOffset ** 2);
+
+        // isolate
+        isolatedInteger = Math.floor(initialNumerator * (floor + denominatorOffset) / normalizedDenominator);
+        leadingDigits.push(isolatedInteger);
+        if (normalizedDenominator === initialNumerator) {
+          // the initialNumerator always starts with 1
+          // if the above two variables are equal, then the next initialNumerator will be 1, which will cause the cycle to repeat
+          repetitionFound = true;
+          break;
+        }
+
+        // update for next iteration
+        initialNumerator = normalizedDenominator / initialNumerator;
+        denominatorOffset = Math.abs(denominatorOffset - initialNumerator * isolatedInteger);
+      }
+
+      // Step 2: search for solution
+
+      // solution verifier
+      const isSolution = (x, y) => (((x ** BigInt(2)) - (BigInt(D) * (y ** BigInt(2)))) === BigInt(1));
+      // returns nth leading integer in the continued fraction expansion of sqrt(D)
+      const getNthLeadingInteger = n => leadingDigits[(n - 1) % leadingDigits.length];
+
+      // initial values
+      let target = 1;
+      let numerator = BigInt(1);
+      let denominator = BigInt(getNthLeadingInteger(target));
+
+      // loop while a solution is not found
+      while (!isSolution(numerator, denominator)) {
+        numerator = BigInt(1);
+        denominator = BigInt(getNthLeadingInteger(target));
+        // find the convergent at the `target` index by using backtracking
+        for (let i = target - 1; i >= 1; i--) {
+          const nextLeadingInteger = getNthLeadingInteger(i);
+          [numerator, denominator] = [BigInt(denominator), BigInt(nextLeadingInteger) * BigInt(denominator) + BigInt(numerator)];
+        }
+        numerator += (denominator * BigInt(floor));
+        target++;
+      }
+
+      if (numerator > largestSolution) {
+        largestSolution = numerator;
+        ANSWER = D;
+      }
+    }
+    return ANSWER;
+  },
+
+  /**
+   * Problem 67 Maximum Path Sum II
+   *
+   * By starting at the top of the triangle below and moving to adjacent numbers on the row below, the maximum total from top to bottom is 23.
+   *
+   *    3
+   *   7 4
+   *  2 4 6
+   * 8 5 9 3
+   *
+   * That is, 3 + 7 + 4 + 9 = 23.
+   * NOTE: This is a much more difficult version of Problem 18. It is not possible to try every route to solve this problem, as there are 2^99 altogether!
+   * @question Find the maximum total from top to bottom in triangle.txt, a 15K text file containing a triangle with one-hundred rows.
+   */
+  e67() {
+    const rows = fs.readFileSync(path.join(__dirname, './p067_triangle.txt'))
+      .toString()
+      .split('\n')
+      .map(row => row.split(' ').map(Number));
+
+    // keeps track of the maximum score from the top to each number in the previous row
+    let previousRowScores = [];
+
+    rows.forEach((row, rowIndex) => {
+      const currentRowScores = [];
+      row.forEach((number, position) => {
+        const isFirst = position === 0;
+        const isLast = position === row.length - 1;
+        if (rowIndex === 0) {
+          // first row: score is just the number
+          currentRowScores[0] = number;
+        } else if (isFirst) {
+          // first number of row: score is the score of the first element of previous row + this number
+          currentRowScores[0] = previousRowScores[0] + number;
+        } else if (isLast) {
+          // last number of row: same as above
+          currentRowScores[position] = previousRowScores[position - 1] + number;
+        } else {
+          const leftParent = previousRowScores[position - 1];
+          const rightParent = previousRowScores[position];
+          if (leftParent > rightParent) {
+            // if the number is in the middle of a row (not first nor last), simply check which 'parent' is larger
+            currentRowScores[position] = number + leftParent;
+          } else {
+            currentRowScores[position] = number + rightParent;
+          }
+        }
+      });
+      previousRowScores = currentRowScores;
+    });
+
+    return Math.max(...previousRowScores);
+  },
+
+  /**
+   * Problem 68 Magic 5-gon ring
+   *
+   * [tldr; solving magic square variants](https://projecteuler.net/problem=68)
+   *
+   * @question What is the maximum 16-digit string for a "magic" 5-gon ring?
+   */
+  e68() {
+    // The first step consists of generating the list of permutations of digits in the inner and outer ring
+    const DIGITS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    const innerPermutations = [];
+    const outerPermutations = [];
+    for (let i1 = 1; i1 <= 5; i1++) {
+      for (let i2 = i1 + 1; i2 <= 6; i2++) {
+        for (let i3 = i2 + 1; i3 <= 7; i3++) {
+          for (let i4 = i3 + 1; i4 <= 8; i4++) {
+            for (let i5 = i4 + 1; i5 <= 9; i5++) {
+              const innerRing = [i1, i2, i3, i4, i5];
+              innerPermutations.push(innerRing);
+              outerPermutations.push(DIGITS.filter(x => !innerRing.includes(x)));
+            }
+          }
+        }
+      }
+    }
+
+    let maxSolution = 0;
+    // then, for each permutation, we check if it is a legitimate solution with the helper function below
+    for (let i = 0; i < innerPermutations.length; i++) {
+      const leadingDigit = innerPermutations[i][0];
+      const basePermutation = innerPermutations[i].slice(1);
+      const outerDigits = outerPermutations[i];
+      for (let j = 1; j <= 24; j++) {
+        const currentPermutation = utils.getLexicographicPermutation(basePermutation, j).map(Number);
+        currentPermutation.unshift(leadingDigit);
+        const commonSum = findSolution(currentPermutation, outerDigits);
+        if (commonSum) {
+          // if a soution is found, find maximal string corresponding to that solution
+          // first, find the index of the inner ring adjacent to the smallest outer digit
+          const innerStartIndex = currentPermutation.findIndex((permDigit, permIndex) => {
+            const currentInnerDigit = permDigit;
+            const nextInnerDigit = currentPermutation[(permIndex + 1) % 5];
+            return currentInnerDigit + nextInnerDigit === commonSum - outerDigits[0];
+          });
+
+          // then we go around the inner ring (clockwise) and preppend the corresponding outer digit
+          let solutionString = '';
+          for (let k = 0; k <= 4; k++) {
+            const currentInnerRingDigit = currentPermutation[(innerStartIndex + k) % 5];
+            const nextInnerRingDigit = currentPermutation[(innerStartIndex + k + 1) % 5];
+            const currentSum = currentInnerRingDigit + nextInnerRingDigit;
+            const correspondingOuterDigit = commonSum - currentSum;
+            solutionString += `${correspondingOuterDigit}${currentInnerRingDigit}${nextInnerRingDigit}`;
+          }
+          const solution = +solutionString;
+          if (solution > maxSolution) {
+            maxSolution = solution;
+          }
+        }
+      }
+    }
+
+    return maxSolution;
+
+    // given a sequence of inner ring, return the common sum if a solution exists, false otherwise
+    function findSolution(inner, outer) {
+      // we go around the inner ring and extract all the sums of adjacent digits
+      const sumsToTest = [...inner].reduce(
+        (acc, curr, idx, arr) => {
+          const nextIndex = idx === 4 ? 0 : idx + 1;
+          const sum = curr + inner[nextIndex];
+          if (acc[sum]) {
+            // if there are duplicate sums in the inner ring, a solution cannot exist as the outer ring numbers are all disinct
+            arr.splice(1);
+            return null;
+          }
+          acc[sum] = true;
+          return acc;
+        },
+        {},
+      );
+
+      if (!sumsToTest) { // duplicate sums detected
+        return false;
+      }
+
+      // the digits of the outer ring are sorted from smallest to largest by design
+      // therefore we sort the sums of the inner ring from largest to smallest
+      const partialSums = Object.keys(sumsToTest).map(Number).sort((a, b) => b - a);
+      const SOLUTION_SUM = partialSums[4] + 10; // smallest inner sum + 10
+
+      // we check if adding the corresponding index of the outer ring will result in the solution sum
+      for (let i = 0; i <= 3; i++) {
+        if (partialSums[i] + outer[i] !== SOLUTION_SUM) {
+          return false;
+        }
+      }
+
+      return SOLUTION_SUM;
+    }
+  },
+
+  /**
+   * Problem 69 Totient Maximum
+   *
+   * Euler's Totient function, φ(n) [sometimes called the phi function], is used to determine the number of numbers less than n which are relatively prime to n.
+   * For example, as 1, 2, 4, 5, 7, and 8, are all less than nine and relatively prime to nine, φ(9)=6.
+   *
+   * For n ≤ 10, n = 6 produces a maximum n/φ(n).
+   * @question Find the value of n ≤ 1,000,000 for which n/φ(n) is a maximum.
+   */
+  e69() {
+    // we use the Euler's formula for the totient function for all n <= 1 million
+    // we start with n, and for each prime p divisible by n, we multiply by ((p - 1) / p)
+    // the intuition is as follows:
+    // let's take the number 60, which has prime divisors 2, 3, 5
+    // 1. we first extract the numbers NOT divisible by 2: p = 2 => 60 * 1/2 = 30;
+    // 2. of those numbers, we extract numbers NOT divisible by 3: p = 3 => 30 * 2/3 = 20;
+    // 3. finally, we extract from the previous result numbers not divisible by 5: 20 * 4/5 = 16;
+    // indeed, the numbers relatively prime to 60 are the numbers which are not divisible by 2, 3, or 5, and there are 16 of them
+
+    // we also use a heuristic to cut down a majority of numbers to test:
+    // since we want to maximize n/phi(n), we need to find a number which is highly divisible
+    // we do that by MAXIMIZING the number of PRIME divisors, and by MINIMIZING the number itself
+    // therefore, we search incrementally with products of prime numbers from smallest to largest, and we stop if the product exceeds 1 million
+    const PRIMES_TABLE = utils.generatePrimeTable(1000000);
+    const PRIMES_ARR = Object.keys(PRIMES_TABLE).map(Number);
+    let maxTotient = 0;
+    let maxTotientNumber = 0;
+    for (let i = 0; i < PRIMES_ARR.length; i++) {
+      const factors = PRIMES_ARR.slice(0, i + 1);
+      const product = factors.reduce((a, c) => a * c, 1);
+      if (product > 1000000) {
+        break;
+      }
+      const reverseTotient = factors.reduce((a, c) => a * c / (c - 1), 1); // shortcut to calculate n/phi(n)
+      if (reverseTotient > maxTotient) {
+        maxTotient = reverseTotient;
+        maxTotientNumber = product;
+      }
+    }
+    return maxTotientNumber;
+  },
 };
