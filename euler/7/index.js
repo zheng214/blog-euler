@@ -545,7 +545,7 @@ module.exports = {
     // since we want to maximize n/phi(n), we need to find a number which is highly divisible
     // we do that by MAXIMIZING the number of PRIME divisors, and by MINIMIZING the number itself
     // therefore, we search incrementally with products of prime numbers from smallest to largest, and we stop if the product exceeds 1 million
-    const PRIMES_TABLE = utils.generatePrimeTable(1000000);
+    const PRIMES_TABLE = utils.generatePrimeTable(100);
     const PRIMES_ARR = Object.keys(PRIMES_TABLE).map(Number);
     let maxTotient = 0;
     let maxTotientNumber = 0;
