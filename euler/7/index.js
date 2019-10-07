@@ -539,13 +539,14 @@ module.exports = {
     // 1. we first extract the numbers NOT divisible by 2: p = 2 => 60 * 1/2 = 30;
     // 2. of those numbers, we extract numbers NOT divisible by 3: p = 3 => 30 * 2/3 = 20;
     // 3. finally, we extract from the previous result numbers not divisible by 5: 20 * 4/5 = 16;
-    // indeed, the numbers relatively prime to 60 are the numbers which are not divisible by 2, 3, or 5, and there are 16 of them
+    // indeed, the numbers (<60) relatively prime to 60 are the numbers which are not divisible by 2, 3, or 5, and there are 16 of them
 
     // we also use a heuristic to cut down a majority of numbers to test:
     // since we want to maximize n/phi(n), we need to find a number which is highly divisible
     // we do that by MAXIMIZING the number of PRIME divisors, and by MINIMIZING the number itself
     // therefore, we search incrementally with products of prime numbers from smallest to largest, and we stop if the product exceeds 1 million
-    const PRIMES_TABLE = utils.generatePrimeTable(100);
+    // ie. 2, 2*3, 2*3*5, 2*3*5*7, etc.
+    const PRIMES_TABLE = utils.generatePrimeTable(100); // product of primes < 100 is guaranteed to exceed 1 million
     const PRIMES_ARR = Object.keys(PRIMES_TABLE).map(Number);
     let maxTotient = 0;
     let maxTotientNumber = 0;
