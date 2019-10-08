@@ -274,7 +274,7 @@ module.exports = {
   /**
    * Problem 66 Diophantine equation
    *
-   * Consider quadratic Diophantine equations of the form: x^2 - D * y^2 = 1
+   * Consider quadratic Diophantine equations of the form: x^2 - D \* y^2 = 1
    * For example, when D=13, the minimal solution in x is 649^2 – 13×180^2 = 1.
    * It can be assumed that there are no solutions in positive integers when D is square.
    *
