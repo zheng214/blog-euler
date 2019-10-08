@@ -76,7 +76,7 @@ function generateFileMenu(file) {
 
       lineStreamer.on('line', (line) => {
         // escape pipe characters (md table formatting)
-        line = line.replace(/\|/g, '\\|');
+        line = line.replace(/\|/g, '\\|').replace(/\*/g, '\\*');
         // matches the start of problem description
         const problemStartMatch = !inDescription && !inSolution && line.match(/Problem (\d{1,3})[^\w]*(\w.+)$/);
 
