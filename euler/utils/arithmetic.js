@@ -37,17 +37,11 @@ function listPrimeFactors(n) {
 }
 
 function gcd(a, b) {
-  const smaller = a < b ? a : b;
-  const bigger = a < b ? b : a;
-  const allDivisorsOfSmaller = getProperDivisors(smaller).slice(1);
-  allDivisorsOfSmaller.push(smaller);
-  let greatestCommonDivisor = 1;
-  for (let i = 0; i < allDivisorsOfSmaller.length; i++) {
-    if (bigger % allDivisorsOfSmaller[i] === 0) {
-      greatestCommonDivisor = allDivisorsOfSmaller[i];
-    }
+  if (!b) {
+    return a;
   }
-  return greatestCommonDivisor;
+
+  return gcd(b, a % b);
 }
 
 // check if two numbers are coprime

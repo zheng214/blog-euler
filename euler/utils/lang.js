@@ -43,9 +43,40 @@ function isPalindrome(number) {
   return number.toString().split('').reverse().join('') === number.toString();
 }
 
+// check if all elements of the input array have the same digits
+function haveSameDigits(arr) {
+  const formatted = arr.map(String);
+  const digitTable = formatted[0].split('').reduce((a, c) => {
+    a[c] = a[c] ? a[c] + 1 : 1;
+    return a;
+  }, {});
+  const digitLength = formatted[0].split('').length;
+  return formatted.every((elem) => {
+    if (elem.split('').length !== digitLength) {
+      return false;
+    }
+    let satisfyCount = Object.keys(digitTable);
+    const clone = { ...digitTable };
+    let satisfied = true;
+    elem.split('').forEach((digit, _, a) => {
+      if (!clone[digit]) {
+        satisfied = false;
+        a.splice(1);
+        return null;
+      }
+      clone[digit] -= 1;
+      if (clone[digit] === 0) {
+        satisfyCount--;
+      }
+    });
+    return satisfied || satisfyCount === 0;
+  });
+}
+
 module.exports = {
   containsDuplicate,
   toArray,
   flip,
   isPalindrome,
+  haveSameDigits,
 };

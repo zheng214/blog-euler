@@ -564,4 +564,52 @@ module.exports = {
     }
     return maxTotientNumber;
   },
+
+  /**
+   * Problem 70 Totient permutation
+   * Euler's Totient function, φ(n), is used to determine the number of positive numbers less than or equal to n which are relatively prime to n.
+   * For example, as 1, 2, 4, 5, 7, and 8, are all less than nine and relatively prime to nine, φ(9)=6.
+   * The number 1 is considered to be relatively prime to every positive number, so φ(1)=1.
+   * Interestingly, φ(87109)=79180, and it can be seen that 87109 is a permutation of 79180.
+   * @question Find the value of n, 1 < n < 107, for which φ(n) is a permutation of n and the ratio n/φ(n) produces a minimum.
+   */
+  e70() {
+    // to minimize n/phi(n), we need to maximize phi(n), ie. we need to find n which is not highly divisible
+    // n cannot be prime as phi(n) = n - 1, and n and n - 1 cannot have the same digits
+
+    // NOTE:
+    // let p1, p2, ... pm denote the prime factors of n
+    // therefore n/phi(n) := p1/(p1-1) * p2/(p2-1) * p3/(p3-1) * ... * pm/(pm-1) (1)
+    // in order to minimize the equation above, we need to minimize the number of terms (as each term > 1)
+    // and also minimize each term by maximizing the value of the prime factors
+    const PRIMES_TABLE = utils.generatePrimeTable(10000);
+    // this number is chosen with the confidence that the minimal ratio < 1.001
+    const PRIMES_ARR = Object.keys(PRIMES_TABLE).reverse().map(Number);
+    let minimalTotientRatio = 1.001; // arbitrarily large number
+    let minimalTotientNumber = 0;
+    for (let i = 0; i < PRIMES_ARR.length - 1; i++) {
+      const p1 = PRIMES_ARR[i];
+      const phi1 = p1 / (p1 - 1);
+      if (phi1 > minimalTotientRatio) {
+        break;
+      }
+      for (let j = PRIMES_ARR.findIndex(x => x < 10000000 / p1); j < PRIMES_ARR.length; j++) {
+        const p2 = PRIMES_ARR[j];
+        const phi2 = p2 / (p2 - 1);
+        if (phi2 > minimalTotientRatio) {
+          break;
+        }
+        const result = p1 * p2;
+        const phi = (p1 - 1) * (p2 - 1);
+        if (utils.haveSameDigits([result, phi])) {
+          const totientRatio = result / phi;
+          if (totientRatio < minimalTotientRatio) {
+            minimalTotientRatio = totientRatio;
+            minimalTotientNumber = result;
+          }
+        }
+      }
+    }
+    return minimalTotientNumber;
+  },
 };
