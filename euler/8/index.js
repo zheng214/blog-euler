@@ -194,4 +194,106 @@ module.exports = {
     return res;
   },
 
+  /**
+   * Problem 75 Singular integer right triangles
+   *
+   * It turns out that 12 cm is the smallest length of wire that can be bent to form an integer sided right angle
+   * triangle in exactly one way, but there are many more examples.
+   *
+   * 12 cm: (3,4,5)
+   * 24 cm: (6,8,10)
+   * 30 cm: (5,12,13)
+   * 36 cm: (9,12,15)
+   * 40 cm: (8,15,17)
+   * 48 cm: (12,16,20)
+   *
+   * In contrast, some lengths of wire, like 20 cm, cannot be bent to form an integer sided right angle triangle,
+   * and other lengths allow more than one solution to be found; for example, using 120 cm it is possible to form
+   * exactly three different integer sided right angle triangles.
+   *
+   * 120 cm: (30,40,50), (20,48,52), (24,45,51)
+   *
+   * @question Given that L is the length of the wire, for how many values of L ≤ 1,500,000 can exactly one integer sided right angle triangle be formed?
+   */
+  e75() {
+    // keys are the length, value are how many time it has been sieved
+    const TRIANGLE_LENGTH_TABLE = {};
+    const target = 1500000;
+    // we first generate the table of primitive pythagorean triplets
+    for (let n = 1; n < 612; n++) {
+      for (let m = n + 1; m <= target; m++) {
+        const perimeter = 2 * m * (n + m);
+        if (perimeter > target) {
+          break;
+        }
+        const isCoprime = utils.gcd(m, n) === 1;
+        const isPrimitive = isCoprime && (utils.isEven(m) || utils.isEven(n));
+        if (isPrimitive) {
+          TRIANGLE_LENGTH_TABLE[perimeter] = 1;
+        }
+      }
+    }
+
+    // for each generated triplet, we sieve all the multiples of that perimeter
+    const primitivePerimeters = Object.keys(TRIANGLE_LENGTH_TABLE).map(Number);
+    for (let i = 0; i < primitivePerimeters.length; i++) {
+      const primitive = primitivePerimeters[i];
+      for (let k = 2; primitive * k <= target; k++) {
+        TRIANGLE_LENGTH_TABLE[primitive * k] = TRIANGLE_LENGTH_TABLE[primitive * k]
+          ? TRIANGLE_LENGTH_TABLE[primitive * k] + 1
+          : 1;
+      }
+    }
+
+    // at the end, for each perimeter, if it has value 1 (ie. it has been sieved exactly once), then it fits the condition
+    return Object.keys(TRIANGLE_LENGTH_TABLE).filter(p => TRIANGLE_LENGTH_TABLE[p] === 1).length;
+  },
+
+  /**
+   * Problem 76 Counting summations
+   *
+   * It is possible to write five as a sum in exactly six different ways:
+   *
+   * 4 + 1
+   * 3 + 2
+   * 3 + 1 + 1
+   * 2 + 2 + 1
+   * 2 + 1 + 1 + 1
+   * 1 + 1 + 1 + 1 + 1
+   *
+   * @question How many different ways can one hundred be written as a sum of at least two positive integers?
+   */
+  e76() {
+    // we use the same algorithm as problem 31, replacing the coins by the digits 1 through 100
+    const NUMBERS = [...Array(100)].map((_, i) => i + 1); // 1 to 100
+    // our final result
+    let ways = 0;
+
+    function count(amountLeft, levelIndex = 99) {
+      if (amountLeft < 0) {
+        // dead branch
+        return 0;
+      }
+      if (levelIndex === 1) {
+        // reached leaf
+        return Math.floor(amountLeft / 2) + 1;
+      }
+      if (amountLeft === 0) {
+        // if amountLeft is 0, it means we called count on amountLeft with a number equal to it
+        // eg. count(74 - 2 * 37): how many ways are there to add to 74 using two 39's
+        return 1;
+      }
+
+      // for a given amountLeft, calculate all the ways to make that amount using the number at the next level
+      for (let i = 0; i <= Math.floor(amountLeft / NUMBERS[levelIndex]); i++) {
+        // 'generate' branches according to amountLeft/level
+        const changesAtLevel = count(amountLeft - i * NUMBERS[levelIndex], levelIndex - 1);
+        ways += changesAtLevel;
+      }
+      return 0;
+    }
+
+    count(100);
+    return ways - 1; // exclude { 100 }
+  },
 };
