@@ -75,7 +75,6 @@ function generateFileMenu(file) {
       let inSolution = false;
 
       lineStreamer.on('line', (line) => {
-        console.assert(!line.includes('Diophantine'), line)
         // escape pipe characters (md table formatting)
         line = line.replace(/\|/g, '\\|');
         // matches the start of problem description
