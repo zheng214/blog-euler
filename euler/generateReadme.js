@@ -75,8 +75,9 @@ function generateFileMenu(file) {
       let inSolution = false;
 
       lineStreamer.on('line', (line) => {
+        console.assert(!line.includes('Diophantine'), line)
         // escape pipe characters (md table formatting)
-        line = line.replace(/\|/g, '\\|').replace(/\*/g, '\\*');
+        line = line.replace(/\|/g, '\\|');
         // matches the start of problem description
         const problemStartMatch = !inDescription && !inSolution && line.match(/Problem (\d{1,3})[^\w]*(\w.+)$/);
 
@@ -109,8 +110,7 @@ function generateFileMenu(file) {
         if (!problemStartMatch && !questionMatch && !functionMatch & inDescription) {
           // skip extra line (*/) at then end of every problem description
           if (!line.match(/\*\//)) {
-            const statement = line
-              .replace(/(^.+\*)/, '');
+            const statement = line.replace(/(^[^*]+\*)/, '');
             problemDetails.push(statement);
           }
         }
