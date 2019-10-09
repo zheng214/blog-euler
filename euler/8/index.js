@@ -335,4 +335,124 @@ module.exports = {
     }
     return answer;
   },
+
+  /**
+   * Problem 78
+   *
+   * Let p(n) represent the number of different ways in which n coins can be separated into piles.
+   * For example, five coins can be separated into piles in exactly seven different ways, so p(5)=7.
+   *
+   * @question Find the least value of n for which p(n) is divisible by one million.
+   */
+  e78() {
+    // using the pentagonal number theorem, we can use the following recurrence relationship
+    // let p(n) denote the number of partitions of n
+    // p(n) = p(n - 1) + p(n - 2) - p(n - 5) - p(n - 7) + p(n - 12) + p(n - 17) - ...
+    // the subtracted indices are defined as the generalized pentagonal numbers starting at index 1
+    let answer = 0;
+    let n = 3;
+    // memoized partition list MEM[i] = p(i)
+    const MEM = [1, 1, 2];
+    while (!answer) {
+      let i = 1;
+      let term = penta(i);
+      let currentPartition = 0;
+      // sum all terms p(n-1), p(n-2), p(n-5), etc.
+      while (term <= n) {
+        const sign = (i - 1) % 4 > 1 ? -1 : 1;
+        currentPartition += sign * MEM[n - term];
+        i++;
+        term = penta(i);
+      }
+      currentPartition %= 1000000;
+      if (currentPartition === 0) {
+        answer = n;
+        break;
+      }
+      MEM[n] = currentPartition;
+      n++;
+    }
+
+    return answer;
+
+    // generalized pentagonal number generator
+    function penta(k) {
+      if (k & 1) {
+        const m = (k + 1) / 2;
+        return m * (3 * m - 1) / 2;
+      }
+      const m = k / 2;
+      return m * (3 * m + 1) / 2;
+    }
+  },
+
+  /**
+   * Problem 79 Passcode derivation
+   *
+   * A common security method used for online banking is to ask the user for three random characters from a passcode. For example, if the passcode was 531278,
+   * they may ask for the 2nd, 3rd, and 5th characters; the expected reply would be: 317.
+   *
+   * The text file, keylog.txt, contains fifty successful login attempts.
+   *
+   * @question Given that the three characters are always asked for in order, analyse the file so as to determine the shortest possible secret passcode of unknown length.
+   */
+  e79() {
+    const passcodes = fs.readFileSync(path.join(__dirname, './p079_keylog.txt'))
+      .toString()
+      .split('\n')
+      .filter(Boolean);
+    // we can remove repeated passcodes
+    const uniqAttempts = Array.from(new Set(passcodes));
+
+    // if we spend a minute to look at the attempts, we can see that the passcode contains no repeating digits
+    // therefore the solution becomes very straightforward
+    // we find the first digit of the passcode by finding the digit that is not preceeded by any other digits
+    // that digit can always be found, because if not, it means that there must be repeating digits
+    // repeat for second, third, etc.
+
+    // since there are no repeats, and our login attempts do not contain a 4 or 5
+    // our passcode must have length 8
+    const target = 8;
+    let digitsFound = 0;
+    let answer = '';
+    // the list of attempts is updated every time we find a digit, by removing the found digit from it
+    let remainingAttempts = [...uniqAttempts];
+
+    // the list of digits yet to be pushed into our answer is updated everytime we find an answer
+    let remainingDigits = [0, 1, 2, 3, 6, 7, 8, 9];
+
+    while (digitsFound < target) {
+      let foundDigit;
+      // the list of remaining possible digits for a given step is updated everytime we find, in each attempt,
+      // a digit which is not in the first position
+      let currentPossibilities = [...remainingDigits];
+
+      for (let i = 0; i < remainingAttempts.length; i++) {
+        // split each attempt into first and non-first digits (rem array)
+        const [first, ...rem] = remainingAttempts[i].split('');
+        // for the possible digits remaining, keep the ones that are not included in the list of non-first digits
+        currentPossibilities = currentPossibilities.filter(x => !rem.includes(`${x}`));
+        // if there is only one possible digit left, then it is the answer
+        if (currentPossibilities.length === 1) {
+          foundDigit = currentPossibilities[0];
+          // push digit into answer string
+          answer += foundDigit;
+          break;
+        }
+      }
+
+      // remove the found digit from the list of remaining digits
+      remainingDigits = remainingDigits.filter(x => x !== foundDigit);
+      // reset the list of remaining possible digits used for traversal through attempts
+      currentPossibilities = [...remainingDigits];
+      // remove every occurrence of the found digit from the list of attempts
+      remainingAttempts = remainingAttempts.map(
+        attempt => attempt.split('').filter(
+          digit => +digit !== foundDigit,
+        ).join(''),
+      ).filter(x => x !== '');
+      digitsFound++;
+    }
+    return answer;
+  },
 };
