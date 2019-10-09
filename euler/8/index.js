@@ -429,9 +429,9 @@ module.exports = {
 
       for (let i = 0; i < remainingAttempts.length; i++) {
         // split each attempt into first and non-first digits (rem array)
-        const [first, ...rem] = remainingAttempts[i].split('');
+        const [first, ...nonFirst] = remainingAttempts[i].split('');
         // for the possible digits remaining, keep the ones that are not included in the list of non-first digits
-        currentPossibilities = currentPossibilities.filter(x => !rem.includes(`${x}`));
+        currentPossibilities = currentPossibilities.filter(x => !nonFirst.includes(`${x}`));
         // if there is only one possible digit left, then it is the answer
         if (currentPossibilities.length === 1) {
           foundDigit = currentPossibilities[0];
