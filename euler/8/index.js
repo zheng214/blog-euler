@@ -264,36 +264,75 @@ module.exports = {
    * @question How many different ways can one hundred be written as a sum of at least two positive integers?
    */
   e76() {
-    // we use the same algorithm as problem 31, replacing the coins by the digits 1 through 100
-    const NUMBERS = [...Array(100)].map((_, i) => i + 1); // 1 to 100
-    // our final result
-    let ways = 0;
-
-    function count(amountLeft, levelIndex = 99) {
-      if (amountLeft < 0) {
-        // dead branch
-        return 0;
+    // this is similar to the change making problem
+    // we have 100 coins of value 1, 2 ... 100
+    // the question is how to make 100 with those coins
+    const MEM = {};
+    for (let i = 1; i <= 100; i++) {
+      // we do not have to consider j < i as there would be no way of making j with a coin i
+      // from this point, MEM[n] denotes the number of ways of making n using coins up to i
+      for (let j = i; j <= 100; j++) {
+        // the number of ways to make amount j is equal to the sum of
+        // 1. the number of ways of making j without using i,
+        // which is the number of ways of making change j using coins 1, ..., i - 1
+        // which is equal to MEM[j] of the previous iteration
+        // 2. the number of ways of making j using i,
+        // which is the number of ways of making j - i using 1, 2, ..., i
+        // if MEM[j - i] is undefined, it means  j = i, and the answer is 1
+        MEM[j] = (MEM[j] || 0) + (MEM[j - i] || 1);
       }
-      if (levelIndex === 1) {
-        // reached leaf
-        return Math.floor(amountLeft / 2) + 1;
-      }
-      if (amountLeft === 0) {
-        // if amountLeft is 0, it means we called count on amountLeft with a number equal to it
-        // eg. count(74 - 2 * 37): how many ways are there to add to 74 using two 39's
-        return 1;
-      }
-
-      // for a given amountLeft, calculate all the ways to make that amount using the number at the next level
-      for (let i = 0; i <= Math.floor(amountLeft / NUMBERS[levelIndex]); i++) {
-        // 'generate' branches according to amountLeft/level
-        const changesAtLevel = count(amountLeft - i * NUMBERS[levelIndex], levelIndex - 1);
-        ways += changesAtLevel;
-      }
-      return 0;
     }
+    return MEM[100] - 1;
+  },
 
-    count(100);
-    return ways - 1; // exclude { 100 }
+  /**
+   * Problem 77 Prime summations
+   * It is possible to write ten as the sum of primes in exactly five different ways:
+   *
+   * 7 + 3
+   * 5 + 5
+   * 5 + 3 + 2
+   * 3 + 3 + 2 + 2
+   * 2 + 2 + 2 + 2 + 2
+   *
+   * @question What is the first value which can be written as the sum of primes in over five thousand different ways?
+   */
+  e77() {
+    // from problem above, i = 30 was sufficient to generate > 5000 partitions
+    // in order to minimize space and time, we will use 46 primes as an upper bound, and increase if necessary
+    const PRIMES = Object.keys(utils.generatePrimeTable(200)).map(Number);
+    let answer = 0;
+    let I = 2;
+
+    // each key is of the form a|b, and the value is the number of partitions of a using primes smaller or equal to b
+    const MEM = { };
+    while (!answer) {
+      for (let i = 2; i <= I; i++) {
+        for (let j = 0; j < PRIMES.length; j++) {
+          const prime = PRIMES[j];
+          if (prime > i) {
+            MEM[`${i}|${prime}`] = MEM[`${i}|${PRIMES[j - 1]}`];
+            continue;
+          }
+          if (j === 0) {
+            MEM[`${i}|${prime}`] = utils.isEven(i) ? 1 : 0;
+            continue;
+          }
+          const usingPrime = MEM[`${i - prime}|${prime}`] || (i === prime ? 1 : 0);
+          const notUsing = MEM[`${i}|${PRIMES[j - 1]}`] || 0;
+          if (notUsing + usingPrime > 5000) {
+            MEM[`${i}|${prime}`] = notUsing + usingPrime;
+            answer = i;
+            break;
+          }
+          MEM[`${i}|${prime}`] = notUsing + usingPrime;
+        }
+        if (answer) {
+          break;
+        }
+      }
+      I++;
+    }
+    return answer;
   },
 };
