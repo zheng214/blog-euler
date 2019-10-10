@@ -110,7 +110,7 @@ function generateFileMenu(file) {
           // skip extra line (*/) at then end of every problem description
           if (!line.match(/\*\//)) {
             const statement = line.replace(/(^[^*]+\*)/, '');
-            problemDetails.push(`<span style="font-family: Courier New">${statement}</span>`);
+            problemDetails.push(statement);
           }
         }
 
