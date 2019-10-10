@@ -455,4 +455,113 @@ module.exports = {
     }
     return answer;
   },
+
+  /**
+   * Problem 80 Square root digital expansion
+   *
+   * It is well known that if the square root of a natural number is not an integer, then it is irrational.
+   * The decimal expansion of such square roots is infinite without any repeating pattern at all.
+   *
+   * The square root of two is 1.41421356237309504880..., and the digital sum of the first one hundred decimal digits is 475.
+   *
+   * @question For the first one hundred natural numbers, find the total of the digital sums of the first one hundred decimal digits for all the irrational square roots.
+   */
+  e80() {
+    let ANSWER = 0;
+    // this is very similar to problem 66
+    // instead of iterating until we find a solution to an equation
+    // we keep iterating until we find a number for which the 100 first decimal is 'stable'
+    for (let D = 2; D <= 100; D++) {
+      // find leading digits
+      const sqrt = Math.sqrt(D);
+      const floor = Math.floor(sqrt);
+      if (sqrt === floor) {
+        continue;
+      }
+      let repetitionFound = false; // if a repetition has been found, we can exit the loop (explained below)
+
+      // Step 1: Sequence of leading digits
+      const leadingDigits = [];
+
+      let isolatedInteger = floor; // leading digit of our current iteration
+      let normalizedDenominator; // the denominator as a result of normalization
+      let initialNumerator = 1; // the normalized and reduced denominator (by the initial numerator) of the previous iteration
+      let denominatorOffset = floor; // the offset found in the denominator as a result of isolating the leading integer from the previous iteration
+
+      while (!repetitionFound) {
+        // normalize
+        normalizedDenominator = D - (denominatorOffset ** 2);
+
+        // isolate
+        isolatedInteger = Math.floor(initialNumerator * (floor + denominatorOffset) / normalizedDenominator);
+        leadingDigits.push(isolatedInteger);
+        if (normalizedDenominator === initialNumerator) {
+          // the initialNumerator always starts with 1
+          // if the above two variables are equal, then the next initialNumerator will be 1, which will cause the cycle to repeat
+          repetitionFound = true;
+          break;
+        }
+
+        // update for next iteration
+        initialNumerator = normalizedDenominator / initialNumerator;
+        denominatorOffset = Math.abs(denominatorOffset - initialNumerator * isolatedInteger);
+      }
+
+      // Step 2: search for solution
+
+      // solution verifier
+      // verify if there is a variation in the 101st decimal between the 2 fractions
+      // (ie. if the first 101 decimals are equal)
+      // we accomplish this by multiplying each numerator by 10^101 before dividing by the denominator
+      // this will truncate the 102nd digit (and everything after)
+      // if the 101th digit is the same for both fractions,
+      // we then just need to round the 100th digit to get our answer
+      const getSum100Digits = (num1, denom1, num2, denom2) => {
+        const shift = BigInt(10) ** BigInt(101);
+        const prevDigits = num1 * shift / denom1;
+        const currDigits = num2 * shift / denom2;
+        if (prevDigits === currDigits) { // stabilized, return the sum of the 100 digits
+          const digits = String(currDigits).slice(0, 100).split('');
+          return digits.map(Number).reduce((a, c) => a + c, 0);
+        }
+        return false;
+      };
+
+      // returns nth leading integer in the continued fraction expansion of sqrt(D)
+      const getNthLeadingInteger = n => leadingDigits[(n - 1) % leadingDigits.length];
+
+      // initial values
+      let target = 1;
+      let numerator = BigInt(1);
+      let denominator = BigInt(getNthLeadingInteger(target));
+
+      let previousNumerator;
+      let previousDenominator;
+
+      let stabilized = false;
+      // loop while a solution is not found
+      while (!stabilized) {
+        numerator = BigInt(1);
+        denominator = BigInt(getNthLeadingInteger(target));
+        // find the convergent at the `target` index by using backtracking
+        for (let i = target - 1; i >= 1; i--) {
+          const nextLeadingInteger = getNthLeadingInteger(i);
+          [numerator, denominator] = [BigInt(denominator), BigInt(nextLeadingInteger) * BigInt(denominator) + BigInt(numerator)];
+        }
+        numerator += (denominator * BigInt(floor));
+        if (target > 1) {
+          const solution = getSum100Digits(previousNumerator, previousDenominator, numerator, denominator);
+          if (solution) {
+            ANSWER += solution;
+            stabilized = true;
+            break;
+          }
+        }
+        previousNumerator = numerator;
+        previousDenominator = denominator;
+        target++;
+      }
+    }
+    return ANSWER;
+  },
 };
