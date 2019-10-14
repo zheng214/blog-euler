@@ -67,7 +67,6 @@ function generateFileMenu(file) {
       let problemDetails = [];
 
       // store question statement
-      let questionCapture = ''; // can be multiline
       let questionLines = [];
 
       // track the difference of "{" and "}" inside a solution. bracketBalance === 0 marks the end of the solution
@@ -153,7 +152,6 @@ function generateFileMenu(file) {
 
             // exiting solution
             inSolution = false;
-            questionCapture = '';
             problemDetails = [];
             questionLines = [];
           }
