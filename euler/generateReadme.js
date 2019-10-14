@@ -67,6 +67,7 @@ function generateFileMenu(file) {
       let problemDetails = [];
 
       // store question statement
+      let questionCapture = ''; // can be multiline
       let questionLines = [];
 
       // track the difference of "{" and "}" inside a solution. bracketBalance === 0 marks the end of the solution
@@ -78,19 +79,20 @@ function generateFileMenu(file) {
         line = line.replace(/\|/g, '\\|');
         // matches the start of problem description
         const problemStartMatch = !inDescription && !inSolution && line.match(/Problem (\d{1,3})[^\w]*(\w.+)$/);
+
         // matches question statement
         const questionMatch = line.match(/@question/);
+
         // matches the start of the solution
         const functionMatch = line.match(/e\d{1,3}\(\) \{/);
 
-        // entering description
         if (problemStartMatch) {
           [, problemID, problemName] = problemStartMatch;
           startLine = currentLine - 1;
+          // entering description
           inDescription = true;
         }
 
-        // entering question statement
         if (questionMatch && !functionMatch) {
           const isPrevLineQuestion = prevLine.match('@question');
           const statement = line.replace(/(^.+\*)/, '');
@@ -104,7 +106,7 @@ function generateFileMenu(file) {
         }
 
         // if line does not match title or start of solution, then it must be in description
-        if (!problemStartMatch && !questionMatch && !functionMatch) {
+        if (!problemStartMatch && !questionMatch && !functionMatch & inDescription) {
           // skip extra line (*/) at then end of every problem description
           if (!line.match(/\*\//)) {
             const statement = line.replace(/(^[^*]+\*)/, '');
@@ -112,21 +114,19 @@ function generateFileMenu(file) {
           }
         }
 
-        // entering solution
         if (functionMatch) {
+          // entering solution
           inDescription = false;
           bracketBalance = 0;
           inSolution = true;
         }
 
-        // if we are in solution, keep track of the balancing of { and }
-        // if they are equal, then it marks the end of a solution
         if (inSolution) {
           const leftBrackets = (line.split('//')[0].match(/\{/g) || []).length;
           const rightBrackets = (line.split('//')[0].match(/\}/g) || []).length;
-          bracketBalance += leftBrackets - rightBrackets;
+          bracketBalance = bracketBalance + leftBrackets - rightBrackets;
           if (bracketBalance === 0) {
-            // end of solution detected, write all stored content of problem
+            // end of problem, write all stored content of problem
             const githubURLTemplate = 'https://github.com/zheng214/euler/blob/master/euler/{folder}/index.js#L{start}-L{end}';
             const githubURL = githubURLTemplate
               .replace('{folder}', file)
@@ -153,6 +153,7 @@ function generateFileMenu(file) {
 
             // exiting solution
             inSolution = false;
+            questionCapture = '';
             problemDetails = [];
             questionLines = [];
           }
