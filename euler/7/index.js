@@ -377,8 +377,9 @@ module.exports = {
    * 8 5 9 3
    *
    * That is, 3 + 7 + 4 + 9 = 23.
-   * NOTE: This is a much more difficult version of Problem 18. It is not possible to try every route to solve this problem, as there are 2^99 altogether!
-   * @question Find the maximum total from top to bottom in triangle.txt, a 15K text file containing a triangle with one-hundred rows.
+   *
+   * @question Find the maximum total from top to bottom in [triangle.txt]((https://github.com/zheng214/euler/blob/master/euler/7/p067_triangle.txt)),
+   * @question a 15K text file containing a triangle with one-hundred rows.
    */
   e67() {
     const rows = fs.readFileSync(path.join(__dirname, './p067_triangle.txt'))

@@ -38,8 +38,8 @@ module.exports = {
    * we form a word value. For example, the word value for SKY is 19 + 11 + 25 = 55 = t10. If the word value is a triangle
    * number then we shall call the word a triangle word.
    *
-   * @question Using p042_words.txt, a 16K text file containing nearly two-thousand common English words,
-   * how many are triangle words?
+   * @question Using [p042_words.txt](https://github.com/zheng214/euler/blob/master/euler/5/p042_words.txt), a 16K text file
+   * @question containing nearly two-thousand common English words, how many are triangle words?
    */
   e42() {
     // we can assume that a word cannot exceed the word value of 500 (almost 20 consecutive 'z')
