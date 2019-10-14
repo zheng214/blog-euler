@@ -11,7 +11,8 @@ module.exports = {
    * 537 699 497 **121** 956
    * 805 732 524 **037** **331**
    *
-   * @question Find the minimal path sum, in matrix.txt, a text file containing a 80 by 80 matrix, from the top left to the bottom right by only moving right and down.
+   * @question Find the minimal path sum, in [matrix.txt](https://github.com/zheng214/euler/blob/master/euler/9/p081_matrix.txt),
+   * @question a text file containing a 80 by 80 matrix, from the top left to the bottom right by only moving right and down.
    */
   e81() {
     // we use a memoized table where the entry [i,j] is the optimal path from 0,0 to i,j
@@ -41,7 +42,8 @@ module.exports = {
    * 537 699 497 121 956
    * 805 732 524 037 331
    *
-   * @question Find the minimal path sum, in [matrix.txt](https://github.com/zheng214/euler/blob/master/euler/9/p082_matrix.txt), a 31K text file containing a 80 by 80 matrix, from the left column to the right column.
+   * @question Find the minimal path sum, in [matrix.txt](https://github.com/zheng214/euler/blob/master/euler/9/p082_matrix.txt),
+   * @question a 31K text file containing a 80 by 80 matrix, from the left column to the right column.
    */
   e82() {
     // we iterate column by column, at each step we memorize the optimal sum from the leftmost column to
