@@ -184,7 +184,7 @@ module.exports = {
    * for example, both players have a pair of queens, then highest cards in each hand are compared;
    * if the highest cards tie then the next highest cards are compared, and so on.
    *
-   * The file, [poker.txt]((https://github.com/zheng214/euler/blob/master/euler/6/p054_poker.txt)),
+   * The file, [poker.txt](https://github.com/zheng214/euler/blob/master/euler/6/p054_poker.txt),
    * contains one-thousand random hands dealt to two players. Each line of the file contains ten cards
    * (separated by a single space): the first five are Player 1's cards and the last five are Player 2's cards.
    *
@@ -567,7 +567,7 @@ module.exports = {
    * The balance for this method is using a sufficiently long password key for security, but short enough to be memorable.
    *
    * Your task has been made easy, as the encryption key consists of three lower case characters.
-   * @question Using [p059_cipher.txt]((https://github.com/zheng214/euler/blob/master/euler/6/p059_cipher.txt)), a file containing the encrypted ASCII codes,
+   * @question Using [p059_cipher.txt](https://github.com/zheng214/euler/blob/master/euler/6/p059_cipher.txt), a file containing the encrypted ASCII codes,
    * @question and the knowledge that the plain text must contain common English words, decrypt the message and find the sum of the ASCII values in the original text.
    */
   e59() {

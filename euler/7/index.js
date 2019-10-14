@@ -378,7 +378,7 @@ module.exports = {
    *
    * That is, 3 + 7 + 4 + 9 = 23.
    *
-   * @question Find the maximum total from top to bottom in [triangle.txt]((https://github.com/zheng214/euler/blob/master/euler/7/p067_triangle.txt)),
+   * @question Find the maximum total from top to bottom in [triangle.txt](https://github.com/zheng214/euler/blob/master/euler/7/p067_triangle.txt),
    * @question a 15K text file containing a triangle with one-hundred rows.
    */
   e67() {
