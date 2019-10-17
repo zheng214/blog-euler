@@ -39,7 +39,7 @@ function insertElementSorted(arr, element, insertLeft = (e, a) => e < a) {
 
 // initiate a table of row x col
 function initTable(row, col, f = () => 0) {
-  return [...Array(row)].map((x, i) => [...Array(col)].map((y, j) => f(x, i, y, j)));
+  return [...Array(row)].map((_1, i) => [...Array(col)].map((_2, j) => f(i, j)));
 }
 
 module.exports = {
