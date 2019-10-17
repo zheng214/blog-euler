@@ -106,7 +106,7 @@ module.exports = {
    * In the 5 by 5 matrix below, the minimal path sum from the top left to the bottom right, by moving left, right, up, and down,
    * is indicated in bold and is equal to 2297.
    *
-   * 131 673 **234** **103** **018**
+   * **131** 673 **234** **103** **018**
    * **201** **096** **342** 965 **150**
    * 630 803 746 **422** **111**
    * 537 699 497 **121** 956
