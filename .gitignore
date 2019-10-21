@@ -1,0 +1,5 @@
+*.ahk
+node_modules
+.eslintrc
+fullResults.json
+derp.txt

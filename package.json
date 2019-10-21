@@ -1,0 +1,50 @@
+{
+  "name": "zheng-project-euler",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zheng214/euler.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zheng214/euler/issues"
+  },
+  "homepage": "https://zheng214.github.io/euler/",
+  "dependencies": {
+    "bluebird": "^3.5.5",
+    "create-react-app": "^3.2.0",
+    "eslint-plugin-react": "^7.13.0",
+    "react": "^16.10.2",
+    "react-scripts": "^3.2.0"
+  },
+  "eslintConfig": {
+    "globals": {
+      "angular": true
+    }
+  },
+  "devDependencies": {
+    "gh-pages": "^2.1.1"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
