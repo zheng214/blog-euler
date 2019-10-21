@@ -56,7 +56,7 @@ function generatePrimeTable(n) {
   const sieveArr = [];
   const root = Math.sqrt(n);
   for (let i = 1; i < root; i++) {
-    const realRepr = 2 * i + 1; // e.g. i = 2 -> 5th odd number -> 5
+    const realRepr = 2 * i + 1; // e.g. i = 2 -> 2nd odd number -> 5
     if (sieveArr[i] !== false) { // if index is not already sieved
       sieveArr[i] = true; // then it must be prime
       // since the indexes represent the odd numbers, we only need to sieve up to a multiple(j) such that:
