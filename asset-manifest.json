@@ -1,15 +1,22 @@
 {
   "files": {
-    "main.js": "/euler/static/js/main.0f156d60.chunk.js",
-    "main.js.map": "/euler/static/js/main.0f156d60.chunk.js.map",
-    "runtime-main.js": "/euler/static/js/runtime-main.ad0ee135.js",
-    "runtime-main.js.map": "/euler/static/js/runtime-main.ad0ee135.js.map",
-    "index.html": "/euler/index.html",
-    "precache-manifest.79eb5aac9761dbfafc33a5c66eb2c1ee.js": "/euler/precache-manifest.79eb5aac9761dbfafc33a5c66eb2c1ee.js",
-    "service-worker.js": "/euler/service-worker.js"
+    "main.css": "/project-euler/static/css/main.b100e6da.chunk.css",
+    "main.js": "/project-euler/static/js/main.afdfc990.chunk.js",
+    "main.js.map": "/project-euler/static/js/main.afdfc990.chunk.js.map",
+    "runtime-main.js": "/project-euler/static/js/runtime-main.bfeaf29c.js",
+    "runtime-main.js.map": "/project-euler/static/js/runtime-main.bfeaf29c.js.map",
+    "static/js/2.f443dac2.chunk.js": "/project-euler/static/js/2.f443dac2.chunk.js",
+    "static/js/2.f443dac2.chunk.js.map": "/project-euler/static/js/2.f443dac2.chunk.js.map",
+    "index.html": "/project-euler/index.html",
+    "precache-manifest.4fb6ec8c0c0f4aca8009780c185d02b9.js": "/project-euler/precache-manifest.4fb6ec8c0c0f4aca8009780c185d02b9.js",
+    "service-worker.js": "/project-euler/service-worker.js",
+    "static/css/main.b100e6da.chunk.css.map": "/project-euler/static/css/main.b100e6da.chunk.css.map",
+    "static/media/logo.svg": "/project-euler/static/media/logo.25bf045c.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.ad0ee135.js",
-    "static/js/main.0f156d60.chunk.js"
+    "static/js/runtime-main.bfeaf29c.js",
+    "static/js/2.f443dac2.chunk.js",
+    "static/css/main.b100e6da.chunk.css",
+    "static/js/main.afdfc990.chunk.js"
   ]
 }
