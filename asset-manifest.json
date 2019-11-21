@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/project-euler/static/css/main.53ba7726.chunk.css",
+    "main.css": "/project-euler/static/css/main.f0911983.chunk.css",
     "main.js": "/project-euler/static/js/main.ba0dd8e0.chunk.js",
     "main.js.map": "/project-euler/static/js/main.ba0dd8e0.chunk.js.map",
     "runtime-main.js": "/project-euler/static/js/runtime-main.bfeaf29c.js",
@@ -9,10 +9,10 @@
     "static/js/2.d180f8bf.chunk.js": "/project-euler/static/js/2.d180f8bf.chunk.js",
     "static/js/2.d180f8bf.chunk.js.map": "/project-euler/static/js/2.d180f8bf.chunk.js.map",
     "index.html": "/project-euler/index.html",
-    "precache-manifest.422098ae9f5ba2a39dcb74af0de6cded.js": "/project-euler/precache-manifest.422098ae9f5ba2a39dcb74af0de6cded.js",
+    "precache-manifest.0a1951b066d0037ef8d5583d40f6b371.js": "/project-euler/precache-manifest.0a1951b066d0037ef8d5583d40f6b371.js",
     "service-worker.js": "/project-euler/service-worker.js",
     "static/css/2.ea8319cd.chunk.css.map": "/project-euler/static/css/2.ea8319cd.chunk.css.map",
-    "static/css/main.53ba7726.chunk.css.map": "/project-euler/static/css/main.53ba7726.chunk.css.map",
+    "static/css/main.f0911983.chunk.css.map": "/project-euler/static/css/main.f0911983.chunk.css.map",
     "static/media/katex.min.css": "/project-euler/static/media/KaTeX_Typewriter-Regular.f43e8696.woff2",
     "static/media/p042_words.txt": "/project-euler/static/media/p042_words.ca4c3ad4.txt",
     "static/media/p054_poker.txt": "/project-euler/static/media/p054_poker.eef3c901.txt",
@@ -31,7 +31,7 @@
     "static/js/runtime-main.bfeaf29c.js",
     "static/css/2.ea8319cd.chunk.css",
     "static/js/2.d180f8bf.chunk.js",
-    "static/css/main.53ba7726.chunk.css",
+    "static/css/main.f0911983.chunk.css",
     "static/js/main.ba0dd8e0.chunk.js"
   ]
 }
