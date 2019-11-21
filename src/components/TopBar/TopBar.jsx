@@ -18,7 +18,7 @@ export default function TopBar({ darkMode, toggleDark }) {
     <div className="topbar">
       <div className="topbar__side left"><Link to="/e">SOLUTIONS</Link></div>
       <div className="topbar__center">
-        <h2><Link to="/">PROJECT EULERS</Link></h2>
+        <h2><Link to="/">PROJECT EULER</Link></h2>
       </div>
       <div className="topbar__quick-links">
         <button className="toggle-dark" type="button" onClick={toggleDark}>

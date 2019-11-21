@@ -2,7 +2,7 @@
 
 import React from 'react';
 import {
-  Switch, Route, BrowserRouter, Link,
+  Switch, Route, HashRouter, Link,
 } from 'react-router-dom';
 import './App.css';
 import Main from './components/Main/Main.jsx';
@@ -10,14 +10,14 @@ import Main from './components/Main/Main.jsx';
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
+      <HashRouter basename={process.env.PUBLIC_URL}>
         <Switch>
           <Route
             path="/"
             component={Main}
           />
         </Switch>
-      </BrowserRouter>
+      </HashRouter>
     </div>
   );
 }
