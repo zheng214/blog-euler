@@ -1,14 +1,22 @@
+
+const fs = require('fs');
+const path = require('path');
+const utils = require('../utils');
+
 module.exports = {
   /**
    * Problem 71 Ordered fractions
    *
    * Consider the fraction, n/d, where n and d are positive integers.
+   *
    * If n<d and HCF(n,d)=1, it is called a reduced proper fraction.
    *
    * If we list the set of reduced proper fractions for d ≤ 8 in ascending order of size, we get:
+   *
    * 1/8, 1/7, 1/6, 1/5, 1/4, 2/7, 1/3, 3/8, 2/5, 3/7, 1/2, 4/7, 3/5, 5/8, 2/3, 5/7, 3/4, 4/5, 5/6, 6/7, 7/8
    *
    * It can be seen that 2/5 is the fraction immediately to the left of 3/7.
+   *
    * @question By listing the set of reduced proper fractions for d ≤ 1,000,000 in ascending order, find the numerator of the fraction immediately to the left of 3/7.
    */
   e71() {
@@ -40,12 +48,15 @@ module.exports = {
    * Problem 72 Counting fractions
    *
    * Consider the fraction, n/d, where n and d are positive integers.
+   *
    * If n<d and HCF(n,d)=1, it is called a reduced proper fraction.
    *
    * If we list the set of reduced proper fractions for d ≤ 8 in ascending order of size, we get:
+   *
    * 1/8, 1/7, 1/6, 1/5, 1/4, 2/7, 1/3, 3/8, 2/5, 3/7, 1/2, 4/7, 3/5, 5/8, 2/3, 5/7, 3/4, 4/5, 5/6, 6/7, 7/8
    *
    * It can be seen that there are 21 elements in this set.
+   *
    * @question How many elements would be contained in the set of reduced proper fractions for d ≤ 1,000,000?
    */
   e72() {
@@ -58,7 +69,7 @@ module.exports = {
     // by multiplying each number by (p - 1) / p
     // eventually each integer below 1000000 will be sieved once by each of its prime factors
     const target = 1000000;
-    const PRIME_TABLE = utils.generatePrimeTable(target);
+    const PRIME_TABLE = utils.generatePrimesTable(target);
     const INTEGER_TABLE = { ...PRIME_TABLE };
     let answer = 0;
     for (let i = 2; i <= target; i++) {
@@ -83,12 +94,15 @@ module.exports = {
    * Problem 73 Counting fractions in a range
    *
    * Consider the fraction, n/d, where n and d are positive integers.
+   *
    * If n<d and HCF(n,d)=1, it is called a reduced proper fraction.
    *
    * If we list the set of reduced proper fractions for d ≤ 8 in ascending order of size, we get:
+   *
    * 1/8, 1/7, 1/6, 1/5, 1/4, 2/7, 1/3, 3/8, 2/5, 3/7, 1/2, 4/7, 3/5, 5/8, 2/3, 5/7, 3/4, 4/5, 5/6, 6/7, 7/8
    *
    * It can be seen that there are 3 fractions between 1/3 and 1/2.
+   *
    * @question How many fractions lie between 1/3 and 1/2 in the sorted set of reduced proper fractions for d ≤ 12,000?
    */
   e73() {
@@ -114,17 +128,23 @@ module.exports = {
    * Problem 74 Digit factorial chains
    *
    * The number 145 is well known for the property that the sum of the factorial of its digits is equal to 145:
+   *
    * 1! + 4! + 5! = 1 + 24 + 120 = 145
    *
-   * Perhaps less well known is 169, in that it produces the longest chain of numbers that link back to 169;
-   * it turns out that there are only three such loops that exist:
+   * Perhaps less well known is 169, in that it produces the longest chain of numbers that link back to 169; it turns out that there are only three such loops that exist:
+   *
    * 169 → 363601 → 1454 → 169
+   *
    * 871 → 45361 → 871
+   *
    * 872 → 45362 → 872
    *
    * It is not difficult to prove that EVERY starting number will eventually get stuck in a loop. For example,
+   *
    * 69 → 363600 → 1454 → 169 → 363601 (→ 1454)
+   *
    * 78 → 45360 → 871 → 45361 (→ 871)
+   *
    * 540 → 145 (→ 145)
    *
    * Starting with 69 produces a chain of five non-repeating terms, but the longest non-repeating chain with a starting number below one million is sixty terms.
@@ -197,19 +217,21 @@ module.exports = {
   /**
    * Problem 75 Singular integer right triangles
    *
-   * It turns out that 12 cm is the smallest length of wire that can be bent to form an integer sided right angle
-   * triangle in exactly one way, but there are many more examples.
+   * It turns out that 12 cm is the smallest length of wire that can be bent to form an integer sided right angle triangle in exactly one way, but there are many more examples.
    *
    * 12 cm: (3,4,5)
+   *
    * 24 cm: (6,8,10)
+   *
    * 30 cm: (5,12,13)
+   *
    * 36 cm: (9,12,15)
+   *
    * 40 cm: (8,15,17)
+   *
    * 48 cm: (12,16,20)
    *
-   * In contrast, some lengths of wire, like 20 cm, cannot be bent to form an integer sided right angle triangle,
-   * and other lengths allow more than one solution to be found; for example, using 120 cm it is possible to form
-   * exactly three different integer sided right angle triangles.
+   * In contrast, some lengths of wire, like 20 cm, cannot be bent to form an integer sided right angle triangle, and other lengths allow more than one solution to be found; for example, using 120 cm it is possible to form exactly three different integer sided right angle triangles.
    *
    * 120 cm: (30,40,50), (20,48,52), (24,45,51)
    *
@@ -255,10 +277,15 @@ module.exports = {
    * It is possible to write five as a sum in exactly six different ways:
    *
    * 4 + 1
+   *
    * 3 + 2
+   *
    * 3 + 1 + 1
+   *
    * 2 + 2 + 1
+   *
    * 2 + 1 + 1 + 1
+   *
    * 1 + 1 + 1 + 1 + 1
    *
    * @question How many different ways can one hundred be written as a sum of at least two positive integers?
@@ -290,9 +317,13 @@ module.exports = {
    * It is possible to write ten as the sum of primes in exactly five different ways:
    *
    * 7 + 3
+   *
    * 5 + 5
+   *
    * 5 + 3 + 2
+   *
    * 3 + 3 + 2 + 2
+   *
    * 2 + 2 + 2 + 2 + 2
    *
    * @question What is the first value which can be written as the sum of primes in over five thousand different ways?
@@ -300,7 +331,7 @@ module.exports = {
   e77() {
     // from problem above, i = 30 was sufficient to generate > 5000 partitions
     // in order to minimize space and time, we will use 46 primes as an upper bound, and increase if necessary
-    const PRIMES = Object.keys(utils.generatePrimeTable(200)).map(Number);
+    const PRIMES = Object.keys(utils.generatePrimesTable(200)).map(Number);
     let answer = 0;
     let I = 2;
 
@@ -340,6 +371,7 @@ module.exports = {
    * Problem 78 Coin Partitions
    *
    * Let p(n) represent the number of different ways in which n coins can be separated into piles.
+   *
    * For example, five coins can be separated into piles in exactly seven different ways, so p(5)=7.
    *
    * @question Find the least value of n for which p(n) is divisible by one million.
@@ -389,10 +421,9 @@ module.exports = {
   /**
    * Problem 79 Passcode derivation
    *
-   * A common security method used for online banking is to ask the user for three random characters from a passcode. For example, if the passcode was 531278,
-   * they may ask for the 2nd, 3rd, and 5th characters; the expected reply would be: 317.
+   * A common security method used for online banking is to ask the user for three random characters from a passcode. For example, if the passcode was 531278, they may ask for the 2nd, 3rd, and 5th characters; the expected reply would be: 317.
    *
-   * The text file, [keylog.txt](https://github.com/zheng214/euler/blob/master/euler/8/p079_keylog.txt), contains fifty successful login attempts.
+   * The text file, [keylog.txt @asset p079_keylog.txt], contains fifty successful login attempts.
    *
    * @question Given that the three characters are always asked for in order, analyse the file so as to determine the shortest possible secret passcode of unknown length.
    */
@@ -406,7 +437,7 @@ module.exports = {
 
     // if we spend a minute to look at the attempts, we can see that the passcode contains no repeating digits
     // therefore the solution becomes very straightforward
-    // we find the first digit of the passcode by finding the digit that is not preceeded by any other digits
+    // we find the first digit of the passcode by finding the digit that is not preceded by any other digits
     // that digit can always be found, because if not, it means that there must be repeating digits
     // repeat for second, third, etc.
 
@@ -418,12 +449,12 @@ module.exports = {
     // the list of attempts is updated every time we find a digit, by removing the found digit from it
     let remainingAttempts = [...uniqAttempts];
 
-    // the list of digits yet to be pushed into our answer is updated everytime we find an answer
+    // the list of digits yet to be pushed into our answer is updated every time we find an answer
     let remainingDigits = [0, 1, 2, 3, 6, 7, 8, 9];
 
     while (digitsFound < target) {
       let foundDigit;
-      // the list of remaining possible digits for a given step is updated everytime we find, in each attempt,
+      // the list of remaining possible digits for a given step is updated every time we find, in each attempt,
       // a digit which is not in the first position
       let currentPossibilities = [...remainingDigits];
 
@@ -460,6 +491,7 @@ module.exports = {
    * Problem 80 Square root digital expansion
    *
    * It is well known that if the square root of a natural number is not an integer, then it is irrational.
+   *
    * The decimal expansion of such square roots is infinite without any repeating pattern at all.
    *
    * The square root of two is 1.41421356237309504880..., and the digital sum of the first one hundred decimal digits is 475.
@@ -485,8 +517,10 @@ module.exports = {
 
       let isolatedInteger = floor; // leading digit of our current iteration
       let normalizedDenominator; // the denominator as a result of normalization
-      let initialNumerator = 1; // the normalized and reduced denominator (by the initial numerator) of the previous iteration
-      let denominatorOffset = floor; // the offset found in the denominator as a result of isolating the leading integer from the previous iteration
+      // the normalized and reduced denominator (by the initial numerator) of the previous iteration
+      let initialNumerator = 1;
+      // the offset found in the denominator as a result of isolating the leading integer from the previous iteration
+      let denominatorOffset = floor;
 
       while (!repetitionFound) {
         // normalize
@@ -497,7 +531,8 @@ module.exports = {
         leadingDigits.push(isolatedInteger);
         if (normalizedDenominator === initialNumerator) {
           // the initialNumerator always starts with 1
-          // if the above two variables are equal, then the next initialNumerator will be 1, which will cause the cycle to repeat
+          // if the above two variables are equal, then the next initialNumerator will be 1,
+          // which will cause the cycle to repeat
           repetitionFound = true;
           break;
         }
@@ -545,8 +580,8 @@ module.exports = {
         denominator = BigInt(getNthLeadingInteger(target));
         // find the convergent at the `target` index by using backtracking
         for (let i = target - 1; i >= 1; i--) {
-          const nextLeadingInteger = getNthLeadingInteger(i);
-          [numerator, denominator] = [BigInt(denominator), BigInt(nextLeadingInteger) * BigInt(denominator) + BigInt(numerator)];
+          const nextLeadingInteger = BigInt(getNthLeadingInteger(i));
+          [numerator, denominator] = [denominator, nextLeadingInteger * denominator + numerator]
         }
         numerator += (denominator * BigInt(floor));
         if (target > 1) {

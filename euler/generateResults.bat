@@ -1,1 +1,0 @@
-FOR /L %%G IN (%1,1,%2) DO node main %%G -s

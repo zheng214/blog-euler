@@ -4,9 +4,24 @@
   "private": true,
   "homepage": "https://zheng214.github.io/project-euler",
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.25",
+    "@fortawesome/free-brands-svg-icons": "^5.11.2",
+    "@fortawesome/free-solid-svg-icons": "^5.11.2",
+    "@fortawesome/react-fontawesome": "^0.1.7",
+    "big-integer": "^1.6.47",
+    "bluebird": "^3.7.1",
+    "classnames": "^2.2.6",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-react": "^7.13.0",
+    "lodash": "^4.17.15",
+    "node-sass": "^4.13.0",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
-    "react-scripts": "3.2.0"
+    "react-katex": "^2.0.2",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "3.2.0",
+    "react-syntax-highlight": "^15.3.1",
+    "react-syntax-highlighter": "^11.0.2"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -14,10 +29,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
+    "deploy": "gh-pages -d build",
+    "import": "node scripts/importSolutions.js"
   },
   "browserslist": {
     "production": [
@@ -33,5 +46,8 @@
   },
   "devDependencies": {
     "gh-pages": "^2.1.1"
+  },
+  "globals": {
+    "BigInt": true
   }
 }

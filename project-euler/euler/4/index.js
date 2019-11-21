@@ -1,9 +1,17 @@
+
+const fs = require('fs');
+const path = require('path');
+const utils = require('../utils');
+
 module.exports = {
   /**
    * Problem 31: Coin sums
    * In England the currency is made up of pound, £, and pence, p, and there are eight coins in general circulation:
+   *
    * 1p, 2p, 5p, 10p, 20p, 50p, £1 (100p) and £2 (200p).
+   *
    * It is possible to make £2 in the following way:
+   *
    * 1×£1 + 1×50p + 2×20p + 1×5p + 1×2p + 3×1p
    *
    * @question How many different ways can £2 be made using any number of coins?
@@ -19,7 +27,7 @@ module.exports = {
     // from each branch we find the amount of combinations of the next coin
     // [tree level: 100] left branch used 200, has 0 left, return 1 (1 way to make 200 using 200p coins)
     // [tree level: 100] right branch did not use 200, has 200 left, now we can either:
-    // [tree level: 100] use 2 100p coins, 1 100p coins, or 0 100p coins, now we create 3 branches into the next level
+    // [tree level: 100] use 2 100p coins, 1 100p coins, or 0 100p coins, -> we create 3 branches for the next level
     // the tree looks like this:
     // [root]            200
     //                  /   \
@@ -61,11 +69,11 @@ module.exports = {
 
   /**
    * Problem 32: Pandigital products
-   * The product 7254 is unusual, as the identity, 39 × 186 = 7254, containing multiplicand, multiplier,
-   * and product is 1 through 9 pandigital.
+   * The product 7254 is unusual, as the identity, 39 × 186 = 7254, containing multiplicand, multiplier, and product is 1 through 9 pandigital.
    *
    * @question Find the sum of all products whose multiplicand/multiplier/product identity can be written as a 1 through 9 pandigital.
-   * HINT: Some products can be obtained in more than one way so be sure to only include it once in your sum.
+   *
+   * @question HINT: Some products can be obtained in more than one way so be sure to only include it once in your sum.
    */
   e32() {
     const DIGITS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -76,7 +84,11 @@ module.exports = {
     for (let i = 1111; i <= 9876; i++) {
       const selectionIndexes = i.toString().split('');
       // we only check if the selection is valid
-      if (+(selectionIndexes[1]) < 9 && +(selectionIndexes[2]) < 8 && +(selectionIndexes[3]) < 7 && !selectionIndexes.some(x => x === '0')) {
+      if (+(selectionIndexes[1]) < 9
+        && +(selectionIndexes[2]) < 8
+        && +(selectionIndexes[3]) < 7
+        && !selectionIndexes.some(x => x === '0')
+      ) {
         let c = '';
         let remainingDigits = [...DIGITS];
         selectionIndexes.forEach(
@@ -139,11 +151,12 @@ module.exports = {
 
   /**
    * Problem 33: Digit cancelling fractions
-   * The fraction 49/98 is a curious fraction, as an inexperienced mathematician in attempting to simplify
-   * it may incorrectly believe that 49/98 = 4/8, which is correct, is obtained by cancelling the 9s.
+   *
+   * The fraction 49/98 is a curious fraction, as an inexperienced mathematician in attempting to simplify it may incorrectly believe that 49/98 = 4/8, which is correct, is obtained by cancelling the 9s.
+   *
    * We shall consider fractions like, 30/50 = 3/5, to be trivial examples.
-   * There are exactly four non-trivial examples of this type of fraction, less than one in value, and containing two
-   * digits in the numerator and denominator.
+   *
+   * There are exactly four non-trivial examples of this type of fraction, less than one in value, and containing two digits in the numerator and denominator.
    *
    * @question If the product of these four fractions is given in its lowest common terms, find the value of the denominator.
    */
@@ -186,78 +199,98 @@ module.exports = {
   /**
    * Problem 34: Digit factorials
    * 145 is a curious number, as 1! + 4! + 5! = 1 + 24 + 120 = 145.
+   *
    * @question Find the sum of all numbers which are equal to the sum of the factorial of their digits.
-   * Note: as 1! = 1 and 2! = 2 are not sums they are not included.
+   *
+   * @question Note: as 1! = 1 and 2! = 2 are not sums they are not included.
    */
   e34() {
     const FACTORIALS = utils.generateFactTable(9);
     const curiousNumbers = [];
+
+    // check whether n is curious
+    function isCurious(n) {
+      return utils.sumArray(n.toString().split(''), x => FACTORIALS[x]) === n;
+    }
+
+    // ensures that none of n's digits exceed d
+    function boundedBy(n, d) {
+      return n.toString().split('').every(x => +(x) <= d);
+    }
+
+    // check if number `n` contains exactly `c` copies of the digit `d`
+    function containExactly(n, d, c) {
+      return n.toString().split('').filter(x => +(x) === d).length === c;
+    }
+
 
     // we note that curious numbers must have between 3 and 7 digits, since 8 * 9! < 10^8
     // and we can quickly manually verify that numbers with 2 digits cannot be curious
 
     // for each digit count we use a heuristic to prune some numbers
     for (let d = 3; d <= 7; d++) {
-      // for 3-digit numbers, we notice that
-      // 1. the number cannot contain a digit > 6, since 6! = 720, and 7! (in 720) > 999
-      // 2. the number must contain at least one 5, since 3 * 4! < 100
-      // 3. the max number following condition 1 is 555, but 5! + 5! + 5! = 360, so our number cannot have three 5's
-      // 4. we can quickly verify that our number cannot contain two 5's either, as none of them satisfies our condition
-      // therefore our number must contain exactly one 5,
-      // for the rest of digits below, we use the same logic applied here
+      // for 3-digit numbers (n₃), we notice that
+      // 1. n₃ < 700 since 7! > 999
+      // 2. to comply with above, n₃ cannot contain a digit > 5
       if (d === 3) {
-        for (let i = 125; i <= 145; i++) {
-          if (isEligible(i, 5) && isCurious(i)) curiousNumbers.push(i);
+        for (let i = 100; i <= 555; i++) {
+          if (boundedBy(i, 5) && isCurious(i)) curiousNumbers.push(i);
         }
       }
 
-      // for 4-digit numbers, we have two main options, either use one 7, or no 7
-      // if we use one 7, our upper bound is 7! + 3 * 6! = 7200 maximize-> 7166 -> factSum(7166) = 6481 maximize-> 6476
-      // if not using 7. our uppper bound is 6! * 4 = 2880 maximize-> 2666, since the first digit <= 2
-      // our upper bound becomes  2 + 6! * 3 = 2162
-      // since we need to use at least 2 6's, our lower bound becomes 1266
+      // for 4-digit numbers (n₄), we have two main options, either use one 7, or no 7
+      // if not using 7, upper bound is 4 * 6! = 2880
+      // if using one 7, lower bound is 7000, upper bound is 5040 + 3 * 6! = 7200
       if (d === 4) {
-        for (let i = 1266; i < 2162; i++) {
-          if (isEligible(i, 6) && isCurious(i)) curiousNumbers.push(i);
+        // no 7
+        for (let i = 1000; i < 2880; i++) {
+          if (boundedBy(i, 6) && isCurious(i)) curiousNumbers.push(i);
         }
-        for (let i = 5040; i < 6476; i++) {
-          if (isEligible(i, 7) && isCurious(i)) curiousNumbers.push(i);
+        for (let i = 7000; i < 7200; i++) {
+          if (containExactly(i, 7, 1) && isCurious(i)) curiousNumbers.push(i);
         }
       }
 
       // for 5-digit numbers, the options are to use 2 8's, 1 8, or no 8
       if (d === 5) {
-        // using two 8's
-        for (let i = 80640; i < 88777; i++) {
-          if (isEligible(i, 8) && isCurious(i)) curiousNumbers.push(i);
+        // no 8
+        // upper bound is 5 * 7! = 25200
+        // since our number < 25200, we cannot have five 7's, as the first digit is either 1 or 2
+        // therefore our upper bound becomes 4 * 7! = 20160
+        // we can lower it down further by noticing that we must be using four 7's
+        for (let i = 10000; i < 17777; i++) {
+          if (boundedBy(i, 7) && isCurious(i)) curiousNumbers.push(i);
         }
 
+        // the same min-maxing upper/lower bound logic is applied
+        // to all further digit count and code below
         // using one 8
         for (let i = 40320; i < 57778; i++) {
-          if (isEligible(i, 8) && isCurious(i)) curiousNumbers.push(i);
+          if (boundedBy(i, 8) && containExactly(i, 8, 1) && isCurious(i)) curiousNumbers.push(i);
         }
 
-        // no 8
-        for (let i = 10077; i < 17777; i++) {
-          if (isEligible(i, 7) && isCurious(i)) curiousNumbers.push(i);
+        // using two 8's
+        for (let i = 80640; i < 88777; i++) {
+          if (boundedBy(i, 8) && containExactly(i, 8, 2) && isCurious(i)) curiousNumbers.push(i);
         }
       }
 
-      // for 6-digit numbers, the options are to use 2 9's, 1 9, or no 9
+      // for 6-digit numbers, the options are to use two 9's, one 9, or no 9
+      // if we use more than two 9s, the sum will exceed 6 digits
       if (d === 6) {
-        // 2 9's
+        // two 9's
         for (let i = 725799; i < 886998; i++) {
-          if (isCurious(i)) curiousNumbers.push(i);
+          if (containExactly(i, 9, 2) && isCurious(i)) curiousNumbers.push(i);
         }
 
-        // 1 9
+        // one 9
         for (let i = 362889; i < 488889; i++) {
-          if (isCurious(i)) curiousNumbers.push(i);
+          if (containExactly(i, 9, 1) && isCurious(i)) curiousNumbers.push(i);
         }
 
         // no 9
         for (let i = 100088; i < 158888; i++) {
-          if (isCurious(i)) curiousNumbers.push(i);
+          if (boundedBy(i, 8) && isCurious(i)) curiousNumbers.push(i);
         }
       }
 
@@ -265,33 +298,28 @@ module.exports = {
       if (d === 7) {
         // 4 9's
         for (let i = 1459999; i < 1489999; i++) {
-          if (isCurious(i)) curiousNumbers.push(i);
+          if (containExactly(i, 9, 4) && isCurious(i)) curiousNumbers.push(i);
         }
       }
     }
-
-    function isCurious(n) {
-      return utils.sumArray(n.toString().split(''), x => FACTORIALS[x]) === n;
-    }
-
-    function isEligible(n, d) {
-      return !n.toString().split('').some(x => +(x) > d);
-    }
-
     return utils.sumArray(curiousNumbers);
   },
 
   /**
    * Problem 35: Circular primes
    * The number, 197, is called a circular prime because all rotations of the digits: 197, 971, and 719, are themselves prime.
-   * There are thirteen such primes below 100: 2, 3, 5, 7, 11, 13, 17, 31, 37, 71, 73, 79, and 97.
+   *
+   * There are thirteen such primes below 100:
+   *
+   * 2, 3, 5, 7, 11, 13, 17, 31, 37, 71, 73, 79, and 97.
    *
    * @question How many circular primes are there below one million?
    */
   e35() {
-    // const primeTable = utils.generatePrimeTable(1000000);
-    const testedNumbers = {}; // table containing numbers we have tested to avoid duplicate testing
-    const validDigits = [1, 3, 7, 9]; // any number containing a digit outside of this list will have a composite rotation
+    // table containing numbers we have tested to avoid duplicate testing
+    const testedNumbers = {};
+    // any number containing a digit outside of this list will have a composite rotation
+    const validDigits = [1, 3, 7, 9];
     const primeRotations = []; // result containing all rotation primes
 
     // we check all numbers within 3 to 6 digits
@@ -348,7 +376,9 @@ module.exports = {
         const evenDigitPalindrome = +(`${i.toString()}${i.toString().split('').reverse().join('')}`);
         let oddDigitPalindromes = [];
         if (i < 100) { // we don't want to generate 7 digit palindromes
-          oddDigitPalindromes = [...Array(10)].map((x, idx) => +(`${i.toString()}${idx}${i.toString().split('').reverse().join('')}`));
+          oddDigitPalindromes = [...Array(10)].map(
+            (x, idx) => +(`${i.toString()}${idx}${i.toString().split('').reverse().join('')}`)
+          );
         }
         const decimalPalindromes = [evenDigitPalindrome, ...oddDigitPalindromes];
         decimalPalindromes.forEach((dp) => {
@@ -366,11 +396,11 @@ module.exports = {
 
   /**
    * Problem 37: Truncatable primes
-   * The number 3797 has an interesting property. Being prime itself, it is possible to continuously remove digits from left to right,
-   * and remain prime at each stage: 3797, 797, 97, and 7. Similarly we can work from right to left: 3797, 379, 37, and 3.
+   * The number 3797 has an interesting property. Being prime itself, it is possible to continuously remove digits from left to right, and remain prime at each stage: 3797, 797, 97, and 7. Similarly we can work from right to left: 3797, 379, 37, and 3.
    *
    * @question Find the sum of the only eleven primes that are both truncatable from left to right and right to left.
-   * NOTE: 2, 3, 5, and 7 are not considered to be truncatable primes.
+   *
+   * @question NOTE: 2, 3, 5, and 7 are not considered to be truncatable primes.
    */
   e37() {
     const truncatedPrimes = [];
@@ -390,7 +420,8 @@ module.exports = {
 
     // 1, 9 cannot be a root as it is not prime
     const queueA = [2, 3, 5, 7]; // queue for append
-    const queueP = [3, 7]; // queue for preppend (preppending to a 2 or 5 will automatically make a number composite)
+    // queue for preppend (preppending to a 2 or 5 will automatically make a number composite)
+    const queueP = [3, 7];
 
     while (queueA.length || queueP.length) {
       if (queueA.length) {
@@ -414,7 +445,8 @@ module.exports = {
         // preppending to 2, 5 will result in a composite right truncation
         const stopPreppend = firstDigitOfNode === 2 || firstDigitOfNode === 5;
 
-        // preppending the same digit to the leading digit eg. 357 -> 3357 will result in the first 2 leading digit to be divisible by 11
+        // preppending the same digit to the leading digit eg. 357 -> 3357
+        // will result in the first 2 leading digit to be divisible by 11
         // except when the leading digit is 1, then preppending by 1 is still fine as 11 is prime
         const validDigits = validDigitsP.filter(x => x === 1 || x !== firstDigitOfNode);
         if (seen[nodeP] && nodeP.toString().length > 1) {
@@ -443,23 +475,25 @@ module.exports = {
    * Take the number 192 and multiply it by each of 1, 2, and 3:
    *
    * 192 × 1 = 192
+   *
    * 192 × 2 = 384
+   *
    * 192 × 3 = 576
    *
    * By concatenating each product we get the 1 to 9 pandigital, 192384576. We will call 192384576 the concatenated product of 192 and (1,2,3)
    *
-   * The same can be achieved by starting with 9 and multiplying by 1, 2, 3, 4, and 5, giving the pandigital, 918273645, which is the
-   * concatenated product of 9 and (1,2,3,4,5)
+   * The same can be achieved by starting with 9 and multiplying by 1, 2, 3, 4, and 5, giving the pandigital, 918273645, which is the concatenated product of 9 and (1,2,3,4,5)
    *
-   * @question What is the largest 1 to 9 pandigital 9-digit number that can be formed as the concatenated product of an integer with
-   * (1,2, ... , n) where n > 1?
+   * @question What is the largest 1 to 9 pandigital 9-digit number that can be formed as the concatenated product of an integer with (1,2, ... , n) where n > 1?
    */
   e38() {
     // we are given that the answer is >= 918273645
     // given that our multiplicand (m) has 2 digits, then it must be >= 91
-    // successive multiplication by 1, 2, 3, 4 will yield products of 2 digits, 3 digits, 3 digits, 3 digits = 11 digits > 9 digits
+    // successive multiplication by 1, 2, 3, 4 will yield products of
+    // 2 digits, 3 digits, 3 digits, 3 digits = 11 digits > 9 digits
     // we can apply the same logic to 3 digit multiplicands: 3 + 4 + 4 > 9
-    // for 5 digits and above, the result of mulitpliying by 1 and 2 will result in a >5 and >6 digit multiplicand > 9 digits
+    // for 5 digits and above, the result of multipliying by 1 and 2
+    // will result (respectively) in a >5 and >6 digit multiplicand => > 9 digits
     // so we can only check 4-digits multiplicands where m * 1 has 4 digits and m * 2 has 5 digits, 4 + 5 = 9
     // we dont have to check numbers > 9500 as multipliying by 2 will yield 19...
     let largestPandigitalProduct = 918273645;
@@ -483,7 +517,9 @@ module.exports = {
   /**
    * Problem 39: Integer right triangles
    * If p is the perimeter of a right angle triangle with integral length sides, {a,b,c}, there are exactly three solutions for p = 120.
+   *
    * {20,48,52}, {24,45,51}, {30,40,50}
+   *
    * @question For which value of p ≤ 1000, is the number of solutions maximised?
    */
   e39() {
@@ -528,13 +564,18 @@ module.exports = {
   /**
    * Problem 40: Champernowne's constant
    * An irrational decimal fraction is created by concatenating the positive integers:
+   *
    * 0.12345678910[1]112131415161718192021...
+   *
    * It can be seen that the 12th digit of the fractional part is 1 (enclosed in square brackets []).
+   *
    * @question If d_n represents the nth digit of the fractional part, find the value of the following expression.
+   *
    * @question d_1 × d_10 × d_100 × d_1000 × d_10000 × d_100000 × d_1000000
    */
   e40() {
-    // we split the fractional part into sections, where the first section contains the numbers with one digit (1,2,3,...,9),
+    // we split the fractional part into sections,
+    // where the first section contains the numbers with one digit (1,2,3,...,9),
     // the second section contains the 2-digits numbers (11,12,...,99), etc.
     // it can be seen that each section contains 9i * 10^(i-1) digits total
     const searchIndexes = [1, 10, 100, 1000, 10000, 100000, 1000000];

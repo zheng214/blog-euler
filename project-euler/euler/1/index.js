@@ -16,7 +16,7 @@ module.exports = {
 
   /**
    * Problem 2: Even Fibonacci numbers
-   * @question Find the sum of the even-valued Fibonacci numbers whose values do not exceed four million
+   * @question Find the sum of the even-valued Fibonacci numbers whose values do not exceed four million.
    */
   e2() {
     let [a, b] = [0, 1];
@@ -32,12 +32,13 @@ module.exports = {
 
   /**
    * Problem 3: Largest prime factor
-   * @question What is the largest prime factor of the number 600851475143
+   * @question What is the largest prime factor of the number 600851475143.
    */
   e3() {
     let currentlyDividing = 600851475143;
     let currentFactor = 2;
-    // for each currentFactor, we keep dividing the current number (currentlyDividing) by it until it is incapable of doing so
+    // for each currentFactor,
+    // we keep dividing the current number by it until it is incapable of doing so
     while (currentlyDividing > 1) {
       while (currentlyDividing % currentFactor === 0) {
         currentlyDividing /= currentFactor;
@@ -50,8 +51,8 @@ module.exports = {
 
   /**
    * Problem 4: Largest palindrome product
-   * @question Find the largest palindrome made from the product of two 3-digit numbers.
    * The largest palindrome made from the product of two 2-digit numbers is 9009 = 91 × 99.
+   * @question Find the largest palindrome made from the product of two 3-digit numbers.
    */
   e4() {
     // searching 6 digits palindromes
@@ -91,7 +92,10 @@ module.exports = {
         searchDirection = 'up';
       }
 
-      let currentDivisor = searchDirection === 'up' ? Math.ceil(centerQuotient) : Math.floor(centerQuotient);
+      let currentDivisor = searchDirection === 'up'
+        ? Math.ceil(centerQuotient)
+        : Math.floor(centerQuotient);
+
       do {
         if (isValidDivisor(palindrome / currentDivisor)) {
           return true;
@@ -108,14 +112,15 @@ module.exports = {
 
   /**
    * Problem 5: Smallest multiple
-   * @question What is the smallest positive number that is evenly divisible by all of the numbers from 1 to 20?
    * 2520 is the smallest number that can be divided by each of the numbers from 1 to 10 without any remainder.
+   * @question What is the smallest positive number that is evenly divisible by all of the numbers from 1 to 20?
    */
   e5() {
     const totalPrimeFactors = [];
     // for each n, we:
     // (1) compute its prime factorization (see function below)
-    // (2) "merge" that factorization into totalPrimeFactors by checking if the computed power is higher than the power already in the array
+    // (2) "merge" that factorization into totalPrimeFactors by checking if the computed power
+    // is higher than the power already in the array
     // (3) after all merging is done, the totalPrimeFactors will contain the prime factorization of our answer
     for (let n = 2; n <= 20; n++) {
       const primeFactors = utils.listPrimeFactors(n); // (1)
@@ -171,12 +176,12 @@ module.exports = {
 
   /**
    * Problem 8: Largest product in a series
-   * @question Find the thirteen adjacent digits in the 1000-digit number that have the greatest product.
+   * @question Find the thirteen adjacent digits in the [1000-digit number @asset 'p8_data.txt'] that have the greatest product.
    */
   e8() {
     const data8 = require('./p8_data');
-    const formattedNumber = data8.replace(/\r|\n|\s/g, '');
-    // if 12 digits are wrapped between two 0s, we can trim it
+    const formattedNumber = data8.replace(/\r|\n|\s/g, ''); // one line of string
+    // if 12 or less digits are wrapped between two 0s, we can collapse it
     const slimNumber = formattedNumber.replace(/0\d{0,12}0/g, '0');
     // initial product
     let largestProduct = slimNumber.substr(0, 13).split('').reduce((acc, curr) => acc * Number(curr), 1);
@@ -187,7 +192,8 @@ module.exports = {
       // if our substring contains an 0, we can skip it
       if (!slimNumber.substr(i, 13).includes('0')) {
         // since each iteration have 12 digits in common with the previous iteration
-        // we use our previously computed product, divide the digit that came before it, and multiply the digit that comes after
+        // we use our previously computed product, divide the digit that came before it,
+        // and multiply the digit that comes after
         if (slimNumber[i - 1] === '0') { // make sure we don't divide by 0
           newProduct = slimNumber.substr(i, 13).split('').reduce((acc, curr) => acc * Number(curr), 1);
         } else {
@@ -228,10 +234,12 @@ module.exports = {
    */
   e10() {
     // we use the Sieve of Eratosthenes to generate all primes below two million
-    // for this purpose we create an array where the indexes represent integers, and the values represent whether the index is prime or not
+    // for this purpose we create an array where the indexes represent integers,
+    // and the values represent whether the index is prime or not
     // however, to optimize speed, we only sieve by odd multiples, ie. the even numbers are assumed to be non-prime
 
-    // the resulting sieveArr will contain a list of flags indicating whether the odd number corresponding to that index is prime or not
+    // the resulting sieveArr will contain a list of flags indicating
+    // whether the odd number corresponding to that index is prime or not
     // e.g. sieveArr[3] = true -> meaning that the 3rd odd number (excluding 1, so 7) is prime
     // e.g. sieveArr[4] = false -> 9 is not prime
     const sieveArr = [];
@@ -254,7 +262,8 @@ module.exports = {
       }
     }
     let sum = 0;
-    // after the array is ready, we loop over it adding all flags which are true, keeping in mind that the p is the pth odd integer
+    // after the array is ready, we loop over it adding all flags which are true,
+    // keeping in mind that the p is the pth odd integer
     for (let p = 1; p < sieveArr.length; p++) {
       if (sieveArr[p] !== false) {
         sum += (2 * p + 1);

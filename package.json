@@ -2,7 +2,7 @@
   "name": "zheng-project-euler",
   "version": "0.1.0",
   "description": "",
-  "main": "index.js",
+  "main": "project-euler/index.js",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

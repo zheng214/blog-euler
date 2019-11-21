@@ -1,56 +1,45 @@
 /**
  * @file primes.js
- * @overview contains helper functions related to prime numbers
+ * @overview Contains helper functions related to prime numbers
  */
 
+/**
+ * @function isPrime
+ * @description Check if a number is prime, using a simple divisibility algorithm and a few heuristics
+ * @param {Number} n The integer to check
+ * @returns {Boolean}
+ */
 function isPrime(n) {
-  if (n < 2) {
+  // small numbers, edge cases
+  if (n < 4) {
+    return n > 1;
+  }
+
+  // check divisibility by 2 and 3
+  if (!(n & 1) || !(n % 3)) {
     return false;
   }
 
-  if (n === 2) {
-    return true;
-  }
+  const upperBound = Math.floor(Math.sqrt(n));
+  let divisor = 5;
 
-  if (!(n & 1)) {
-    return false;
-  }
-
-  const lastDigit = n % 10;
-  if (lastDigit === 5) {
-    return false;
-  }
-
-  const sumOfDigit = utils.sumArray(n.toString().split(''), x => +x);
-  if (sumOfDigit % 3 === 0) {
-    return false;
-  }
-
-  let divisor = Math.floor(Math.sqrt(n));
-  if (!(divisor & 1)) {
-    divisor--;
-  }
-
-  while (divisor > 1) {
-    if (!(n % divisor)) {
+  while (divisor <= upperBound) {
+    if (!(n % divisor) || !(n % (divisor + 2))) {
       return false;
     }
-    divisor -= 2;
+    divisor += 6;
   }
   return true;
 }
 
-// generates a table of all primes under n by sieving all odd numbers, support for n up to 90 million
-// performance: intel i5 9400F
-// 1000: < 0.1ms
-// 10K: 2.436ms
-// 100K: 5.967ms
-// 1M: 57ms
-// 5M: 382ms
-// 10M: 919.793ms
-// 50M: 7376.009ms
-// 90M: 10404.120ms
-function generatePrimeTable(n) {
+/**
+ * @function generatePrimesTable
+ * @description Generates a table in which the keys are all primes under n, using a optimized Sieve of Eratosthenes
+ * @param {Number} n Upper Bound
+ * @returns {Object} The keys are the primes, the values are truthy placeholders
+ * @example input: 15; output: { 2: true, 3: true, 5: true, 7: true, 11: true, 13: true }
+ */
+function generatePrimesTable(n) {
   // array where indexes represent all odd numbers, ie. each index i correspond to the ith odd number (except for 1)
   // e.g. sieveArr[2] = true is equivalent of saying the 2nd odd number excluding 1 (ie. 5) is prime
   const sieveArr = [];
@@ -84,9 +73,19 @@ function generatePrimeTable(n) {
     }
   }
   return table;
+
+  // performance: intel i5 9400F
+  // 1000: < 0.1ms
+  // 10K: 2.436ms
+  // 100K: 5.967ms
+  // 1M: 57ms
+  // 5M: 382ms
+  // 10M: 919.793ms
+  // 50M: 7376.009ms
+  // 90M: 10404.120ms
 }
 
 module.exports = {
   isPrime,
-  generatePrimeTable,
+  generatePrimesTable,
 };

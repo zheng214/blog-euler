@@ -1,0 +1,22 @@
+@import '../../styles/variables.scss';
+
+.u-sidebar {
+  .utilitybar-header{
+    height: 75px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    .e-item {
+      button {
+        font-size: 18px !important;
+        height: 75px;
+      }
+    }
+  }
+}
+
+.u-sidebar::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}

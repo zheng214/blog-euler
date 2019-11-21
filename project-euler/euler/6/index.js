@@ -1,26 +1,32 @@
+
+const fs = require('fs');
+const path = require('path');
+const utils = require('../utils');
+
 module.exports = {
   /**
    * Problem 51 Prime digit replacements
    * By replacing the 1st digit of the 2-digit number *3, it turns out that six of the nine possible values:
+   *
    * 13, 23, 43, 53, 73, and 83, are all prime.
    *
-   * By replacing the 3rd and 4th digits of 56**3 with the same digit, this 5-digit number is the first example
-   * having seven primes among the ten generated numbers, yielding the family:
-   * 56003, 56113, 56333, 56443, 56663, 56773, and 56993. Consequently 56003, being the first member of this family,
-   * is the smallest prime with this property.
+   * By replacing the 3rd and 4th digits of 56**3 with the same digit, this 5-digit number is the first example having seven primes among the ten generated numbers, yielding the family:
    *
-   * @question Find the smallest prime which, by replacing part of the number (not necessarily adjacent digits) with the same digit,
-   * @question is part of an eight prime value family.
+   * 56003, 56113, 56333, 56443, 56663, 56773, and 56993.
+   *
+   * Consequently 56003, being the first member of this family, is the smallest prime with this property.
+   *
+   * @question Find the smallest prime which, by replacing part of the number (not necessarily adjacent digits) with the same digit, is part of an eight prime value family.
    */
   e51() {
     // define * as the "variable" part, and the rest of digits as the "fixed" part
-    // the number of * must be a multiple of 3, as otherwise there will be at least 3 numbers in each family which will be divisble by 3
+    // the number of * must be a multiple of 3, as otherwise there will be at least 3 numbers in each family which will be divisible by 3
     // because the sum of their digits will be a multiple of 3.
     // we first try with 3 variable digits and 3 fixed digits or less;
     const candidates = [];
     for (let fixedDigits = 1; fixedDigits <= 999; fixedDigits++) {
       // for each fixed set of digits, generate the list of combinations comprising of fixed digits and *'s
-      const binomialCombinations = utils.computeBinomialCombinations(fixedDigits, '***');
+      const binomialCombinations = utils.listOrderedCombinations(fixedDigits, '***');
       for (let i = 0; i < binomialCombinations.length; i++) {
         const family = [];
         let composites = 0;
@@ -123,10 +129,15 @@ module.exports = {
   /**
    * Problem 53 Combinatorics selections
    * There are exactly ten ways of selecting three from five, 12345:
+   *
    * 123, 124, 125, 134, 135, 145, 234, 235, 245, and 345
+   *
    * In combinatorics, we use the notation, C(5, 3) = 10
+   *
    * In general, C(n, r) = n!/(r!(n−r)!), where r ≤ n
+   *
    * It is not until n=23, that a value exceeds one-million: C(23, 10)=1144066.
+   *
    * @question How many, not necessarily distinct, values of C(n, r) for 1 ≤ n ≤ 100, are greater than one-million?
    */
   e53() {
@@ -166,30 +177,34 @@ module.exports = {
    * In the card game poker, a hand consists of five cards and are ranked, from lowest to highest, in the following way:
    *
    * High Card: Highest value card.
+   *
    * One Pair: Two cards of the same value.
+   *
    * Two Pairs: Two different pairs.
+   *
    * Three of a Kind: Three cards of the same value.
+   *
    * Straight: All cards are consecutive values.
+   *
    * Flush: All cards of the same suit.
+   *
    * Full House: Three of a kind and a pair.
+   *
    * Four of a Kind: Four cards of the same value.
+   *
    * Straight Flush: All cards are consecutive values of same suit.
+   *
    * Royal Flush: Ten, Jack, Queen, King, Ace, in same suit.
    *
    * The cards are valued in the order:
+   *
    * 2, 3, 4, 5, 6, 7, 8, 9, 10, Jack, Queen, King, Ace.
    *
-   * If two players have the same ranked hands then the rank made up of the highest value wins;
-   * for example, a pair of eights beats a pair of fives (see example 1 below). But if two ranks tie
-   * for example, both players have a pair of queens, then highest cards in each hand are compared;
-   * if the highest cards tie then the next highest cards are compared, and so on.
+   * If two players have the same ranked hands then the rank made up of the highest value wins; for example, a pair of eights beats a pair of fives. But if two ranks tie for example, both players have a pair of queens, then highest cards in each hand are compared; if the highest cards tie then the next highest cards are compared, and so on.
    *
-   * The file, [poker.txt](https://github.com/zheng214/euler/blob/master/euler/6/p054_poker.txt),
-   * contains one-thousand random hands dealt to two players. Each line of the file contains ten cards
-   * (separated by a single space): the first five are Player 1's cards and the last five are Player 2's cards.
+   * The file, [poker.txt @asset p054_poker.txt], contains one-thousand random hands dealt to two players. Each line of the file contains ten cards (separated by a single space): the first five are Player 1's cards and the last five are Player 2's cards.
    *
-   * You can assume that all hands are valid (no invalid characters or repeated cards), each player's hand is in no specific order,
-   * and in each hand there is a clear winner.
+   * You can assume that all hands are valid (no invalid characters or repeated cards), each player's hand is in no specific order, and in each hand there is a clear winner.
    *
    * @question How many hands does Player 1 win?
    */
@@ -209,7 +224,7 @@ module.exports = {
         const highest = index + 5;
         const base = arr.slice(index, index + 5);
         for (let i = 0; i <= 120; i++) {
-          table[utils.getLexicographicPermutation(base, i).join('')] = highest;
+          table[utils.getLexicalPermutation(base, i).join('')] = highest;
         }
         return table;
       },
@@ -340,17 +355,21 @@ module.exports = {
    * If we take 47, reverse and add, 47 + 74 = 121, which is palindromic.
    *
    * Not all numbers produce palindromes so quickly. For example,
+   *
    * 349 + 943 = 1292,
+   *
    * 1292 + 2921 = 4213
+   *
    * 4213 + 3124 = 7337
    *
    * That is, 349 took three iterations to arrive at a palindrome.
    *
-   * Although no one has proved it yet, it is thought that some numbers, like 196, never produce a palindrome. A number that never forms a palindrome
-   * through the reverse and add process is called a Lychrel number. Due to the theoretical nature of these numbers, and for the purpose of this problem,
-   * we shall assume that a number is Lychrel until proven otherwise. In addition you are given that for every number below ten-thousand, it will either
+   * Although no one has proved it yet, it is thought that some numbers, like 196, never produce a palindrome. A number that never forms a palindrome through the reverse and add process is called a Lychrel number. Due to the theoretical nature of these numbers, and for the purpose of this problem, we shall assume that a number is Lychrel until proven otherwise. In addition you are given that for every number below ten-thousand, it will either:
+   *
    * (i) become a palindrome in less than fifty iterations, or,
+   *
    * (ii) no one, with all the computing power that exists, has managed so far to map it to a palindrome.
+   *
    * 10677 is the first number to be shown to require over fifty iterations before producing a palindrome: 4668731596684224866951378664 (53 iterations, 28-digits).
    *
    * Surprisingly, there are palindromic numbers that are themselves Lychrel numbers; the first example is 4994.
@@ -359,7 +378,7 @@ module.exports = {
    */
   e55() {
     const lychrelNumbers = {}; // memoized table for all lychrel numbers (doesnt terminate)
-    const nonLychrelNumbers = {}; // numbers which produce a palindrom through reverse add
+    const nonLychrelNumbers = {}; // numbers which produce a palindrome through reverse add
 
     for (let n = 1; n <= 10000; n++) {
       testLychrel(n);
@@ -397,7 +416,9 @@ module.exports = {
    * Problem 56 Powerful digit sum
    *
    * A googol (10^100) is a massive number: one followed by one-hundred zeros;
+   *
    * 100^100 is almost unimaginably large: one followed by two-hundred zeros.
+   *
    * Despite their size, the sum of the digits in each number is only 1.
    *
    * @question Considering natural numbers of the form, ab, where a, b < 100, what is the maximum digital sum?
@@ -414,8 +435,7 @@ module.exports = {
         return null;
       }
       for (let exp = 1; exp <= 99; exp++) {
-        const result = BigInt(column[exp - 1]) * BigInt(base);
-        // const result = longMultiply(column[exp - 1], base.toString());
+        const result = longMultiply(column[exp - 1], base.toString());
         const digitSum = utils.sumArray(result, x => +x);
         if (digitSum > largestDigitSum) {
           largestDigitSum = digitSum;
@@ -428,7 +448,6 @@ module.exports = {
 
     // takes 2 strings of numbers as params, returns an array containing the digits of the product of the 2 numbers
     // multiplies the 2 numbers using long multiplication
-    // is obsolete when BigInt gets pass stage 3
     function longMultiply(a, b) {
       const mTable = {};
       const [n1, n2] = [a.split('').reverse(), b.split('').reverse()];
@@ -473,16 +492,17 @@ module.exports = {
   /**
    * Problem 57 Square root convergents
    * It is possible to show that the square root of two can be expressed as an infinite continued fraction.
-   * sqrt(2) = 1 + 1 / (2 + 1 / (2 + 1 / (2 + ...)))
    *
-   * By expanding for the first three iterations. we get:
+   * @math \sqrt 2 =1+ \frac 1 {2+ \frac 1 {2 +\frac 1 {2+ \dots}}}
    *
-   * 1 + 1 / 2 = 3/2 = 1.5
-   * 1 + 1 / (2 + 1 / 2) = 7/5 = 1.4
-   * 1 + 1 / (2 + 1 / (2 + 1 / 2)) = 17/12 = 1.41666
+   * By expanding for the first four iterations. we get:
    *
-   * The next three expansions are 41/29, 99/70, and 239/169, but the 8th expansion, 1393/985, is the first exmaple where the number of digits
-   * in the numerator exceeds the number of digits in the denominator.
+   * @math 1 + \frac 1 2 = \frac  32 = 1.5
+   * @math 1 + \frac 1 {2 + \frac 1 2} = \frac 7 5 = 1.4
+   * @math 1 + \frac 1 {2 + \frac 1 {2+\frac 1 2}} = \frac {17}{12} = 1.41666 \dots
+   * @math 1 + \frac 1 {2 + \frac 1 {2+\frac 1 {2+\frac 1 2}}} = \frac {41}{29} = 1.41379 \dots
+   *
+   * The next three expansions are 41/29, 99/70, and 239/169, but the 8th expansion, 1393/985, is the first example where the number of digits in the numerator exceeds the number of digits in the denominator.
    *
    * @question In the first one-thousand expansions, how many fractions contain a numerator with more digits than the denominator?
    */
@@ -509,15 +529,21 @@ module.exports = {
    * Problem 58 Spiral Primes
    * Starting with 1 and spiralling anticlockwise in the following way, a square spiral with side length 7 is formed.
    *
-   * 37 36 35 34 33 32 31
-   * 38 17 16 15 14 13 30
-   * 39 18  5  4  3 12 29
-   * 40 19  6  1  2 11 28
-   * 41 20  7  8  9 10 27
-   * 42 21 22 23 24 25 26
-   * 43 44 45 46 47 48 49
-   * It is interesting to note that the odd squares lie along the bottom right diagonal, but what is more interesting is that
-   * 8 out of the 13 numbers lying along both diagonals are prime; that is, a ratio of 8/13 ≈ 62%.
+   *  37 36 35 34 33 32 31
+   *
+   *  38 17 16 15 14 13 30
+   *
+   *  39 18 05 04 03 12 29
+   *
+   *  40 19 06 01 02 11 28
+   *
+   *  41 20 07 08 09 10 27
+   *
+   *  42 21 22 23 24 25 26
+   *
+   *  43 44 45 46 47 48 49
+   *
+   * It is interesting to note that the odd squares lie along the bottom right diagonal, but what is more interesting is that 8 out of the 13 numbers lying along both diagonals are prime; that is, a ratio of 8/13 ≈ 62%.
    *
    * If one complete new layer is wrapped around the spiral above, a square spiral with side length 9 will be formed.
    *
@@ -526,7 +552,7 @@ module.exports = {
 
   e58() {
     // generate a table of 1 million primes
-    // const PRIMES = utils.generatePrimeTable(10000000);
+    // const PRIMES = utils.generatePrimesTable(10000000);
 
     // start from the second layer
     let currentNumber = 9;
@@ -552,23 +578,17 @@ module.exports = {
   /**
    * Problem 59 XOR decryption
    *
-   * Each character on a computer is assigned a unique code and the preferred standard is ASCII (American Standard Code for Information Interchange).
-   * For example, uppercase A = 65, asterisk (*) = 42, and lowercase k = 107.
+   * Each character on a computer is assigned a unique code and the preferred standard is ASCII (American Standard Code for Information Interchange). For example, uppercase A = 65, asterisk (*) = 42, and lowercase k = 107.
    *
-   * A modern encryption method is to take a text file, convert the bytes to ASCII, then XOR each byte with a given value, taken from a secret key.
-   * The advantage with the XOR function is that using the same encryption key on the cipher text, restores the plain text;
-   * for example, 65 XOR 42 = 107, then 107 XOR 42 = 65.
+   * A modern encryption method is to take a text file, convert the bytes to ASCII, then XOR each byte with a given value, taken from a secret key. The advantage with the XOR function is that using the same encryption key on the cipher text, restores the plain text; for example, 65 XOR 42 = 107, then 107 XOR 42 = 65.
    *
-   * For unbreakable encryption, the key is the same length as the plain text message, and the key is made up of random bytes.
-   * The user would keep the encrypted message and the encryption key in different locations, and without both "halves", it is impossible to decrypt the message.
+   * For unbreakable encryption, the key is the same length as the plain text message, and the key is made up of random bytes. The user would keep the encrypted message and the encryption key in different locations, and without both "halves", it is impossible to decrypt the message.
    *
-   * Unfortunately, this method is impractical for most users, so the modified method is to use a password as a key.
-   * If the password is shorter than the message, which is likely, the key is repeated cyclically throughout the message.
-   * The balance for this method is using a sufficiently long password key for security, but short enough to be memorable.
+   * Unfortunately, this method is impractical for most users, so the modified method is to use a password as a key. If the password is shorter than the message, which is likely, the key is repeated cyclically throughout the message. The balance for this method is using a sufficiently long password key for security, but short enough to be memorable.
    *
    * Your task has been made easy, as the encryption key consists of three lower case characters.
-   * @question Using [p059_cipher.txt](https://github.com/zheng214/euler/blob/master/euler/6/p059_cipher.txt), a file containing the encrypted ASCII codes,
-   * @question and the knowledge that the plain text must contain common English words, decrypt the message and find the sum of the ASCII values in the original text.
+   *
+   * @question Using [p059_cipher.txt @asset p059_cipher.txt], a file containing the encrypted ASCII codes, and the knowledge that the plain text must contain common English words, decrypt the message and find the sum of the ASCII values in the original text.
    */
   e59() {
     // we start by compiling a list of valid password characters for each position
@@ -601,7 +621,8 @@ module.exports = {
     }
 
     function isAsciiValid(ascii) {
-      // include all characters that can be typed on a standard english keyboard, except fractions, tab, and the following: \{}|`~^_
+      // include all characters that can be typed on a standard english keyboard,
+      // except fractions, tab, and the following: \{}|`~^_
       return (ascii >= 32 && ascii <= 90) || (ascii >= 97 && ascii <= 122) || ascii === 91 || ascii === 93;
     }
 
@@ -619,15 +640,24 @@ module.exports = {
     const plaintext = formatted.map((char, i) => char ^ password[i % 3]);
     // console.log(String.fromCharCode(...plaintext)); // this will yield the following plaintext output
     /*
-    An extract taken from the introduction of one of Euler's most celebrated papers, "De summis serierum reciprocarum" [On the sums of series of reciprocals]: I have
-    recently found, quite unexpectedly, an elegant expression for the entire sum of this series 1 + 1/4 + 1/9 + 1/16 + etc., which depends on the quadrature of the
-    circle, so that if the true sum of this series is obtained, from it at once the quadrature of the circle follows. Namely, I have found that the sum of this series
-    is a sixth part of the square of the perimeter of the circle whose diameter is 1; or by putting the sum of this series equal to s, it has the ratio sqrt(6) multiplied
-    by s to 1 of the perimeter to the diameter. I will soon show that the sum of this series to be approximately 1.644934066842264364; and from multiplying this number
-    by six, and then taking the square root, the number 3.141592653589793238 is indeed produced, which expresses the perimeter of a circle whose diameter is 1. Following
-    again the same steps by which I had arrived at this sum, I have discovered that the sum of the series 1 + 1/16 + 1/81 + 1/256 + 1/625 + etc. also depends on the
-    quadrature of the circle. Namely, the sum of this multiplied by 90 gives the biquadrate (fourth power) of the circumference of the perimeter of a circle whose
-    diameter is 1. And by similar reasoning I have likewise been able to determine the sums of the subsequent series in which the exponents are even numbers.
+    An extract taken from the introduction of one of Euler's most celebrated papers,
+    "De summis serierum reciprocarum" [On the sums of series of reciprocals]: I have
+    recently found, quite unexpectedly, an elegant expression for the entire sum of
+    this series 1 + 1/4 + 1/9 + 1/16 + etc., which depends on the quadrature of the
+    circle, so that if the true sum of this series is obtained, from it at once the
+    quadrature of the circle follows. Namely, I have found that the sum of this series
+    is a sixth part of the square of the perimeter of the circle whose diameter is 1;
+    or by putting the sum of this series equal to s, it has the ratio sqrt(6) multiplied
+    by s to 1 of the perimeter to the diameter. I will soon show that the sum of this
+    series to be approximately 1.644934066842264364; and from multiplying this number
+    by six, and then taking the square root, the number 3.141592653589793238 is indeed
+    produced, which expresses the perimeter of a circle whose diameter is 1. Following
+    again the same steps by which I had arrived at this sum, I have discovered that the
+    sum of the series 1 + 1/16 + 1/81 + 1/256 + 1/625 + etc. also depends on the
+    quadrature of the circle. Namely, the sum of this multiplied by 90 gives the biquadrate
+    (fourth power) of the circumference of the perimeter of a circle whose
+    diameter is 1. And by similar reasoning I have likewise been able to determine the sums
+    of the subsequent series in which the exponents are even numbers.
     */
     return utils.sumArray(plaintext);
   },
@@ -636,13 +666,13 @@ module.exports = {
    * Problem 60 Prime pair sets
    *
    * The primes 3, 7, 109, and 673, are quite remarkable. By taking any two primes and concatenating them in any order the result will always be prime.
-   * For example, taking 7 and 109, both 7109 and 1097 are prime. The sum of these four primes, 792, represents the lowest sum for a set of four primes
-   * with this property.
+   *
+   * For example, taking 7 and 109, both 7109 and 1097 are prime. The sum of these four primes, 792, represents the lowest sum for a set of four primes with this property.
    *
    * @question Find the lowest sum for a set of five primes for which any two primes concatenate to produce another prime.
    */
   e60() {
-    const PRIMES_TABLE = utils.generatePrimeTable(100000);
+    const PRIMES_TABLE = utils.generatePrimesTable(100000);
     delete PRIMES_TABLE['2'];
     delete PRIMES_TABLE['5'];
     const PRIMES_ARR = Object.keys(PRIMES_TABLE);
