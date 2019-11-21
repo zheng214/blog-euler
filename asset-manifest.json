@@ -1,22 +1,37 @@
 {
   "files": {
-    "main.css": "/project-euler/static/css/main.b100e6da.chunk.css",
-    "main.js": "/project-euler/static/js/main.16b078eb.chunk.js",
-    "main.js.map": "/project-euler/static/js/main.16b078eb.chunk.js.map",
+    "main.css": "/project-euler/static/css/main.e55f3f10.chunk.css",
+    "main.js": "/project-euler/static/js/main.1b66a6d0.chunk.js",
+    "main.js.map": "/project-euler/static/js/main.1b66a6d0.chunk.js.map",
     "runtime-main.js": "/project-euler/static/js/runtime-main.bfeaf29c.js",
     "runtime-main.js.map": "/project-euler/static/js/runtime-main.bfeaf29c.js.map",
-    "static/js/2.f443dac2.chunk.js": "/project-euler/static/js/2.f443dac2.chunk.js",
-    "static/js/2.f443dac2.chunk.js.map": "/project-euler/static/js/2.f443dac2.chunk.js.map",
+    "static/css/2.ea8319cd.chunk.css": "/project-euler/static/css/2.ea8319cd.chunk.css",
+    "static/js/2.a8f3f35c.chunk.js": "/project-euler/static/js/2.a8f3f35c.chunk.js",
+    "static/js/2.a8f3f35c.chunk.js.map": "/project-euler/static/js/2.a8f3f35c.chunk.js.map",
     "index.html": "/project-euler/index.html",
-    "precache-manifest.5d51c62bde42c2703cc8c5cef586676a.js": "/project-euler/precache-manifest.5d51c62bde42c2703cc8c5cef586676a.js",
+    "precache-manifest.b9d36ab4059a21106485b7e2f25a2aca.js": "/project-euler/precache-manifest.b9d36ab4059a21106485b7e2f25a2aca.js",
     "service-worker.js": "/project-euler/service-worker.js",
-    "static/css/main.b100e6da.chunk.css.map": "/project-euler/static/css/main.b100e6da.chunk.css.map",
-    "static/media/logo.svg": "/project-euler/static/media/logo.25bf045c.svg"
+    "static/css/2.ea8319cd.chunk.css.map": "/project-euler/static/css/2.ea8319cd.chunk.css.map",
+    "static/css/main.e55f3f10.chunk.css.map": "/project-euler/static/css/main.e55f3f10.chunk.css.map",
+    "static/media/katex.min.css": "/project-euler/static/media/KaTeX_Typewriter-Regular.f43e8696.woff2",
+    "static/media/p042_words.txt": "/project-euler/static/media/p042_words.ca4c3ad4.txt",
+    "static/media/p054_poker.txt": "/project-euler/static/media/p054_poker.de3975ec.txt",
+    "static/media/p059_cipher.txt": "/project-euler/static/media/p059_cipher.c7dd028e.txt",
+    "static/media/p067_triangle.txt": "/project-euler/static/media/p067_triangle.0fa2daaa.txt",
+    "static/media/p079_keylog.txt": "/project-euler/static/media/p079_keylog.19a1ae8d.txt",
+    "static/media/p081_matrix.txt": "/project-euler/static/media/p081_matrix.37b4bb13.txt",
+    "static/media/p084.png": "/project-euler/static/media/p084.3471c10f.png",
+    "static/media/p11_data.txt": "/project-euler/static/media/p11_data.51502b09.txt",
+    "static/media/p13_data.txt": "/project-euler/static/media/p13_data.def51ee0.txt",
+    "static/media/p18_triangle.txt": "/project-euler/static/media/p18_triangle.2a4c9647.txt",
+    "static/media/p22_names.txt": "/project-euler/static/media/p22_names.9f2284c8.txt",
+    "static/media/p8_data.txt": "/project-euler/static/media/p8_data.fe98d5a9.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.bfeaf29c.js",
-    "static/js/2.f443dac2.chunk.js",
-    "static/css/main.b100e6da.chunk.css",
-    "static/js/main.16b078eb.chunk.js"
+    "static/css/2.ea8319cd.chunk.css",
+    "static/js/2.a8f3f35c.chunk.js",
+    "static/css/main.e55f3f10.chunk.css",
+    "static/js/main.1b66a6d0.chunk.js"
   ]
 }
