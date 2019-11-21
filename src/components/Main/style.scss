@@ -1,0 +1,203 @@
+@import '../../styles/variables.scss';
+
+.main.dark {
+  .main-content__center, .inline-code-highlight {
+    background-color: black;
+  }
+  .main-content__left, button, .main-content__right, .topbar, Link, .toggle-ubar {
+    background-color: #212121;
+  }
+  a, h2, h3, h4, span, p, button, ul, Link, .topbar, dt, dd {
+    color: white;
+  }
+  a, h1, h2, h3, h4, span, p, ul, Link, dt, dd {
+    opacity: 0.75;
+  }
+  button[type="button"] {
+    @include hoverable(#4c4f44);
+  }
+  .page__solution {
+    .description, .results, .helpers {
+      background-color: #212121;
+    }
+  }
+  .page__utility {
+    .description {
+      background-color: #212121;
+    }
+  }
+  .container, pre {
+    background-color: #1d1f21 !important;
+  }
+  img {
+    filter: invert(100%)
+  }
+  .utilities-hub__list .file-section {
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  .topbar {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    h2 > a:after {
+      background: white;
+    }
+    &__side {
+      @include hoverable(#4c4f44);
+    }
+  }
+  .tooltip-container {
+    .tooltip-icon {
+      svg {
+        filter: invert(100%);
+      }
+    }
+    .tooltip-message {
+      background: #212121;
+      code {
+        color: #678196;
+      }
+    }
+  }
+}
+
+.main {
+  .page__solution > div {
+    padding: 20px 20px 20px 35px;
+  }
+  .page__utility > div {
+    padding: 20px 20px 20px 35px;
+  }
+}
+
+.main-content {
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 300px;
+  &__left {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: scroll;
+    z-index: 1729;
+    background-color: $main-color;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+  }
+  &__right {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    overflow-y: scroll;
+    z-index: 1729;
+    background-color: $main-color;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+    &.hidden {
+      transform: translateX(250px);
+    }
+    transition: 0.3s;
+  }
+  &__center {
+    margin-bottom: 0;
+    margin-top: 75px;
+    width: calc(100vw - 600px);
+    height: calc(100vh - 75px);
+    max-width: 1000px;
+    &.expanded {
+      width: calc(100vw - 400px);
+    }
+    transition: 0.3s;
+  }
+}
+
+.topbar {
+  top: 0;
+  background-color: white;
+  z-index: 3458;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  width: 100vw;
+  position: fixed;
+  transition: 0.3s;
+  &.hidden{
+    transform: translateY(-75px);
+  }
+}
+
+.toggle-ubar {
+  position: fixed;
+  right: 250px;
+  width: 30px;
+  height: 80px;
+  top: calc(50vh - 25px);
+  background: $main-color;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-right: none;
+  border-radius: 25px 0 0 25px;
+  box-shadow: -2px 0 1px -1px rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+  z-index: 1730;
+  &.hidden {
+    transform: translateX(250px);
+    svg {
+      transform: rotate(180deg) scale(2, 4);
+    }
+  }
+  svg {
+    transform: scale(2, 4);
+  }
+}
+
+.main-content__left::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+.main-content__right::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+.inline-code-highlight {
+  background-color: #f1f1f1;
+  font-family: "Courier New", Courier, monospace;
+}
+
+body {
+  background-color: white;
+  overflow-y: scroll;
+  transition: 0.3s;
+}
+
+button {
+  border: none;
+  outline: none;
+  background-color: $main-color;
+}
+
+a, button {
+  font-family: 'Roboto', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6, p, ul, dt, dd {
+  font-family: "Overpass", Frutiger, Frutiger Linotype, Dejavu Sans, Helvetica Neue, Arial, sans-serif;
+}
+
+code {
+  font-family: "Fira code", "Fira Mono", monospace !important;
+  font-variant-ligatures: common-ligatures !important;
+  line-height: 1.3em;
+  letter-spacing: -0.5px;
+  font-size: 16px;
+}
+
+dd {
+  margin-left: 10px;
+}
+
+dt {
+  margin: 15px 0 5px;
+}
+
+img {
+  max-width: 75%;
+}

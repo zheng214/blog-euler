@@ -1,0 +1,24 @@
+.utilities-hub {
+  margin: 50px 0;
+  &__title {
+    font-size: 24px;
+    text-align: center;
+  }
+}
+
+.utilities-hub__list .file-section {
+  margin-top: 50px;
+  border-top: 1px solid rgba(0, 0, 0, 0.2);
+  padding-top: 20px;
+  &__title {
+    text-align: center;
+  }
+  &__description {
+
+  }
+  &__utilities {
+    a {
+      color: inherit;
+    }
+  }
+}
