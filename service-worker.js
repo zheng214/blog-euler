@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/project-euler/precache-manifest.7835ff51e60a7262a8f0a94db30c5edf.js"
+  "/project-euler/precache-manifest.55a3d4f9e00e9050bd03e6e38ec0cbd7.js"
 );
 
 self.addEventListener('message', (event) => {
