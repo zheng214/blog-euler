@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "913e72afb13accfe8f58f31ac8d66ae6",
+    "revision": "484d3c21a30341b44db4dcd47942907d",
     "url": "/project-euler/index.html"
   },
   {
@@ -8,16 +8,16 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/project-euler/static/css/2.ea8319cd.chunk.css"
   },
   {
-    "revision": "6279b23084906022f814",
-    "url": "/project-euler/static/css/main.e55f3f10.chunk.css"
+    "revision": "c8765309e8c5dbf72817",
+    "url": "/project-euler/static/css/main.53ba7726.chunk.css"
   },
   {
     "revision": "b4979e8d085d482c818b",
     "url": "/project-euler/static/js/2.a8f3f35c.chunk.js"
   },
   {
-    "revision": "6279b23084906022f814",
-    "url": "/project-euler/static/js/main.1b66a6d0.chunk.js"
+    "revision": "c8765309e8c5dbf72817",
+    "url": "/project-euler/static/js/main.81c6b46e.chunk.js"
   },
   {
     "revision": "1f42cf30d1227b5c6253",
@@ -256,47 +256,47 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/project-euler/static/media/p042_words.ca4c3ad4.txt"
   },
   {
-    "revision": "de3975ec563b4a59baf4e524c0b08558",
-    "url": "/project-euler/static/media/p054_poker.de3975ec.txt"
+    "revision": "eef3c901530cce45d46fd4fe09e92409",
+    "url": "/project-euler/static/media/p054_poker.eef3c901.txt"
   },
   {
     "revision": "c7dd028e262cc32eb25e9fd978bfac3f",
     "url": "/project-euler/static/media/p059_cipher.c7dd028e.txt"
   },
   {
-    "revision": "0fa2daaabe279ef4a1813dda2034c9c8",
-    "url": "/project-euler/static/media/p067_triangle.0fa2daaa.txt"
+    "revision": "8f8e494db7a8585b22ee583ceae29178",
+    "url": "/project-euler/static/media/p067_triangle.8f8e494d.txt"
   },
   {
-    "revision": "19a1ae8de49041f5ad3cb48ee9d1736f",
-    "url": "/project-euler/static/media/p079_keylog.19a1ae8d.txt"
+    "revision": "95c9d500f28c23ca2fb6ccf9f785db9f",
+    "url": "/project-euler/static/media/p079_keylog.95c9d500.txt"
   },
   {
-    "revision": "37b4bb135b4c3241873a3e49f3ff6686",
-    "url": "/project-euler/static/media/p081_matrix.37b4bb13.txt"
+    "revision": "0532a57012be38d1890fa51ddc969f92",
+    "url": "/project-euler/static/media/p081_matrix.0532a570.txt"
   },
   {
     "revision": "3471c10f727bb91083956be22a27b694",
     "url": "/project-euler/static/media/p084.3471c10f.png"
   },
   {
-    "revision": "51502b09faac5d053b2936217ae78a78",
-    "url": "/project-euler/static/media/p11_data.51502b09.txt"
+    "revision": "4caf5b16efa0d4a2c0be7e125e176309",
+    "url": "/project-euler/static/media/p11_data.4caf5b16.txt"
   },
   {
-    "revision": "def51ee0893ffe54a5368a702a06c283",
-    "url": "/project-euler/static/media/p13_data.def51ee0.txt"
+    "revision": "4a767e38d52f35a6287b115e1783dbf4",
+    "url": "/project-euler/static/media/p13_data.4a767e38.txt"
   },
   {
-    "revision": "2a4c96478e0ec562cab58ca65a0381f7",
-    "url": "/project-euler/static/media/p18_triangle.2a4c9647.txt"
+    "revision": "9093bac4fa8b9dfcfbd739dc0bd4ffad",
+    "url": "/project-euler/static/media/p18_triangle.9093bac4.txt"
   },
   {
     "revision": "9f2284c8ae51c2f185bdd234fa5faa42",
     "url": "/project-euler/static/media/p22_names.9f2284c8.txt"
   },
   {
-    "revision": "fe98d5a97a503bdc7c866b7fe9acb26e",
-    "url": "/project-euler/static/media/p8_data.fe98d5a9.txt"
+    "revision": "461baf52ec0b4ac9314b5e2694d36ec5",
+    "url": "/project-euler/static/media/p8_data.461baf52.txt"
   }
 ]);
