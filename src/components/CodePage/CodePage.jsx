@@ -253,9 +253,8 @@ function Navigation(props) {
   if (!solutionId) {
     return null;
   }
-
-  const isFirst = solutionId === 1;
-  const isLast = solutionId === SOLVED - 1;
+  const isFirst = +solutionId === 1;
+  const isLast = +solutionId === SOLVED;
 
   const rewind = () => props.history.push(`${+solutionId - 1}`);
   const random = () => props.history.push(`${Math.ceil(SOLVED * Math.random())}`);

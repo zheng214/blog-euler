@@ -18,13 +18,13 @@ export default function TopBar({ darkMode, toggleDark }) {
     <div className="topbar">
       <div className="topbar__side left"><Link to="/e">SOLUTIONS</Link></div>
       <div className="topbar__center">
-        <h2><Link to="/">PROJECT EULER</Link></h2>
+        <h2><Link to={process.env.PUBLIC_URL}>PROJECT EULER</Link></h2>
       </div>
       <div className="topbar__quick-links">
         <button className="toggle-dark" type="button" onClick={toggleDark}>
           <span><FontAwesomeIcon icon={darkMode ? faSun : faMoon} /></span>
         </button>
-        <button className="toggle-dark" type="button" onClick={toggleDark}>
+        <button className="toggle-dark" type="button" onClick={() => { window.location.href = 'https://github.com/zheng214/project-euler'; }}>
           <span><FontAwesomeIcon icon={faGithub} /></span>
         </button>
       </div>

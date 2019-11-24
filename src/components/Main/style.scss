@@ -69,9 +69,8 @@
 }
 
 .main-content {
-  display: flex;
-  justify-content: flex-start;
-  margin-left: 300px;
+  width: calc(100vw - 600px);
+  margin: auto;
   &__left {
     position: fixed;
     top: 0;
