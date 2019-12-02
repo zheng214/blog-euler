@@ -1,10 +1,21 @@
 @import '../../styles/variables.scss';
+@import url('https://fonts.googleapis.com/css?family=Cinzel');
 
 .topbar {
   display:flex;
   justify-content: center;
   align-items: center;
   height: 75px;
+  top: 0;
+  background-color: white;
+  z-index: 3458;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  width: 100vw;
+  position: fixed;
+  @include basic-transition;
+  &.hidden{
+    @include basic-transform(translateY(-75px));
+  }
   &__side {
     @include hoverable(#dfdfdf);
     position: fixed;
@@ -26,6 +37,10 @@
       position: relative;
       font-size: 32px;
       font-weight: normal;
+      > a {
+        font-family: 'Cinzel';
+        opacity: 1 !important;
+      }
       > a:after {
         content: "";
         position: absolute;
@@ -35,13 +50,12 @@
         left: 0;
         background: black;
         visibility: hidden;
-        transform: scaleX(0);
-        transition: .25s linear;
+        @include basic-transform(scaleX(0));
+        @include basic-transition;
       }
-      > a:hover:after,
-      > a:focus:after {
+      > a:hover:after {
         visibility: visible;
-        transform: scaleX(1);
+        @include basic-transform(scaleX(1));
       }
     }
   }
@@ -58,7 +72,7 @@
     height: 75px;
     width: 75px;
     svg {
-      transform: scale(2);
+      @include basic-transform(scale(2));
     }
   }
 }

@@ -1,5 +1,3 @@
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable react/prop-types */
 import React from 'react';
 import './style.scss';
 import cn from 'classnames';
@@ -13,9 +11,9 @@ import { Switch, Route } from 'react-router-dom';
 import Sidebar from '../Sidebar/Sidebar';
 import UtilityBar from '../UtilityBar/UtilityBar';
 import CodePage from '../CodePage/CodePage';
-import SolutionHub from '../Hubs/SolutionHub';
-import UtilityHub from '../Hubs/UtilityHub';
+import { SolutionHub, UtilityHub } from '../Hubs';
 import Topbar from '../TopBar/TopBar';
+import Home from '../Home/Home';
 
 export default class Main extends React.Component {
   state = {
@@ -110,6 +108,7 @@ export default class Main extends React.Component {
           </div>
           <div className={cn('main-content__center', { expanded: ubarHidden })}>
             <Switch>
+              <Route exact path="/" render={(props) => <Home history={props.history} />} />
               <Route exact path="/e/" render={SolutionHub} />
               <Route
                 path="/e/:eid?"

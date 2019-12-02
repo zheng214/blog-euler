@@ -1,7 +1,10 @@
+@import '../../styles/variables.scss';
+
 .tooltip-container {
   .tooltip-icon {
     margin-left: 15px;
-    transform: scale(1.25);
+    margin-top: 5px;
+    @include basic-transform(scale(1.25));
     .tooltip-message {
       visibility: hidden;
       position: absolute;

@@ -14,7 +14,7 @@
   }
   &__nested {
     overflow:hidden;
-    transition: max-height 0.3s;
+    @include basic-transition;
     height: auto;
     max-height: 500px;
     &.collapsed {

@@ -1,0 +1,42 @@
+.solution-hub {
+  &__list {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 25px;
+  }
+  &__section {
+    width: 250px;
+    margin: 25px;
+  }
+  &__section-header {
+    text-align: center;
+  }
+  h3 {
+    text-align: center;
+    font-size: 24px;
+  }
+  p {
+    text-align: center;
+    font-size: 18px;
+  }
+  ul {
+    list-style-type: none;
+    padding-left: 0;
+    line-height: 1.5em;
+    display: inline-block;
+    text-align: left;
+  }
+  a {
+    color: inherit;
+    b {
+      margin-right: 5px;
+    }
+  }
+  p {
+    font-size: 18px;
+  }
+  li, span, a {
+    font-size: 16px;
+  }
+}

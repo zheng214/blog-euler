@@ -1,0 +1,34 @@
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 99998;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  left: 0;
+  top: 0;
+  margin: 0 !important;
+  &.open {
+    display: flex;
+    justify-content: center;
+  }
+  .modal-content {
+    z-index: 99999;
+    width: 90vw;
+    height: 90vh;
+    background-color: white;
+    overflow: auto;
+    .close-modal {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      margin: 0;
+      span {
+        margin: auto;
+      }
+    }
+    .content {
+      padding: 20px;
+    }
+  }
+}

@@ -15,11 +15,28 @@ $brown800: #4e342e;
 $brown900: #3e2723;
 
 $main-color: white;
+$hover-color: #dfdfdf;
+$dark-background: #212121;
 
 @mixin hoverable($color) {
   &:hover {
     cursor: pointer;
     background-color: $color;
   }
-  transition: background-color 0.3s;
+  @include basic-transition;
+}
+
+@mixin basic-transition($time: 0.3s) {
+  transition: $time;
+  -o-transition: $time;
+  -moz-transition: $time;
+  -webkit-transition: $time;
+}
+
+@mixin basic-transform($action) {
+  transform: $action;
+  -moz-transform: $action;
+  -webkit-transform: $action;
+  -o-transform: $action;
+  -ms-transform: $action;
 }

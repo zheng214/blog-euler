@@ -3,7 +3,7 @@ import cn from 'classnames';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import './tooltip.scss';
+import './style.scss';
 
 export default class Tooltip extends React.Component {
   state = {
