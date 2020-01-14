@@ -35,7 +35,6 @@
         align-items: center;
       }
       .right {
-        @include basic-transform(scale(1.5));
         &:hover {
           cursor: pointer;
         }

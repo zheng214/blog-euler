@@ -142,9 +142,9 @@ export default class Main extends React.Component {
             </Switch>
           </div>
           {/* eslint-disable-next-line react/button-has-type */}
-          <button className={cn('toggle-ubar', { hidden: ubarHidden })} onClick={this.toggleMenu}>
+          {/* <button className={cn('toggle-ubar', { hidden: ubarHidden })} onClick={this.toggleMenu}>
             <span><FontAwesomeIcon icon={faAngleDoubleRight} /></span>
-          </button>
+          </button> */}
           <div className={cn('main-content__right', { hidden: ubarHidden })}>
             <UtilityBar history={history} filename={filename} utility={utility} />
           </div>

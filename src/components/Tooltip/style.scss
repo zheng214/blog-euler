@@ -8,12 +8,11 @@
     .tooltip-message {
       visibility: hidden;
       position: absolute;
-      width: 150px;
-      height: 50px;
+      width: auto;
+      height: auto;
       padding: 10px;
       border: 1px solid black;
       border-radius: 10px;
-      margin-left: -75px;
       bottom: 30px;
       background: white;
       font-family: "Overpass", Frutiger, Frutiger Linotype, Dejavu Sans, Helvetica Neue, Arial, sans-serif;

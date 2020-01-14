@@ -29,7 +29,7 @@ export default class Menu extends React.Component {
           onClick={() => this.setState((prev) => ({ collapsed: !prev.collapsed }))}
         >
           <span>{this.props.label}</span>
-          <span>{expandable && <FontAwesomeIcon icon={this.state.collapsed ? faAngleDown : faAngleUp} />}</span>
+          {expandable && <FontAwesomeIcon icon={this.state.collapsed ? faAngleDown : faAngleUp} />}
         </button>
         <div className={`e-menu__nested ${this.state.collapsed ? 'collapsed' : 'expanded'}`}>
           {this.props.children}

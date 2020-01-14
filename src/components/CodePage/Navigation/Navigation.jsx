@@ -12,17 +12,16 @@ import SOLUTIONS from '../../../data/solutions.json';
 const SOLVED = SOLUTIONS.length;
 
 export default function Navigation(props) {
-  const { solutionId } = props;
-  if (!solutionId) {
+  const id = +props.solutionId;
+  if (!id) {
     return null;
   }
+  const isFirst = id === 1;
+  const isLast = id === SOLVED;
 
-  const isFirst = solutionId === 1;
-  const isLast = solutionId === SOLVED - 1;
-
-  const rewind = () => props.history.push(`${+solutionId - 1}`);
+  const rewind = () => props.history.push(`${id - 1}`);
   const random = () => props.history.push(`${Math.ceil(SOLVED * Math.random())}`);
-  const forward = () => props.history.push(`${+solutionId + 1}`);
+  const forward = () => props.history.push(`${id + 1}`);
 
   return (
     <div className="page__navigation">

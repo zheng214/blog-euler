@@ -32,6 +32,9 @@
     b {
       margin-right: 5px;
     }
+    &:hover {
+      text-decoration: underline;
+    }
   }
   p {
     font-size: 18px;

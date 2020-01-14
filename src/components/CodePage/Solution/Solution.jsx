@@ -176,7 +176,7 @@ export default class Solution extends React.Component {
               </div>
             </div>
             <div className="right">
-              <FontAwesomeIcon icon={faExpand} onClick={() => this.setState({ modalOpen: true })} />
+              <Tooltip message={<span>Expand</span>} icon={faExpand} onClick={() => this.setState({ modalOpen: true })} />
             </div>
           </div>
           {renderCode(solutionData.solution, darkMode)}

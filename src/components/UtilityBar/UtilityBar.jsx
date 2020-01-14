@@ -38,7 +38,7 @@ export default class UtilityBar extends React.Component {
           ))}
         </Menu>
       );
-    }
+    },
   )
 
   render() {
