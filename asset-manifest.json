@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/project-euler/static/css/main.50d69917.chunk.css",
-    "main.js": "/project-euler/static/js/main.a2f4c81a.chunk.js",
-    "main.js.map": "/project-euler/static/js/main.a2f4c81a.chunk.js.map",
+    "main.js": "/project-euler/static/js/main.72e037f2.chunk.js",
+    "main.js.map": "/project-euler/static/js/main.72e037f2.chunk.js.map",
     "runtime-main.js": "/project-euler/static/js/runtime-main.bfeaf29c.js",
     "runtime-main.js.map": "/project-euler/static/js/runtime-main.bfeaf29c.js.map",
     "static/css/2.ea8319cd.chunk.css": "/project-euler/static/css/2.ea8319cd.chunk.css",
     "static/js/2.1f3709e9.chunk.js": "/project-euler/static/js/2.1f3709e9.chunk.js",
     "static/js/2.1f3709e9.chunk.js.map": "/project-euler/static/js/2.1f3709e9.chunk.js.map",
     "index.html": "/project-euler/index.html",
-    "precache-manifest.0fabe974f79cfc0496262294829cd28b.js": "/project-euler/precache-manifest.0fabe974f79cfc0496262294829cd28b.js",
+    "precache-manifest.a4bcb7a21d820464955683da302199ed.js": "/project-euler/precache-manifest.a4bcb7a21d820464955683da302199ed.js",
     "service-worker.js": "/project-euler/service-worker.js",
     "static/css/2.ea8319cd.chunk.css.map": "/project-euler/static/css/2.ea8319cd.chunk.css.map",
     "static/css/main.50d69917.chunk.css.map": "/project-euler/static/css/main.50d69917.chunk.css.map",
@@ -32,6 +32,6 @@
     "static/css/2.ea8319cd.chunk.css",
     "static/js/2.1f3709e9.chunk.js",
     "static/css/main.50d69917.chunk.css",
-    "static/js/main.a2f4c81a.chunk.js"
+    "static/js/main.72e037f2.chunk.js"
   ]
 }
