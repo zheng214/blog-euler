@@ -2,14 +2,11 @@ import React from 'react';
 import './style.scss';
 import cn from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faAngleDoubleRight,
-} from '@fortawesome/free-solid-svg-icons';
+
 
 import { Switch, Route } from 'react-router-dom';
 
 import Sidebar from '../Sidebar/Sidebar';
-import UtilityBar from '../UtilityBar/UtilityBar';
 import CodePage from '../CodePage/CodePage';
 import { SolutionHub, UtilityHub } from '../Hubs';
 import Topbar from '../TopBar/TopBar';
@@ -106,7 +103,7 @@ export default class Main extends React.Component {
           <div className="main-content__left">
             <Sidebar history={history} solutionId={solutionId} />
           </div>
-          <div className={cn('main-content__center', { expanded: ubarHidden })}>
+          <div className={cn('main-content__center')}>
             <Switch>
               <Route exact path="/" render={(props) => <Home history={props.history} />} />
               <Route exact path="/e/" render={SolutionHub} />
@@ -140,13 +137,6 @@ export default class Main extends React.Component {
                 }
               />
             </Switch>
-          </div>
-          {/* eslint-disable-next-line react/button-has-type */}
-          {/* <button className={cn('toggle-ubar', { hidden: ubarHidden })} onClick={this.toggleMenu}>
-            <span><FontAwesomeIcon icon={faAngleDoubleRight} /></span>
-          </button> */}
-          <div className={cn('main-content__right', { hidden: ubarHidden })}>
-            <UtilityBar history={history} filename={filename} utility={utility} />
           </div>
         </div>
       </div>

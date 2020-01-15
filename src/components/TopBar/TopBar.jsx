@@ -18,7 +18,7 @@ export default function TopBar({ darkMode, toggleDark }) {
     <div className="topbar">
       <div className="topbar__side left"><Link to="/e">SOLUTIONS</Link></div>
       <div className="topbar__center">
-        <h2><Link to="/">PROJECT EULER</Link></h2>
+        <h2><Link to="/">project euler blog</Link></h2>
       </div>
       <div className="topbar__quick-links">
         <button className="toggle-dark" type="button" onClick={toggleDark}>
@@ -27,9 +27,6 @@ export default function TopBar({ darkMode, toggleDark }) {
         <button className="toggle-dark" type="button" onClick={() => { window.location = 'https://github.com/zheng214/project-euler'; }}>
           <FontAwesomeIcon icon={faGithub} />
         </button>
-      </div>
-      <div className="topbar__side right">
-        <Link to="/u">HELPER FUNCTIONS</Link>
       </div>
     </div>
   );

@@ -28,15 +28,13 @@
     &.left {
       left: 0;
     }
-    &.right {
-      left: calc(100vw - 265px); // 15 (scrollbar) + 250 (sidemenu width)
-    }
   }
   &__center {
     h2 {
       position: relative;
-      font-size: 32px;
+      font-size: 28px;
       font-weight: normal;
+      margin-right: -265px;
       > a {
         font-family: 'Cinzel';
         opacity: 1 !important;
@@ -61,7 +59,7 @@
   }
   &__quick-links {
     position: absolute;
-    right: 265px;
+    right: 15px;
   }
   a {
     text-decoration: none;
