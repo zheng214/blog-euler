@@ -12,12 +12,6 @@ const aboutSite = `
   For each problem, the goal is to write a program which can solve it in a reasonable amount of time.
 `;
 
-const aboutMe = `
-  I'm Zheng Shang. I got my undergraduate degree at Mcgill University in 2015 in Statistics and Computer Science.
-  I created this website as a hobby/portfolio to express my passion for mathematics and programming.
-  To contact me, send me an email to zheng.n.shang@hotmail.com, I look forward to hearing from you!
-`;
-
 export default function Home() {
   return (
     <div className="home">
@@ -32,10 +26,6 @@ export default function Home() {
       <section>
         <h3>About this site</h3>
         <p>Currently, this site contains <b>{SOLVED}</b> solutions. The left menu contains the link to the solutions. At the bottom of the menu, you can find all the helper functions which are shared across multiple solutions.</p>
-      </section>
-      <section>
-        <h3>About me</h3>
-        <p>{aboutMe}</p>
       </section>
     </div>
   );
