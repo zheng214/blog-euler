@@ -1,8 +1,8 @@
 {
-  "name": "project-euler",
+  "name": "blog-euler",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://zheng214.github.io/",
+  "homepage": "https://zheng214.github.io/blog-euler",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.25",
     "@fortawesome/free-brands-svg-icons": "^5.11.2",

@@ -21,7 +21,7 @@
         "no-trailing-spaces": "error",
         "no-undef": "warn",
         "semi": ["error", "always"],
-        "max-len": ["error", { "code": 120 }],
+        "max-len": ["error", { "code": 140 }],
         "no-plusplus": 0,
         "no-use-before-define": 0,
         "no-console": 0,
@@ -42,6 +42,12 @@
         "react/prop-types": "off",
         "react/destructuring-assignment": "off",
         "react/jsx-props-no-spreading": "off",
-        "react/state-in-constructor": "off"
+        "react/state-in-constructor": "off",
+        "jsx-a11y/click-events-have-key-events": "off",
+        "jsx-a11y/anchor-is-valid": "off",
+        "jsx-a11y/interactive-supports-focus": "off",
+        "jsx-a11y/no-static-element-interactions": "off",
+        "react/no-danger": "off",
+        "react/no-did-update-set-state": "off"
     }
 }

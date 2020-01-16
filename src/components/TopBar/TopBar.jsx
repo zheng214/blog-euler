@@ -24,7 +24,7 @@ export default function TopBar({ darkMode, toggleDark }) {
         <button className="toggle-dark" type="button" onClick={toggleDark}>
           <FontAwesomeIcon icon={darkMode ? faSun : faMoon} />
         </button>
-        <button className="toggle-dark" type="button" onClick={() => { window.location = 'https://github.com/zheng214/project-euler'; }}>
+        <button className="toggle-dark" type="button" onClick={() => { window.location = 'https://github.com/zheng214/blog-euler'; }}>
           <FontAwesomeIcon icon={faGithub} />
         </button>
       </div>
