@@ -146,7 +146,7 @@ export default class Solution extends React.Component {
     const solutionData = SOLUTIONS[+solutionId - 1];
     const tooltipMessage = (
       <span>
-        The answer is the value returned by the top level&nbsp;
+        The answer is the value returned by the top-most level&nbsp;
         <code>return</code>
       </span>
     );
