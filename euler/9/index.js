@@ -474,7 +474,7 @@ module.exports = {
   e86() {
     // We will break down the solution of this problem into different parts:
 
-    // PART 1: FINDING THE MINIMAL DISTANCE BETWEEN 2 POINTS IN A CUBOID
+    // PART 1: FINDING THE MINIMAL DISTANCE BETWEEN TWO POINTS IN A CUBOID
     // For any cuboid with given lengths (X,Y,Z)
     // (!) The three candidates for the shortest paths are: √(X²+(Y+Z)²), √(Y²+(X+Z)²), √(Z²+(X+Y)²)
     // This can be seen by unfolding the cuboid, and traversing the 3 adjacent surfaces from the starting point.
