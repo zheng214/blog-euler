@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "390cd3f425f0ea603cf3bd5fd6d15e65",
+    "revision": "9f66d0760b1ea8a75b429b508b70fea8",
     "url": "/blog-euler/index.html"
   },
   {
@@ -8,16 +8,16 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/blog-euler/static/css/2.5ea7b968.chunk.css"
   },
   {
-    "revision": "e6a55475309c5b79403d",
-    "url": "/blog-euler/static/css/main.51083df4.chunk.css"
+    "revision": "6ddb85dc101e10d4f44c",
+    "url": "/blog-euler/static/css/main.6ccaf1cb.chunk.css"
   },
   {
     "revision": "f18763f33bef4d7bbe9b",
     "url": "/blog-euler/static/js/2.435da005.chunk.js"
   },
   {
-    "revision": "e6a55475309c5b79403d",
-    "url": "/blog-euler/static/js/main.809d9309.chunk.js"
+    "revision": "6ddb85dc101e10d4f44c",
+    "url": "/blog-euler/static/js/main.305f1b31.chunk.js"
   },
   {
     "revision": "b6911389193b0cd60ff0",
