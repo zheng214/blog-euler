@@ -134,7 +134,7 @@ function choose(n, p) {
  * @param {Array} a1 First array (max length: 35)
  * @param {Array} a2 Second array (max length: 35)
  * @returns {Array[]} List of combinations (each combination is an array)
- * @example input: ([1,0], [2,2]); output: [[1, 0, 2, 2], [0, 2, 1, 2], [0, 2, 2, 1], [2, 1, 0, 2], [2, 0, 2, 1], [2, 2, 1, 0]]
+ * @example input: ([1,0], [2,2]); output: [[1, 0, 2, 2], [1, 2, 0, 2], [1, 2, 2, 0], [2, 1, 0, 2], [2, 1, 2, 0], [2, 2, 1, 0]]
  */
 function listOrderedCombinations(a1, a2) {
   const f1 = [...lang.toArray(a1)];
