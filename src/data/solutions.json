@@ -20,7 +20,7 @@
     ],
     "solution": "let [a, b] = [0, 1];\nlet result = 0;\nwhile (a < 4000000) {\n  [a, b] = [b, a + b];\n  if (!utils.isOdd(a)) {\n    result += a;\n  }\n}\nreturn result;",
     "utils": [
-      "arithmetic.js/isOdd"
+      "arithmetic/isOdd"
     ]
   },
   {
@@ -59,7 +59,7 @@
     ],
     "solution": "const totalPrimeFactors = [];\n// for each n, we:\n// (1) compute its prime factorization (see function below)\n// (2) \"merge\" that factorization into totalPrimeFactors by checking if the computed power\n// is higher than the power already in the array\n// (3) after all merging is done, the totalPrimeFactors will contain the prime factorization of our answer\nfor (let n = 2; n <= 20; n++) {\n  const primeFactors = utils.listPrimeFactors(n); // (1)\n  // we start at 2 since the first two elements are always empty\n  for (let factor = 2; factor < primeFactors.length; factor++) {\n    const computedPower = primeFactors[factor];\n    const existingPower = totalPrimeFactors[factor];\n    if (computedPower && (!existingPower || computedPower > existingPower)) { // (2)\n      totalPrimeFactors[factor] = primeFactors[factor];\n    }\n  }\n}\nreturn totalPrimeFactors.reduce((acc, power, base) => { // (3)\n  // by definition of totalPrimeFactors, the indexes represent the bases of the prime factorization\n  return power ? acc * (base ** power) : acc;\n}, 1);",
     "utils": [
-      "arithmetic.js/listPrimeFactors"
+      "arithmetic/listPrimeFactors"
     ]
   },
   {
@@ -83,7 +83,7 @@
     ],
     "solution": "let number = 1;\nlet nthPrime = 0;\nwhile (nthPrime < 10001) {\n  number++;\n  if (utils.isPrime(number)) {\n    nthPrime++;\n  }\n}\nreturn number;",
     "utils": [
-      "primes.js/isPrime"
+      "primes/isPrime"
     ]
   },
   {
@@ -175,7 +175,7 @@
     ],
     "solution": "// we use 2 variables to keep track of the highest chain count and the starting number associated with it\nlet longestChainNumber = 0;\nlet longestChain = 0;\n// we use an array to keep track of the length of each starting number,\n// where the index correspond to the starting number\nconst chainLengthArr = [];\n// we start at 500000 because if the longest chain c is below 500000,\n// then there must be a longer chain at c * 2\nfor (let i = 500001; i <= 1000000; i += 1) {\n  computeChainLength(i, 0);\n}\nfunction computeChainLength(n, accumulatedLength) {\n  // as mentionned above, we do not need to consider numbers below 500001\n  if (n < 500001) {\n    return accumulatedLength;\n  }\n  if (chainLengthArr[n]) {\n    const totalChainLength = chainLengthArr[n] + accumulatedLength;\n    return totalChainLength;\n  }\n  let result;\n  if (utils.isOdd(n)) {\n    // if n is odd then 3n + 1 is even, we can skip a step by passing (3n+1)/2 as an argument\n    result = computeChainLength((3 * n + 1) / 2, accumulatedLength + 2);\n  } else {\n    result = computeChainLength(n / 2, accumulatedLength + 1);\n  }\n  // when the result returns, we need to update the chain length number of each number in the chain\n  // we do so by subtracting the accumulator associated with that number from the result (back propagation)\n  // eg: 5 -> 16 -> 8 -> 4 -> 2 -> 1\n  // stack trace:\n  // computeChainLength(5, 0) -> result - 0 = 5\n  // computeChainLength(16, 1) -> result - 1 = 4\n  // computeChainLength(8, 2) -> result - 2 = 3\n  // computeChainLength(4, 3) -> result - 3 = 2\n  // computeChainLength(2, 4) -> result - 4 = 1\n  // computeChainLength(1, 5) -> result - 5 = 0\n  // result = 5\n  // the memoized array will then be updated will the correct values (5 with 5, 16 with 4, etc.)\n  chainLengthArr[n] = result - accumulatedLength;\n  if (chainLengthArr[n] > longestChain) {\n    longestChain = chainLengthArr[n];\n    longestChainNumber = n;\n  }\n  return result;\n}\nreturn longestChainNumber;",
     "utils": [
-      "arithmetic.js/isOdd"
+      "arithmetic/isOdd"
     ]
   },
   {
@@ -193,7 +193,7 @@
     ],
     "solution": "// this problem is equivalent to:\n// given 20 characters \"r\" (right) and 20 characters \"d\" (down)\n// how many ways are there to write a string using exactly those 40 characters\n// the answer is just 40 choose 20\n// as it is equivalent of choosing the locations of the 20 \"r\" inside our string\nreturn utils.fact(40) / (utils.fact(20) * utils.fact(20));",
     "utils": [
-      "combinatorics.js/fact"
+      "combinatorics/fact"
     ]
   },
   {
@@ -270,7 +270,7 @@
     ],
     "solution": "// we use the same procedure as in problem 16\n// ie. manually multiply each digit\nlet resultArr = [1];\nfor (let i = 1; i < 101; i++) {\n  const multiplier = i % 10 === 0 ? i / 10 : i; // multiplying by 90 has the same \"effect\" as multiplying by 9\n  const productArr = resultArr.map(x => x * multiplier);\n  resultArr = consolidate(productArr);\n}\nreturn utils.sumArray(resultArr);\n// \"flatten\" an array of products\n// eg. 25 * 25 => [5, 2] * 25 => [125, 50](input) => [5, 2 + 0, 1 + 5] => [5, 2, 6](output) => 625\nfunction consolidate(productArr) {\n  let output = productArr.reduce(\n    (acc, product, index) => {\n      const productDigits = product.toString().split('').reverse().map(x => +(x)); // 125 => [5, 2, 1]\n      productDigits.forEach((digit, i) => {\n        acc[index + i] = acc[index + i] ? acc[index + i] + digit : digit;\n      });\n      return acc;\n    },\n    [],\n  );\n  if (output.find(x => x >= 10)) {\n    output = consolidate(output);\n  }\n  return output;\n}",
     "utils": [
-      "common.js/sumArray"
+      "common/sumArray"
     ]
   },
   {
@@ -293,9 +293,9 @@
     ],
     "solution": "const primesUnder10000 = utils.generatePrimesTable(10000);\nconst amicableNumbers = [];\nfor (let i = 0; i < 10000; i++) {\n  if (!primesUnder10000[i] && !amicableNumbers.includes(i)) {\n    // d(i)\n    const sumOfDivisors = utils.computeSumOfDivisors(i);\n    // ensure i is not a perfect number (d(i) = i)\n    // which does not qualify as an amicable number by definition\n    if (sumOfDivisors !== i) {\n      // now check if d(d(i)) === i\n      const sumOfDivisors2 = utils.computeSumOfDivisors(sumOfDivisors);\n      if (sumOfDivisors2 === i) {\n        amicableNumbers.push(i);\n        amicableNumbers.push(sumOfDivisors);\n      }\n    }\n  }\n}\nreturn utils.sumArray(amicableNumbers);",
     "utils": [
-      "primes.js/generatePrimesTable",
-      "arithmetic.js/computeSumOfDivisors",
-      "common.js/sumArray"
+      "primes/generatePrimesTable",
+      "arithmetic/computeSumOfDivisors",
+      "common/sumArray"
     ]
   },
   {
@@ -314,7 +314,7 @@
     ],
     "solution": "const stringNames = fs.readFileSync(path.join(__dirname, 'p22_names.txt')).toString();\nconst arrayNames = stringNames.split(',');\nconst sortedNames = arrayNames.sort();\nreturn sortedNames.reduce(\n  (totalScore, name, index) => {\n    const i = index + 1;\n    const scoreOfName = i * utils.sumArray(\n      name.split(''), // 'AARON' => ['A', 'A', 'R', 'O', 'N']\n      n => n.charCodeAt() - 64, // a -> 1, r -> 18, etc.\n    );\n    return totalScore + scoreOfName;\n  },\n  0,\n);",
     "utils": [
-      "common.js/sumArray"
+      "common/sumArray"
     ]
   },
   {
@@ -338,7 +338,7 @@
     ],
     "solution": "const abundantNumbers = {};\nlet result = 0;\nfor (let i = 1; i <= 28123; i++) {\n  if (utils.computeSumOfDivisors(i) > i) {\n    abundantNumbers[i] = true;\n  }\n  // check if number can be written as sum of two abundant numbers\n  let canBeSummed = false;\n  const abundantNumbersArray = Object.keys(abundantNumbers);\n  for (let j = 0; j < abundantNumbersArray.length; j++) {\n    if (abundantNumbersArray[j] > i / 2) {\n      break; // we don't need to check for numbers above i / 2\n    }\n    if (abundantNumbers[i - abundantNumbersArray[j]]) {\n      canBeSummed = true;\n      break;\n    }\n  }\n  if (!canBeSummed) {\n    result += i;\n  }\n}\nreturn result;",
     "utils": [
-      "arithmetic.js/computeSumOfDivisors"
+      "arithmetic/computeSumOfDivisors"
     ]
   },
   {
@@ -361,7 +361,7 @@
     ],
     "solution": "// we convert 1000000 into its factorial number system representation\n// eg.\n// decimal -> factorial\n// 0 -> 00(fact)\n// 1 -> 1 * 1! -> 01 (fact)\n// 2 -> 1 * 2! + 0 * 1! -> 10(fact)\n// 3 -> 1 * 2! + 1 * 1! -> 11(fact)\n// 4 -> 2 * 2! -> 20(fact)\n// 5 -> 2 * 2! + 1 * 1! -> 21(fact)\n//\n// then we iteratively write our permutation, with the following rule:\n// each digit in the factorial representation decides the index\n// from which we grab our next digit from the remaining digits\n//\n// for example, if we want the 5th permutation of 0123456789\n// we get the factorial representation of 4, since we start at 0\n// we obtain 000000020(fact)\n// the first 7 digits are fixed (ie. 0123456)\n// then we grab the second(2) index from the remaining digits 789[2] = 9\n// now the permutation is at 01234569\n// then we grab the 0th(0) index from the remaining digits 78[0] = 7\n// the permutation becomes 012345697\n// there is only the digit 8 left, we append it: 0123456978\n// so the 5th permutation of 0123456789 is 0123456978\nconst ONE_MILLION = 1000000;\nconst factorialRepr = utils.convertToFactorialBase(ONE_MILLION - 1);\nlet remainingDigits = '0123456789';\nlet result = '';\nfor (let k = 0; k < factorialRepr.length; k++) {\n  const indexToGrab = factorialRepr.charAt(k);\n  result += remainingDigits[indexToGrab];\n  remainingDigits = remainingDigits.replace(`${remainingDigits[indexToGrab]}`, '');\n}\n// add last digit remaining\nreturn +(result + remainingDigits);",
     "utils": [
-      "combinatorics.js/convertToFactorialBase"
+      "combinatorics/convertToFactorialBase"
     ]
   },
   {
@@ -434,8 +434,8 @@
     ],
     "solution": "// let Q be a prime generating quadratic polynomial\n// for Q to be valid, b must be a prime number (as Q(0) = b)\nconst primesArray = Object.keys(utils.generatePrimesTable(1000)).map(x => +(x));\nlet longestConsecutivePrimes = 40;\nlet productOfLongest = 0;\nfor (let i = 0; i < primesArray.length; i++) {\n  // since each prime generated must be >= 2, we can constrain the values of a\n  // ie. when n = 1\n  // Q(1) > 1\n  // 1 + a + b > 1\n  // a > -b\n  const b = primesArray[i];\n  for (let a = -b + 1; a < 2; a++) {\n    const consecutivePrimesLength = computeConsecutivePrimesLength(a, b);\n    if (consecutivePrimesLength > longestConsecutivePrimes) {\n      longestConsecutivePrimes = consecutivePrimesLength;\n      productOfLongest = a * b;\n    }\n  }\n}\nreturn productOfLongest;\nfunction computeConsecutivePrimesLength(a, b) {\n  let n = 1;\n  let Q = 1 + a + b;\n  while (utils.isPrime(Q)) {\n    n++;\n    Q = (n ** 2) + a * n + b;\n  }\n  return n;\n}",
     "utils": [
-      "primes.js/generatePrimesTable",
-      "primes.js/isPrime"
+      "primes/generatePrimesTable",
+      "primes/isPrime"
     ]
   },
   {
@@ -505,7 +505,7 @@
     ],
     "solution": "// let N be a number that can be written as the sum of fifth powers of their digits.\n// we first observe N cannot have more than 6 digits. As for x > 6: x * 9^5 < 10^x\n// N obviously cannot have 1 digit\n// If N has 2 digits, then the only valid values of N are 0, 1, 2, since 3^5 > 99\n// by quickly checking we can also see that N cannot have 2 digits\n// so we need to verify numbers between 3 and 6 digits;\nconst fifthPowerDigits = []; // list of N's defined above\n// table that stores the max allowed digit for a given number length\n// e.g for numbers with 3 digits, the valid numbers that form N are 0 to 3, as 4^5 > 999\nconst maxAllowedDigits = {};\n// if max allowed digit is 9, we don't need to go through the trouble of skipping/pruning\nlet needPruning = true;\nfor (let i = 100; i < 999999; i++) {\n  const digits = i.toString().split('');\n  let maxExceeded = false;\n  if (needPruning) {\n    const numberOfDigits = digits.length;\n    let maxAllowedDigit;\n    if (maxAllowedDigits[numberOfDigits]) {\n      // if max allowed digit is already in table, we grab it\n      maxAllowedDigit = maxAllowedDigits[numberOfDigits];\n    } else {\n      // otherwise, we compute the max allowed digits for a given digits length\n      maxAllowedDigit = 0;\n      while ((maxAllowedDigit + 1) ** 5 < 10 ** numberOfDigits) {\n        maxAllowedDigit++;\n      }\n      maxAllowedDigits[numberOfDigits] = maxAllowedDigit;\n    }\n    if (maxAllowedDigit === 9) {\n      needPruning = false;\n    }\n    // we check if a digit exceed the max, if so we check the next number\n    // e.g. 240 is not a valid number as 4 > 3, so we add 60 (ie. 6 * 10^1, or (10 - 4) * 10 ^ (3 - 2))\n    digits.forEach((digit, position) => {\n      if (+(digit) > maxAllowedDigit) {\n        i += (10 - maxAllowedDigit) * (10 ** (numberOfDigits - position - 1)) - 2;\n        maxExceeded = true;\n      }\n    });\n  }\n  if (!maxExceeded) {\n    const sumOfFifthPowers = utils.sumArray(digits, x => (+(x)) ** 5);\n    if (sumOfFifthPowers === i) {\n      fifthPowerDigits.push(i);\n    }\n  }\n}\nreturn utils.sumArray(fifthPowerDigits);",
     "utils": [
-      "common.js/sumArray"
+      "common/sumArray"
     ]
   },
   {
@@ -543,7 +543,7 @@
     ],
     "solution": "const DIGITS = [1, 2, 3, 4, 5, 6, 7, 8, 9];\nconst pandigitalProducts = [];\n// let a * b = c (for convenience, assume a < b), we know that c must have 4 digits because if\n// digits(c) > 4, a * b < c and if digits(c) < 4, a * b > c\n// we just need to check values of c from 1234 to 9876, and find 1 < a <= 98 st. our condition is satisfied\nfor (let i = 1111; i <= 9876; i++) {\n  const selectionIndexes = i.toString().split('');\n  // we only check if the selection is valid\n  if (+(selectionIndexes[1]) < 9\n    && +(selectionIndexes[2]) < 8\n    && +(selectionIndexes[3]) < 7\n    && !selectionIndexes.some(x => x === '0')\n  ) {\n    let c = '';\n    let remainingDigits = [...DIGITS];\n    selectionIndexes.forEach(\n      (selectionIndex) => {\n        const selected = remainingDigits[selectionIndex - 1].toString();\n        c += selected;\n        remainingDigits = remainingDigits.filter(x => x !== remainingDigits[selectionIndex - 1]);\n      },\n    );\n    c = +(c);\n    const root = Math.sqrt(c);\n    // now assume that a has only 1 digit, check for pandigital equations\n    let a;\n    let isPandigital = false;\n    for (a = 0; a < remainingDigits.length; a++) {\n      const dividend = remainingDigits[a];\n      const b = c / dividend;\n      if (Number.isInteger(b)) {\n        if (b.toString().split('').sort().join('') === remainingDigits.filter(x => x !== dividend).join('')) {\n          pandigitalProducts.push(c);\n          isPandigital = true;\n          break;\n        }\n      }\n    }\n    if (!isPandigital) {\n      // now assume a has 2 digits, check for pandigital equations\n      for (let j = 11; j <= 54; j++) {\n        // we select 2 digits from the remaining pool of 5\n        const selectionIndexes2 = j.toString().split('');\n        if (selectionIndexes2[0] < 6 && selectionIndexes2[1] < 5 && !selectionIndexes2.some(x => x === '0')) {\n          let a2 = '';\n          let remainingDigits2 = [...remainingDigits]; // remaining digits after a second round of selection\n          selectionIndexes2.forEach(\n            (selectionIndex2) => {\n              const selected = remainingDigits2[selectionIndex2 - 1].toString();\n              a2 += selected;\n              remainingDigits2 = remainingDigits2.filter(x => x !== remainingDigits2[selectionIndex2 - 1]);\n            },\n          );\n          a2 = +(a2);\n          if (a2 < root) {\n            const b = c / a2;\n            if (Number.isInteger(b)) {\n              if (b.toString().split('').sort().join('') === remainingDigits2.join('')) {\n                pandigitalProducts.push(c);\n                break;\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n}\nreturn utils.sumArray(pandigitalProducts);",
     "utils": [
-      "common.js/sumArray"
+      "common/sumArray"
     ]
   },
   {
@@ -564,7 +564,7 @@
     ],
     "solution": "// we first check all fractions of the form mx/xn, where\n// a. 1 <= m, n <= 9\n// b. m < x <= 9\n// c. m != n\nconst curiousFractions = [];\nfor (let m = 1; m <= 9; m++) {\n  for (let n = 1; n <= 9; n++) {\n    if (m !== n) {\n      for (let x = m; x <= 9; x++) {\n        const numerator = (10 * m) + x;\n        const denominator = (x * 10) + n;\n        const fraction = numerator / denominator;\n        if (fraction === m / n) {\n          curiousFractions.push({ numerator, denominator });\n        }\n      }\n    }\n  }\n}\nconst productFraction = curiousFractions.reduce(\n  (acc, curr) => {\n    acc.numerator *= curr.numerator;\n    acc.denominator *= curr.denominator;\n    return acc;\n  },\n  {\n    numerator: 1,\n    denominator: 1,\n  },\n);\nreturn utils.reduceLCT(productFraction.numerator, productFraction.denominator)[1];",
     "utils": [
-      "arithmetic.js/reduceLCT"
+      "arithmetic/reduceLCT"
     ]
   },
   {
@@ -582,8 +582,8 @@
     ],
     "solution": "const FACTORIALS = utils.generateFactTable(9);\nconst curiousNumbers = [];\n// check whether n is curious\nfunction isCurious(n) {\n  return utils.sumArray(n.toString().split(''), x => FACTORIALS[x]) === n;\n}\n// ensures that none of n's digits exceed d\nfunction boundedBy(n, d) {\n  return n.toString().split('').every(x => +(x) <= d);\n}\n// check if number `n` contains exactly `c` copies of the digit `d`\nfunction containExactly(n, d, c) {\n  return n.toString().split('').filter(x => +(x) === d).length === c;\n}\n// we note that curious numbers must have between 3 and 7 digits, since 8 * 9! < 10^8\n// and we can quickly manually verify that numbers with 2 digits cannot be curious\n// for each digit count we use a heuristic to prune some numbers\nfor (let d = 3; d <= 7; d++) {\n  // for 3-digit numbers (n₃), we notice that\n  // 1. n₃ < 700 since 7! > 999\n  // 2. to comply with above, n₃ cannot contain a digit > 5\n  if (d === 3) {\n    for (let i = 100; i <= 555; i++) {\n      if (boundedBy(i, 5) && isCurious(i)) curiousNumbers.push(i);\n    }\n  }\n  // for 4-digit numbers (n₄), we have two main options, either use one 7, or no 7\n  // if not using 7, upper bound is 4 * 6! = 2880\n  // if using one 7, lower bound is 7000, upper bound is 5040 + 3 * 6! = 7200\n  if (d === 4) {\n    // no 7\n    for (let i = 1000; i < 2880; i++) {\n      if (boundedBy(i, 6) && isCurious(i)) curiousNumbers.push(i);\n    }\n    for (let i = 7000; i < 7200; i++) {\n      if (containExactly(i, 7, 1) && isCurious(i)) curiousNumbers.push(i);\n    }\n  }\n  // for 5-digit numbers, the options are to use 2 8's, 1 8, or no 8\n  if (d === 5) {\n    // no 8\n    // upper bound is 5 * 7! = 25200\n    // since our number < 25200, we cannot have five 7's, as the first digit is either 1 or 2\n    // therefore our upper bound becomes 4 * 7! = 20160\n    // we can lower it down further by noticing that we must be using four 7's\n    for (let i = 10000; i < 17777; i++) {\n      if (boundedBy(i, 7) && isCurious(i)) curiousNumbers.push(i);\n    }\n    // the same min-maxing upper/lower bound logic is applied\n    // to all further digit count and code below\n    // using one 8\n    for (let i = 40320; i < 57778; i++) {\n      if (boundedBy(i, 8) && containExactly(i, 8, 1) && isCurious(i)) curiousNumbers.push(i);\n    }\n    // using two 8's\n    for (let i = 80640; i < 88777; i++) {\n      if (boundedBy(i, 8) && containExactly(i, 8, 2) && isCurious(i)) curiousNumbers.push(i);\n    }\n  }\n  // for 6-digit numbers, the options are to use two 9's, one 9, or no 9\n  // if we use more than two 9s, the sum will exceed 6 digits\n  if (d === 6) {\n    // two 9's\n    for (let i = 725799; i < 886998; i++) {\n      if (containExactly(i, 9, 2) && isCurious(i)) curiousNumbers.push(i);\n    }\n    // one 9\n    for (let i = 362889; i < 488889; i++) {\n      if (containExactly(i, 9, 1) && isCurious(i)) curiousNumbers.push(i);\n    }\n    // no 9\n    for (let i = 100088; i < 158888; i++) {\n      if (boundedBy(i, 8) && isCurious(i)) curiousNumbers.push(i);\n    }\n  }\n  // for 7 digit numbers, we must use 4 9's\n  if (d === 7) {\n    // 4 9's\n    for (let i = 1459999; i < 1489999; i++) {\n      if (containExactly(i, 9, 4) && isCurious(i)) curiousNumbers.push(i);\n    }\n  }\n}\nreturn utils.sumArray(curiousNumbers);",
     "utils": [
-      "combinatorics.js/generateFactTable",
-      "common.js/sumArray"
+      "combinatorics/generateFactTable",
+      "common/sumArray"
     ]
   },
   {
@@ -603,7 +603,7 @@
     ],
     "solution": "// table containing numbers we have tested to avoid duplicate testing\nconst testedNumbers = {};\n// any number containing a digit outside of this list will have a composite rotation\nconst validDigits = [1, 3, 7, 9];\nconst primeRotations = []; // result containing all rotation primes\n// we check all numbers within 3 to 6 digits\nfor (let digits = 3; digits <= 6; digits++) {\n  const permutationsCount = 4 ** digits;\n  for (let permutation = 0; permutation < permutationsCount; permutation++) {\n    // map permutation into an array of indexes specifying the digit to include at that index\n    // eg. 0 -> [0, 0, 0] -> 111, 1 -> [0, 0, 1] -> 113, 5 -> [1, 0, 1] -> 313, etc.\n    const permSpec = permutation.toString(4).padStart(digits, '0').split('');\n    const numberToTest = permSpec.map(perm => validDigits[perm]).join('');\n    if (!testedNumbers[numberToTest]) {\n      let rotationIndex = 0;\n      const rotations = new Set(); // we use set as rotations may be counted twice, eg. 1111\n      let isRotationPrime = true;\n      while (rotationIndex < digits) {\n        const left = numberToTest.slice(rotationIndex, numberToTest.length);\n        const right = numberToTest.slice(0, rotationIndex);\n        const rotatedNumber = +(`${left}${right}`);\n        rotations.add(rotatedNumber);\n        if (!utils.isPrime(rotatedNumber)) {\n          isRotationPrime = false;\n        }\n        testedNumbers[rotatedNumber] = true;\n        rotationIndex++;\n        if (numberToTest.split('').every(x => x === numberToTest.charAt(0))) {\n          // test if all digits in number are equal. If true, no need to continue rotations\n          break;\n        }\n      }\n      if (isRotationPrime) {\n        primeRotations.push(...Array.from(rotations));\n      }\n    }\n  }\n}\nreturn primeRotations.length + 13; // there are 13 rotations under 13 (given)",
     "utils": [
-      "primes.js/isPrime"
+      "primes/isPrime"
     ]
   },
   {
@@ -618,7 +618,7 @@
     ],
     "solution": "const doublePalindromes = [];\n// we loop through each decimal palindrome and check whether its binary representation is also palindromic\n// note that even numbers cannot be palindromic in its binary representation\nfor (let i = 1; i <= 999; i++) {\n  // we can skip the numbers whose leading digit is even\n  if (i.toString().charAt(0) & 1) {\n    // we generate a list of palindromes based on current index\n    // ie. i = 57 -> 5775, 57075, 57175, ..., 57975\n    const evenDigitPalindrome = +(`${i.toString()}${i.toString().split('').reverse().join('')}`);\n    let oddDigitPalindromes = [];\n    if (i < 100) { // we don't want to generate 7 digit palindromes\n      oddDigitPalindromes = [...Array(10)].map(\n        (x, idx) => +(`${i.toString()}${idx}${i.toString().split('').reverse().join('')}`)\n      );\n    }\n    const decimalPalindromes = [evenDigitPalindrome, ...oddDigitPalindromes];\n    decimalPalindromes.forEach((dp) => {\n      const bin = dp.toString(2);\n      if (bin === bin.split('').reverse().join('')) {\n        doublePalindromes.push(dp);\n      }\n    });\n  }\n}\n// we did not yet take into account the numbers under 10 (which are palindromes by default)\n// 1,3,5,7,9 are all binary palindromes, their sum is 25\nreturn utils.sumArray(doublePalindromes) + 25;",
     "utils": [
-      "common.js/sumArray"
+      "common/sumArray"
     ]
   },
   {
@@ -636,8 +636,8 @@
     ],
     "solution": "const truncatedPrimes = [];\n// we can see that the only valid digit in a truncated prime are 1,3,7,9\nconst validDigitsA = [1, 3, 7, 9];\n// 2 and 5 are valid digit for preppending, however, they are only valid as the leading digit in a number\nconst validDigitsP = [1, 2, 3, 5, 7, 9];\n// we use BFS on a tree, where the root is a starting digit\n// for each number in root, we create 2 trees, one for only appending numbers (TA), and the other preppending (TP)\n// everytime we traverse down, we can prune a number if it is not prime\n// a number is a valid truncated prime if it is seen once in TA and once in TP\nconst seen = { };\n// 1, 9 cannot be a root as it is not prime\nconst queueA = [2, 3, 5, 7]; // queue for append\n// queue for preppend (preppending to a 2 or 5 will automatically make a number composite)\nconst queueP = [3, 7];\nwhile (queueA.length || queueP.length) {\n  if (queueA.length) {\n    const nodeA = queueA.shift();\n    if (seen[nodeA] && nodeA.toString().length > 1) {\n      truncatedPrimes.push(nodeA);\n      validDigitsA.forEach((vd) => {\n        queueA.push(+(`${nodeA}${vd}`));\n      });\n    } else if (utils.isPrime(nodeA)) {\n      seen[nodeA] = true;\n      validDigitsA.forEach((vd) => {\n        queueA.push(+(`${nodeA}${vd}`));\n      });\n    }\n  }\n  if (queueP.length) {\n    const nodeP = queueP.shift();\n    const firstDigitOfNode = +(nodeP.toString().charAt(0));\n    // preppending to 2, 5 will result in a composite right truncation\n    const stopPreppend = firstDigitOfNode === 2 || firstDigitOfNode === 5;\n    // preppending the same digit to the leading digit eg. 357 -> 3357\n    // will result in the first 2 leading digit to be divisible by 11\n    // except when the leading digit is 1, then preppending by 1 is still fine as 11 is prime\n    const validDigits = validDigitsP.filter(x => x === 1 || x !== firstDigitOfNode);\n    if (seen[nodeP] && nodeP.toString().length > 1) {\n      truncatedPrimes.push(nodeP);\n      if (!stopPreppend) {\n        validDigits.forEach((vd) => {\n          queueP.push(+(`${vd}${nodeP}`));\n        });\n      }\n    } else if (utils.isPrime(nodeP)) {\n      seen[nodeP] = true;\n      if (!stopPreppend) {\n        validDigits.forEach((vd) => {\n          queueP.push(+(`${vd}${nodeP}`));\n        });\n      }\n    }\n  }\n}\nreturn utils.sumArray(truncatedPrimes);",
     "utils": [
-      "primes.js/isPrime",
-      "common.js/sumArray"
+      "primes/isPrime",
+      "common/sumArray"
     ]
   },
   {
@@ -679,8 +679,8 @@
     ],
     "solution": "// we can generate all unique primitive pythagorean triples given a pair of integers m, n:\n// a = m^2 - n^2, b = 2mn, c = m^2 + n^2, where:\n// 1. m > n > 0\n// 2. m and n must not both be odd\n// 3. m and n must be coprime:\n// so we have perimeter = a+b+c = 2m^2 + 2mn = 2m(m+n)\n// we just generate each m, n pair and increment the value associated with p\n// then we also increment each multiple of the generated perimeter\nconst perimeters = {};\nlet maximizedPerimeter = 12;\nlet maximizedPerimeterSolutionsCount = 0;\n// we can quickly check that in order to satisfy p <= 1000, m <= 23\nfor (let m = 2; m <= 23; m++) {\n  for (let n = 1; n < m; n++) {\n    if ((utils.isEven(m) || utils.isEven(n)) && utils.isCoprime(m, n)) {\n      const primitivePerimeter = 2 * m * (m + n);\n      let multiple = 1;\n      let multipliedPerimeter = primitivePerimeter * multiple;\n      while (multipliedPerimeter <= 1000) {\n        perimeters[multipliedPerimeter] = (perimeters[multipliedPerimeter] || 0) + 1;\n        const perimeterSolutionsCount = perimeters[multipliedPerimeter];\n        if (perimeterSolutionsCount > maximizedPerimeterSolutionsCount) {\n          maximizedPerimeterSolutionsCount = perimeterSolutionsCount;\n          maximizedPerimeter = multipliedPerimeter;\n        }\n        multiple++;\n        multipliedPerimeter = primitivePerimeter * multiple;\n      }\n    }\n  }\n}\nreturn maximizedPerimeter;",
     "utils": [
-      "arithmetic.js/isEven",
-      "arithmetic.js/isCoprime"
+      "arithmetic/isEven",
+      "arithmetic/isCoprime"
     ]
   },
   {
@@ -718,9 +718,9 @@
     ],
     "solution": "// n cannot be 9, as the digits sum up to 45, and therefore divisible by 3\n// by the same logic, n cannot be 8 either\nconst digits = [7, 6, 5, 4, 3, 2, 1];\n// we don't need to check if the number is prime if the finalDigit is 2, 4, 5, or 6\nconst validFinalDigits = [1, 3, 7];\n// we search from n = 7 to n = 4 (given in problem statement)\nfor (let n = 7; n >= 4; n--) {\n  const validDigits = digits.slice(7 - n);\n  // here i represents the ith lexicographic permutation\n  for (let i = 1; i <= utils.fact(n); i++) {\n    const pandigitalArray = utils.getLexicalPermutation(validDigits, i);\n    const finalDigit = pandigitalArray[pandigitalArray.length - 1];\n    if (validFinalDigits.includes(+(finalDigit))) {\n      const pandigitalNumber = +(pandigitalArray.join(''));\n      if (utils.isPrime(pandigitalNumber)) {\n        return pandigitalNumber;\n      }\n    }\n  }\n}",
     "utils": [
-      "combinatorics.js/fact",
-      "combinatorics.js/getLexicalPermutation",
-      "primes.js/isPrime"
+      "combinatorics/fact",
+      "combinatorics/getLexicalPermutation",
+      "primes/isPrime"
     ]
   },
   {
@@ -741,8 +741,8 @@
     ],
     "solution": "// we can assume that a word cannot exceed the word value of 500 (almost 20 consecutive 'z')\n// we generate a table of triangle numbers up to 500\nlet triangleWords = 0;\nconst triangleTable = utils.generateTriangulars(500);\nconst words = fs.readFileSync(path.join(__dirname, 'p042_words.txt'))\n  .toString()\n  .replace(/\"/g, '')\n  .split(',');\nwords.forEach((word) => {\n  const wordValue = utils.sumArray(word.split(''), char => char.charCodeAt(0) - 64);\n  if (triangleTable[wordValue]) {\n    triangleWords++;\n  }\n});\nreturn triangleWords;",
     "utils": [
-      "arithmetic.js/generateTriangulars",
-      "common.js/sumArray"
+      "arithmetic/generateTriangulars",
+      "common/sumArray"
     ]
   },
   {
@@ -775,8 +775,8 @@
     ],
     "solution": "const subdivisibleNumbers = [];\n// we describe our recursion as the following:\n// 1. start by picking the last 3 digits s.t. it is divisible by 17, ie. 017, 034, ...\n// 2. we then pick d7 s.t. d7d8d9 is divisible by 13, if such d7 does not exist, we go to the next iteration\n// 3. if it does exist, we pick d6 s.t. d6d7d8 is divisible by 11, etc.\nconst digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];\n// 58 * 17 = 986, largest 3-digit number which is divisible by 17\nfor (let i = 1; i <= 58; i++) {\n  const last3 = (i * 17).toString().padStart(3, '0'); // 1 -> '017', 2 -> '034, etc\n  if (!utils.containsDuplicate(last3)) {\n    buildNumber(\n      last3,\n      digits.filter(x => !last3.includes(x)),\n      [2, 3, 5, 7, 11, 13],\n    );\n  }\n}\n// recursively build a number digit by digit, ensuring divisibility at each step\nfunction buildNumber(acc, remainingDigits, remainingDividers) {\n  if (!remainingDividers.length) {\n    return subdivisibleNumbers.push(`${remainingDigits[0]}${acc}`);\n  }\n  const divider = remainingDividers.pop();\n  for (let j = 0; j < remainingDigits.length; j++) {\n    const leadingDigit = remainingDigits[j];\n    const trailingDigits = +acc.slice(0, 2);\n    const numToCheck = leadingDigit * 100 + trailingDigits;\n    if (numToCheck % divider === 0) {\n      buildNumber(\n        `${leadingDigit}${acc}`,\n        [...remainingDigits].filter(x => x !== leadingDigit),\n        [...remainingDividers],\n      );\n    }\n  }\n}\nreturn utils.sumArray(subdivisibleNumbers, x => +x);",
     "utils": [
-      "lang.js/containsDuplicate",
-      "common.js/sumArray"
+      "lang/containsDuplicate",
+      "common/sumArray"
     ]
   },
   {
@@ -797,7 +797,7 @@
     ],
     "solution": "// we loop through each pentagonal number Pk, and for each Pk loop through each Pj smaller than Pk\n// we check whether Pk - Pj AND Pk + Pj is pentagonal, if so return the difference\nlet k = 2;\nwhile (true) {\n  const Pk = pentg(k);\n  let j = k;\n  while (j >= 1) {\n    const Pj = pentg(j);\n    if (utils.isPentagonal(Pk - Pj) && utils.isPentagonal(Pk + Pj)) {\n      return Pk - Pj;\n    }\n    j--;\n  }\n  k++;\n}\nfunction pentg(n) {\n  return ((3 * (n ** 2)) - n) / 2;\n}",
     "utils": [
-      "arithmetic.js/isPentagonal"
+      "arithmetic/isPentagonal"
     ]
   },
   {
@@ -821,8 +821,8 @@
     ],
     "solution": "let h = 144;\nwhile (true) {\n  const hexagonal = hexg(h);\n  if (utils.isPentagonal(hexagonal) && utils.isTriangular(hexagonal)) {\n    return hexagonal;\n  }\n  h++;\n}\nfunction hexg(n) {\n  return (n * ((2 * n) - 1));\n}",
     "utils": [
-      "arithmetic.js/isPentagonal",
-      "arithmetic.js/isTriangular"
+      "arithmetic/isPentagonal",
+      "arithmetic/isTriangular"
     ]
   },
   {
@@ -852,7 +852,7 @@
     ],
     "solution": "// check each odd number for primality; if it is composite, check for conjecture validity\nlet num = 9;\nwhile (true) {\n  if (!utils.isPrime(num)) {\n    if (!conjValid(num)) {\n      return num;\n    }\n  }\n  num += 2;\n}\n// determines whether a number is valid for Goldbach's conjecture\nfunction conjValid(n) {\n  const rootUB = Math.sqrt((n - 2) / 2);\n  for (let i = 1; i <= rootUB; i++) {\n    const twiceSquare = (i ** 2) * 2;\n    if (utils.isPrime(n - twiceSquare)) {\n      return true;\n    }\n  }\n  return false;\n}",
     "utils": [
-      "primes.js/isPrime"
+      "primes/isPrime"
     ]
   },
   {
@@ -880,7 +880,7 @@
     ],
     "solution": "// assume for now that we don't need prime factors over 1000\nconst first1000Primes = Object.keys(utils.generatePrimesTable(1000));\nlet first = 2 * 3 * 5 * 7;\nwhile (first < 1000000) {\n  const second = first + 1;\n  const third = first + 2;\n  const fourth = first + 3;\n  if (isDPFValid(first)) {\n    if (isDPFValid(second)) {\n      if (isDPFValid(third)) {\n        if (isDPFValid(fourth)) {\n          return first;\n        } // if the fourth number is not valid, skip over the next four numbers\n        first += 4;\n      } else { // if the third number is not valid, skip over the next 3 numbers, etc.\n        first += 3;\n      }\n    } else {\n      first += 2;\n    }\n  } else {\n    first++;\n  }\n}\n// we implement a tailored function which returns true iff n has exactly 4 distinct prime factors\nfunction isDPFValid(n) {\n  let quotient = n;\n  let DPFCount = 0;\n  for (let primeIndex = 0; primeIndex < first1000Primes.length; primeIndex++) {\n    const primeFactor = first1000Primes[primeIndex];\n    if (primeFactor > quotient) {\n      return DPFCount === 4;\n    }\n    if (quotient % primeFactor === 0) {\n      DPFCount++;\n    }\n    while (quotient % primeFactor === 0) {\n      if (DPFCount > 4) {\n        return false;\n      }\n      quotient /= primeFactor;\n    }\n  }\n}",
     "utils": [
-      "primes.js/generatePrimesTable"
+      "primes/generatePrimesTable"
     ]
   },
   {
@@ -915,7 +915,7 @@
     ],
     "solution": "// we generate all primes under 10000,\n// for each prime generated we sort their digits from lower to higher, and classify them in a table\n// Equivalence Class table, the key represents the equivalence class number (e.g 1478)\n// And the value will be the list of primes in that equivalence class\n// e.g. for 1478, the value will be [ '1487', '1847', '4817', '4871', '7481', '7841', '8147', '8741' ]\nconst permutationClassTable = {};\nconst fourDigitPrimes = Object.keys(utils.generatePrimesTable(10000)).filter(x => x >= 1000);\nfor (let i = 0; i < fourDigitPrimes.length; i++) {\n  const sortedDigits = fourDigitPrimes[i].toString().split('').sort().join('');\n  const permutations = permutationClassTable[sortedDigits];\n  if (permutations) {\n    permutationClassTable[sortedDigits].push(fourDigitPrimes[i]);\n  } else {\n    permutationClassTable[sortedDigits] = [fourDigitPrimes[i]];\n  }\n}\n// now that we have our equivalence class table\n// we loop over the keys and for each key, we check the list of corresponding primes\n// for whether or not one number is the average of 2 other numbers\nconst keys = Object.keys(permutationClassTable);\nfor (let i = 0; i < keys.length; i++) {\n  const key = keys[i];\n  if (key !== '1478') { // this answer is given in problem statement\n    const primes = permutationClassTable[key];\n    if (primes.length >= 3) {\n      for (let j = 0; j < primes.length - 2; j++) {\n        for (let k = j + 2; k < primes.length; k++) {\n          const avg = (+primes[j] + +primes[k]) / 2;\n          if (primes.includes(avg.toString())) {\n            return `${primes[j]}${avg}${primes[k]}`;\n          }\n        }\n      }\n    }\n  }\n}",
     "utils": [
-      "primes.js/generatePrimesTable"
+      "primes/generatePrimesTable"
     ]
   },
   {
@@ -937,8 +937,8 @@
     ],
     "solution": "// we begin by generating the list of primes under 1 million\nconst primesTable = utils.generatePrimesTable(1000000);\nconst primesList = Object.keys(primesTable).map(x => +x);\n// next we determine the upper bound for the number of consecutive primes s.t. their sum does not exceed one million\nconst upperConsec = [...primesList].reduce(\n  (sum, curr, i, arr) => {\n    if (sum >= 1000000) {\n      // if sum exceeds one million, returns the number of terms and exit from the reducer\n      arr.splice(1);\n      return i;\n    }\n    return sum + curr;\n  },\n); // spoiler: the upper bound is 547\nlet largestSum = 0;\n// t := number of terms in the sum\n// for each t, we sum t consecutive primes and check if their sum is also prime\n// if it is we store that number and continue checking for the current t\n// once we are done we just return the largest sum obtained at the current t\nfor (let t = upperConsec; t >= 21; t--) {\n  let j = 0;\n  let sum = utils.sumArray(primesList.slice(j, j + t));\n  while (sum < 1000000) {\n    if (primesTable[sum] && sum > largestSum) {\n      largestSum = sum;\n    }\n    j++;\n    sum = utils.sumArray(primesList.slice(j, j + t));\n  }\n  if (largestSum > 0) {\n    return largestSum;\n  }\n}",
     "utils": [
-      "primes.js/generatePrimesTable",
-      "common.js/sumArray"
+      "primes/generatePrimesTable",
+      "common/sumArray"
     ]
   },
   {
@@ -962,8 +962,8 @@
     ],
     "solution": "// define * as the \"variable\" part, and the rest of digits as the \"fixed\" part\n// the number of * must be a multiple of 3, as otherwise there will be at least 3 numbers in each family which will be divisible by 3\n// because the sum of their digits will be a multiple of 3.\n// we first try with 3 variable digits and 3 fixed digits or less;\nconst candidates = [];\nfor (let fixedDigits = 1; fixedDigits <= 999; fixedDigits++) {\n  // for each fixed set of digits, generate the list of combinations comprising of fixed digits and *'s\n  const binomialCombinations = utils.listOrderedCombinations(fixedDigits, '***');\n  for (let i = 0; i < binomialCombinations.length; i++) {\n    const family = [];\n    let composites = 0;\n    for (let repl = 0; repl <= 9; repl++) { // replacement\n      if (repl !== 0 || binomialCombinations[i][0] !== '*') { // leading 0's aren't valid\n        const familyMember = +binomialCombinations[i].join('').replace(/\\*/g, repl);\n        if (utils.isPrime(familyMember)) {\n          family.push(familyMember);\n          if (family.length >= 8) {\n            candidates.push(family);\n          }\n        } else {\n          composites++;\n          if (composites >= 3) {\n            break;\n          }\n        }\n      }\n    }\n  }\n}\n// from the list of candidates, return the family with the smallest member\nreturn Math.min(candidates.map(x => x[0]));",
     "utils": [
-      "combinatorics.js/listOrderedCombinations",
-      "primes.js/isPrime"
+      "combinatorics/listOrderedCombinations",
+      "primes/isPrime"
     ]
   },
   {
@@ -1000,7 +1000,7 @@
     ],
     "solution": "// we generate the table of 100 x 100 where each cell, row i, column j holds the result C(i, j)\n// instead of calculating each combination using the formula, we can use basic algebra for the follow update rules:\n// 1. C(n + 1, r) = C(n, r) * N where N = (n+1)/(n-r+1)\n// 2. C(n, r + 1) = C(n, r) * R where R = (n-r)/(r+1) => C(n, r - 1) = C(n, r) * r/(n-r+1)\n// we also know that C(n, r) is greater than one million for all n >= 23 and r = 10, so we don't need to check for r > 10\nlet totalCount = 4; // for n = 23, obvious from problem statement\nconst combinationTable = new Array(101); // for convenience, n = 0 ... 100\nfor (let i = 23; i <= 100; i++) {\n  combinationTable[i] = new Array(11); // r = 0 ... 10\n}\ncombinationTable[23][10] = 1144066;\nfor (let n = 24; n <= 100; n++) { // we can start at 24 given by problem statement\n  for (let r = 10; r > 0; r--) {\n    if (r === 10 && n !== 23) {\n      combinationTable[n][r] = combinationTable[n - 1][r] * n / (n - r);\n    } else {\n      combinationTable[n][r] = combinationTable[n][r + 1] * (r + 1) / (n - r);\n    }\n    if (combinationTable[n][r] < 1000000) {\n      const increment = utils.isEven(n)\n        ? 1 + 2 * (n / 2 - r - 1)\n        : 2 * ((n + 1) / 2 - r - 1);\n      totalCount += increment;\n      break;\n    }\n  }\n}\nreturn totalCount;",
     "utils": [
-      "arithmetic.js/isEven"
+      "arithmetic/isEven"
     ]
   },
   {
@@ -1047,7 +1047,7 @@
     ],
     "solution": "// list of possible ranks\nconst RANKS = [2, 3, 4, 5, 6, 7, 8, 9, 'T', 'J', 'Q', 'K', 'A'];\n// generate the list of combinations of straights and all their combinations\n// the keys of the table are the valid combinations of strings of 5 characters (not necessarily in order) which form a straight, ie. J8TQ9\n// the value of each key is the highest rank of that straight\n// note: this method may not be the fastest solution for this problem, but it is much more scalable (eg. 1 million hands instead of 1000)\nconst STRAIGHTS_TABLE = ['A', ...RANKS].reduce( // ace to ace\n  (table, curr, index, arr) => {\n    if (curr === 'J') {\n      arr.splice(1);\n    }\n    const highest = index + 5;\n    const base = arr.slice(index, index + 5);\n    for (let i = 0; i <= 120; i++) {\n      table[utils.getLexicalPermutation(base, i).join('')] = highest;\n    }\n    return table;\n  },\n  {},\n);\nconst GAMES = fs.readFileSync(path.join(__dirname, 'p054_poker.txt')).toString().split('\\n');\nreturn GAMES.reduce((p1Score, currentGame) => {\n  const [p1Hand, p2Hand] = [currentGame.substring(0, 14), currentGame.substring(15, 29)];\n  if (!p1Hand) { // end of games\n    return p1Score;\n  }\n  const [p1HandValue, p2HandValue] = [evaluateHand(p1Hand), evaluateHand(p2Hand)];\n  for (let i = 0; i < p1HandValue.length; i++) {\n    if (p1HandValue[i] > p2HandValue[i]) {\n      return p1Score + 1;\n    }\n    if (p1HandValue[i] < p2HandValue[i]) {\n      return p1Score;\n    }\n  }\n  return p1Score;\n}, 0);\n// input: string of 5 cards, separated by a space\n// output: score of hand, which is an array of size up to 6\n// first element is the rank of the hand, where 9: straight flush, 8: four of a kind, etc.\n// second element is the value of the first type within that rank, ie. a hand with 4 aces will have value 13, a hand with 4 kings value 12, etc.\n// third element is the value of the second type within that rank, ie. if both players have 2 pair of aces and 3 singles, then we compare the\n// second highest value etc.\nfunction evaluateHand(hand) {\n  const cards = hand.split(' ');\n  // FLUSH check\n  // check if every card has the same suit as the first card\n  const firstSuit = cards[0].charAt(1);\n  const isFlush = cards.every(card => card.charAt(1) === firstSuit);\n  // STRAIGHT check\n  // check the generated table of all possible straights\n  const highestStraight = STRAIGHTS_TABLE[cards.map(card => card.charAt(0)).join('')] || false;\n  // same of a kind table, keys are the ranks, values are the number of occurences of that rank\n  const rankTable = cards.reduce((table, currentCard) => {\n    const rank = currentCard.charAt(0);\n    table[rank] = table[rank] ? table[rank] + 1 : 1;\n    return table;\n  }, {});\n  // inverted table of above, keys are occurrences and corresponding values are the ranks that fit that occurrence\n  const occurencesTable = Object.entries(rankTable).reduce((table, [key, value]) => {\n    if (table[value]) {\n      table[value].push(key);\n    } else {\n      table[value] = [key];\n    }\n    return table;\n  }, {});\n  // now that we have all the variables we need, we attempt to match a hand with each hand type from strongest to weakest\n  // STRAIGHT FLUSH\n  if (highestStraight && isFlush) {\n    return [9, getRank(highestStraight)];\n  }\n  // FOUR OF A KIND\n  if (occurencesTable['4']) {\n    return [8, getRank(occurencesTable['4'][0]), getRank(occurencesTable['1'])];\n  }\n  // FULL HOUSE\n  if (occurencesTable['3'] && occurencesTable['2']) {\n    return [7, getRank(occurencesTable['3'][0]), getRank(occurencesTable['2'][0])];\n  }\n  // FLUSH\n  if (isFlush) {\n    return [6, ...occurencesTable['1'].map(getRank).sort(sortBiggest)];\n  }\n  // STRAIGHT\n  if (highestStraight) {\n    return [5, getRank(highestStraight)];\n  }\n  // THREE OF A KIND\n  if (occurencesTable['3']) {\n    return [4, getRank(occurencesTable['3'][0]), ...occurencesTable['1'].map(getRank).sort(sortBiggest)];\n  }\n  // TWO PAIRS\n  if (occurencesTable['2'] && occurencesTable['2'].length === 2) {\n    return [3, ...occurencesTable['2'].map(getRank).sort(sortBiggest), getRank(occurencesTable['1'][0])];\n  }\n  // ONE PAIR\n  if (occurencesTable['2']) {\n    return [2, getRank(occurencesTable['2'][0]), ...occurencesTable['1'].map(getRank).sort(sortBiggest)];\n  }\n  // HIGH CARD\n  return [1, ...occurencesTable['1'].map(getRank).sort(sortBiggest)];\n}\nfunction sortBiggest(a, b) {\n  return b - a;\n}\n// returns the numerical rank of a card from a character\nfunction getRank(card) {\n  if (+card) {\n    return +card;\n  }\n  return {\n    T: 10,\n    J: 11,\n    Q: 12,\n    K: 13,\n    A: 14,\n  }[card];\n}",
     "utils": [
-      "combinatorics.js/getLexicalPermutation"
+      "combinatorics/getLexicalPermutation"
     ]
   },
   {
@@ -1084,8 +1084,8 @@
     ],
     "solution": "const lychrelNumbers = {}; // memoized table for all lychrel numbers (doesnt terminate)\nconst nonLychrelNumbers = {}; // numbers which produce a palindrome through reverse add\nfor (let n = 1; n <= 10000; n++) {\n  testLychrel(n);\n}\nfunction testLychrel(n) {\n  const encounteredNumbers = {};\n  let sum = n;\n  for (let i = 1; i <= 50; i++) {\n    const flipped = utils.flip(sum);\n    encounteredNumbers[sum] = true;\n    if (sum % 10) {\n      encounteredNumbers[flipped] = true;\n    }\n    if (nonLychrelNumbers[sum]) {\n      Object.assign(nonLychrelNumbers, encounteredNumbers);\n      break;\n    }\n    if (lychrelNumbers[sum] || i === 50) {\n      Object.assign(lychrelNumbers, encounteredNumbers);\n      break;\n    }\n    sum += flipped;\n    if (utils.isPalindrome(sum)) {\n      Object.assign(nonLychrelNumbers, encounteredNumbers);\n      break;\n    }\n  }\n}\nreturn Object.keys(lychrelNumbers).filter(x => x <= 10000).length;",
     "utils": [
-      "lang.js/flip",
-      "lang.js/isPalindrome"
+      "lang/flip",
+      "lang/isPalindrome"
     ]
   },
   {
@@ -1106,7 +1106,7 @@
     ],
     "solution": "const expTable = [...Array(99)].map((x, i) => [(i + 1).toString()]); // initialize\nlet largestDigitSum = 0;\nexpTable.forEach((column, colIndex) => {\n  const base = colIndex + 1;\n  // each column i contains the result of [i ^ 1, i ^ 2, ..., i ^ 99]\n  // we will skip numbers < 10 and multiples of 10\n  if (base < 10 || base % 10 === 0) {\n    return null;\n  }\n  for (let exp = 1; exp <= 99; exp++) {\n    const result = longMultiply(column[exp - 1], base.toString());\n    const digitSum = utils.sumArray(result, x => +x);\n    if (digitSum > largestDigitSum) {\n      largestDigitSum = digitSum;\n    }\n    column.push(result.reverse().join(''));\n  }\n});\nreturn largestDigitSum;\n// takes 2 strings of numbers as params, returns an array containing the digits of the product of the 2 numbers\n// multiplies the 2 numbers using long multiplication\nfunction longMultiply(a, b) {\n  const mTable = {};\n  const [n1, n2] = [a.split('').reverse(), b.split('').reverse()];\n  const partialResultsTable = n2.reduce(\n    (acc, curr, idx) => {\n      if (curr) {\n        const power = idx;\n        const results = mTable[curr] || n1.map(x => x * curr);\n        mTable[curr] = results;\n        results.forEach((partialProduct, i) => {\n          if (!acc[power + i + 1]) acc[power + i + 1] = [];\n          if (partialProduct < 10) {\n            acc[power + i].push(partialProduct);\n          } else {\n            acc[power + i].push(partialProduct.toString().split('')[1]);\n            acc[power + i + 1].push(partialProduct.toString().split('')[0]);\n          }\n        });\n      }\n      return acc;\n    },\n    [[]],\n  );\n  // add the digits with respect to their positions\n  return consolidatePartialResults(partialResultsTable);\n}\nfunction consolidatePartialResults(table) {\n  const flatResults = [];\n  let carry = 0;\n  for (let columnIndex = 0; columnIndex < table.length; columnIndex++) {\n    const col = table[columnIndex];\n    const sum = (col.reduce((a, c) => +c + a, 0) + +carry).toString();\n    const retainedDigit = sum.slice(-1);\n    carry = sum.slice(0, sum.length - 1);\n    flatResults.push(retainedDigit);\n  }\n  return flatResults;\n}",
     "utils": [
-      "common.js/sumArray"
+      "common/sumArray"
     ]
   },
   {
@@ -1166,7 +1166,7 @@
     ],
     "solution": "// generate a table of 1 million primes\n// const PRIMES = utils.generatePrimesTable(10000000);\n// start from the second layer\nlet currentNumber = 9;\nlet primes = 3;\nlet diagonals = 5;\nlet sideLength = 3;\nwhile (`${primes}0` >= diagonals) {\n  sideLength += 2;\n  diagonals += 4;\n  const incr = sideLength - 1;\n  for (let i = 0; i < 4; i++) {\n    currentNumber += incr;\n    if (utils.isPrime(currentNumber)) {\n      primes++;\n    }\n  }\n}\nreturn sideLength;",
     "utils": [
-      "primes.js/isPrime"
+      "primes/isPrime"
     ]
   },
   {
@@ -1191,7 +1191,7 @@
     ],
     "solution": "// we start by compiling a list of valid password characters for each position\n// we check each character of the password one by one, that is, we start with 'a', and we XOR it with the 1st, 4th, 7th, etc. characters of the cyphertext\n// if at any point we xor a resulting character which is not a valid character for english text, ie. a-z, A-Z and punctuations, we discard it\n// we repeat for the second and third character of the password p059_cipher.txt\nconst formatted = fs.readFileSync('6/p059_cipher.txt').toString().split(',').map(x => +x);\nconst filtered = {\n  first: formatted.filter((_, i) => i % 3 === 0), // every third ascii starting from pos 0\n  second: formatted.filter((_, i) => i % 3 === 1), // every third ascii starting from pos 1\n  third: formatted.filter((_, i) => i % 3 === 2), // every third ascii starting from pos 2\n};\nconst validPass = {\n  first: [],\n  second: [],\n  third: [],\n};\nfor (let i = 97; i <= 122; i++) {\n  if (isPassValid(i, 'first')) {\n    validPass.first.push(i);\n  }\n  if (isPassValid(i, 'second')) {\n    validPass.second.push(i);\n  }\n  if (isPassValid(i, 'third')) {\n    validPass.third.push(i);\n  }\n}\nfunction isAsciiValid(ascii) {\n  // include all characters that can be typed on a standard english keyboard,\n  // except fractions, tab, and the following: \\{}|`~^_\n  return (ascii >= 32 && ascii <= 90) || (ascii >= 97 && ascii <= 122) || ascii === 91 || ascii === 93;\n}\nfunction isPassValid(code, startPosition) {\n  const encryptedChars = filtered[startPosition];\n  const isValid = encryptedChars.every((x) => {\n    return isAsciiValid((x ^ code));\n  });\n  return isValid;\n}\n// console.log(validPass) // this will yield { first: [101], second: [120], third: [112] }\nconst password = [101, 120, 112];\nconst plaintext = formatted.map((char, i) => char ^ password[i % 3]);\n// console.log(String.fromCharCode(...plaintext)); // this will yield the following plaintext output\n/*\nAn extract taken from the introduction of one of Euler's most celebrated papers,\n\"De summis serierum reciprocarum\" [On the sums of series of reciprocals]: I have\nrecently found, quite unexpectedly, an elegant expression for the entire sum of\nthis series 1 + 1/4 + 1/9 + 1/16 + etc., which depends on the quadrature of the\ncircle, so that if the true sum of this series is obtained, from it at once the\nquadrature of the circle follows. Namely, I have found that the sum of this series\nis a sixth part of the square of the perimeter of the circle whose diameter is 1;\nor by putting the sum of this series equal to s, it has the ratio sqrt(6) multiplied\nby s to 1 of the perimeter to the diameter. I will soon show that the sum of this\nseries to be approximately 1.644934066842264364; and from multiplying this number\nby six, and then taking the square root, the number 3.141592653589793238 is indeed\nproduced, which expresses the perimeter of a circle whose diameter is 1. Following\nagain the same steps by which I had arrived at this sum, I have discovered that the\nsum of the series 1 + 1/16 + 1/81 + 1/256 + 1/625 + etc. also depends on the\nquadrature of the circle. Namely, the sum of this multiplied by 90 gives the biquadrate\n(fourth power) of the circumference of the perimeter of a circle whose\ndiameter is 1. And by similar reasoning I have likewise been able to determine the sums\nof the subsequent series in which the exponents are even numbers.\n*/\nreturn utils.sumArray(plaintext);",
     "utils": [
-      "common.js/sumArray"
+      "common/sumArray"
     ]
   },
   {
@@ -1210,9 +1210,9 @@
     ],
     "solution": "const PRIMES_TABLE = utils.generatePrimesTable(100000);\ndelete PRIMES_TABLE['2'];\ndelete PRIMES_TABLE['5'];\nconst PRIMES_ARR = Object.keys(PRIMES_TABLE);\nconst largestGeneratedPrime = PRIMES_ARR[PRIMES_ARR.length - 1];\n// we build tables which contains matching pairs, matching triples and matching quads\n// we iteratively build them on top of each other\n// for example, if we found a prime which matches with an existing member in the table of matched pairs\n// then we can insert that prime, along with the matched pair, into the table of matched triples\n// so on and so forth until we reach a matched quintuple\nconst matchingPairsTable = {}; // prime pairs\nconst matchingTriplesTable = {}; // connected prime triples\nconst matchingQuadsTable = {}; // connected prime quads\nconst matchingQuintsTable = {}; // connected prime quint (answer)\nfor (let i = 0; i < PRIMES_ARR.length; i++) {\n  const prime = PRIMES_ARR[i];\n  const newMatchingPairs = {};\n  for (let j = 0; j < i; j++) {\n    const smallerPrime = PRIMES_ARR[j];\n    if (doesMatch(smallerPrime, prime)) {\n      newMatchingPairs[`${smallerPrime}|${prime}`] = true;\n    }\n  }\n  const newMatchingTriples = {};\n  const matchingPairs = Object.keys(matchingPairsTable);\n  matchingPairs.forEach((pair) => {\n    if (pair.split('|').every(part => newMatchingPairs[`${part}|${prime}`])) {\n      newMatchingTriples[`${pair}|${prime}`] = true;\n    }\n  });\n  const newMatchingQuads = {};\n  const matchingTriples = Object.keys(matchingTriplesTable);\n  matchingTriples.forEach((triple) => {\n    if (triple.split('|').every(part => newMatchingPairs[`${part}|${prime}`])) {\n      newMatchingQuads[`${triple}|${prime}`] = true;\n    }\n  });\n  const newMatchingQuints = {};\n  const matchingQuads = Object.keys(matchingQuadsTable);\n  matchingQuads.forEach((quad) => {\n    if (quad.split('|').every(part => newMatchingPairs[`${part}|${prime}`])) {\n      newMatchingQuints[`${quad}|${prime}`] = true;\n    }\n  });\n  Object.assign(matchingPairsTable, newMatchingPairs);\n  Object.assign(matchingTriplesTable, newMatchingTriples);\n  Object.assign(matchingQuadsTable, newMatchingQuads);\n  Object.assign(matchingQuintsTable, newMatchingQuints);\n  if (Object.keys(matchingQuintsTable).length) {\n    return utils.sumArray(Object.keys(matchingQuintsTable)[0].split('|').map(x => +x));\n  }\n}\n// returns true if a member can be accepted into a family\nfunction doesMatch(oldPrime, newPrime) {\n  const concat1 = concat(+oldPrime, +newPrime);\n  const concat2 = concat(+newPrime, +oldPrime);\n  return (concat1 > largestGeneratedPrime || concat2 > largestGeneratedPrime\n    ? utils.isPrime(concat1) && utils.isPrime(concat2)\n    : PRIMES_TABLE[concat1] && PRIMES_TABLE[concat2]);\n}\nfunction concat(n1, n2) {\n  return n1 * (10 ** n2.toString().length) + n2;\n}",
     "utils": [
-      "primes.js/generatePrimesTable",
-      "common.js/sumArray",
-      "primes.js/isPrime"
+      "primes/generatePrimesTable",
+      "common/sumArray",
+      "primes/isPrime"
     ]
   },
   {
@@ -1249,7 +1249,7 @@
     ],
     "solution": "const polygonalTables = [{}, {}, {}, {}, {}, {}];\nconst startingIndexes = [45, 32, 26, 23, 21, 19];\nconst polygonGenerators = [\n  n => n * (n + 1) / 2,\n  n => n * n,\n  n => n * (3 * n - 1) / 2,\n  n => n * (2 * n - 1),\n  n => n * (5 * n - 3) / 2,\n  n => n * (3 * n - 2),\n];\n// table indexed by prefixes\n// constructed such that finding all the polygonals starting with any 2 digits can be done with O(1)\nconst prefixLookup = {};\nfor (let i = 0; i < startingIndexes.length; i++) {\n  const side = i + 3;\n  const startingIndex = startingIndexes[i];\n  let generatedNumber = 0;\n  for (let n = startingIndex; generatedNumber < 10000; n++) {\n    generatedNumber = polygonGenerators[i](n);\n    const [prefix, suffix] = `${generatedNumber}`.match(/\\d{1,2}/g);\n    if (suffix.charAt(0) === '0' || generatedNumber > 9999) {\n      // third digit is 0, cannot be in a cycle\n      continue;\n    }\n    polygonalTables[i][generatedNumber] = true;\n    if (!prefixLookup[prefix]) {\n      prefixLookup[prefix] = {};\n    }\n    if (!prefixLookup[prefix][side]) {\n      prefixLookup[prefix][side] = [];\n    }\n    prefixLookup[prefix][side].push(generatedNumber);\n  }\n}\nconst octagons = polygonalTables[5];\n// simulate a tree, recursively find a path of length 6\nfunction findPath(path, acc) {\n  // cycle complete\n  if (path.length === 6) {\n    const first = path[0];\n    const last = path[5];\n    if (Math.floor(first / 100) === last % 100) {\n      // FOUND!\n      return path;\n    }\n    return false;\n  }\n  const last = path[path.length - 1];\n  const suffix = last.toString().match(/\\d{1,2}/g)[1];\n  // all polygonals starting with the current suffix\n  const nextPolygons = prefixLookup[suffix];\n  if (!nextPolygons) {\n    return false;\n  }\n  // find the next polygon from all sides which are still missing from the cycle\n  const missingSides = Object.keys(acc).filter(key => !acc[key]);\n  for (let i = 0; i < missingSides.length; i++) {\n    const missingSide = missingSides[i];\n    const nextMatchingPolygons = nextPolygons[missingSide];\n    if (nextMatchingPolygons) {\n      for (let j = 0; j < nextMatchingPolygons.length; j++) {\n        const nextPolygon = nextMatchingPolygons[j];\n        // if a valid path is found, return it, otherwise keep looping\n        const findNextPath = findPath([...path, nextPolygon], { ...acc, [missingSide]: nextPolygon });\n        if (findNextPath) {\n          return findNextPath;\n        }\n      }\n    }\n  }\n  // if no polygons are found with none of the missing sides, return false\n  return false;\n}\n// we start our path from the octagons to minimize loop count\nfor (let o = 0; o < Object.keys(octagons).length; o++) {\n  const octagon = +Object.keys(octagons)[o];\n  const validPath = findPath([octagon], {\n    3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: octagon,\n  });\n  if (validPath) {\n    return utils.sumArray(validPath);\n  }\n}",
     "utils": [
-      "common.js/sumArray"
+      "common/sumArray"
     ]
   },
   {
@@ -1384,7 +1384,7 @@
     ],
     "solution": "function getNthLeadingInteger(n) {\n  if (n < 3) {\n    return n;\n  }\n  if (n % 3 === 2) {\n    return 2 * (Math.floor(n / 3) + 1);\n  }\n  return 1;\n}\nconst target = 100;\nlet numerator = 1n;\nlet denominator = BigInt(getNthLeadingInteger(target - 1));\nfor (let i = target - 1; i >= 1; i--) {\n  const nextLeadingInteger = BigInt(getNthLeadingInteger(i - 1));\n  [numerator, denominator] = [denominator, nextLeadingInteger * denominator + numerator];\n}\nnumerator += (denominator * 2n); // add leading constant\nreturn utils.sumArray(numerator.toString().split(''), n => +n);",
     "utils": [
-      "common.js/sumArray"
+      "common/sumArray"
     ]
   },
   {
@@ -1485,7 +1485,7 @@
     ],
     "solution": "// The first step consists of generating the list of permutations of digits in the inner and outer ring\nconst DIGITS = [1, 2, 3, 4, 5, 6, 7, 8, 9];\nconst innerPermutations = [];\nconst outerPermutations = [];\nfor (let i1 = 1; i1 <= 5; i1++) {\n  for (let i2 = i1 + 1; i2 <= 6; i2++) {\n    for (let i3 = i2 + 1; i3 <= 7; i3++) {\n      for (let i4 = i3 + 1; i4 <= 8; i4++) {\n        for (let i5 = i4 + 1; i5 <= 9; i5++) {\n          const innerRing = [i1, i2, i3, i4, i5];\n          innerPermutations.push(innerRing);\n          outerPermutations.push(DIGITS.filter(x => !innerRing.includes(x)));\n        }\n      }\n    }\n  }\n}\nlet maxSolution = 0;\n// then, for each permutation, we check if it is a legitimate solution with the helper function below\nfor (let i = 0; i < innerPermutations.length; i++) {\n  const leadingDigit = innerPermutations[i][0];\n  const basePermutation = innerPermutations[i].slice(1);\n  const outerDigits = outerPermutations[i];\n  for (let j = 1; j <= 24; j++) {\n    const currentPermutation = utils.getLexicalPermutation(basePermutation, j).map(Number);\n    currentPermutation.unshift(leadingDigit);\n    const commonSum = findSolution(currentPermutation, outerDigits);\n    if (commonSum) {\n      // if a soution is found, find maximal string corresponding to that solution\n      // first, find the index of the inner ring adjacent to the smallest outer digit\n      const innerStartIndex = currentPermutation.findIndex((permDigit, permIndex) => {\n        const currentInnerDigit = permDigit;\n        const nextInnerDigit = currentPermutation[(permIndex + 1) % 5];\n        return currentInnerDigit + nextInnerDigit === commonSum - outerDigits[0];\n      });\n      // then we go around the inner ring (clockwise) and preppend the corresponding outer digit\n      let solutionString = '';\n      for (let k = 0; k <= 4; k++) {\n        const currentInnerRingDigit = currentPermutation[(innerStartIndex + k) % 5];\n        const nextInnerRingDigit = currentPermutation[(innerStartIndex + k + 1) % 5];\n        const currentSum = currentInnerRingDigit + nextInnerRingDigit;\n        const correspondingOuterDigit = commonSum - currentSum;\n        solutionString += `${correspondingOuterDigit}${currentInnerRingDigit}${nextInnerRingDigit}`;\n      }\n      const solution = +solutionString;\n      if (solution > maxSolution) {\n        maxSolution = solution;\n      }\n    }\n  }\n}\nreturn maxSolution;\n// given a sequence of inner ring, return the common sum if a solution exists, false otherwise\nfunction findSolution(inner, outer) {\n  // we go around the inner ring and extract all the sums of adjacent digits\n  const sumsToTest = [...inner].reduce(\n    (acc, curr, idx, arr) => {\n      const nextIndex = idx === 4 ? 0 : idx + 1;\n      const sum = curr + inner[nextIndex];\n      if (acc[sum]) {\n        // if there are duplicate sums in the inner ring,\n        // a solution cannot exist as the outer ring numbers are all disinct\n        arr.splice(1);\n        return null;\n      }\n      acc[sum] = true;\n      return acc;\n    },\n    {},\n  );\n  if (!sumsToTest) { // duplicate sums detected\n    return false;\n  }\n  // the digits of the outer ring are sorted from smallest to largest by design\n  // therefore we sort the sums of the inner ring from largest to smallest\n  const partialSums = Object.keys(sumsToTest).map(Number).sort((a, b) => b - a);\n  const SOLUTION_SUM = partialSums[4] + 10; // smallest inner sum + 10\n  // we check if adding the corresponding index of the outer ring will result in the solution sum\n  for (let i = 0; i <= 3; i++) {\n    if (partialSums[i] + outer[i] !== SOLUTION_SUM) {\n      return false;\n    }\n  }\n  return SOLUTION_SUM;\n}",
     "utils": [
-      "combinatorics.js/getLexicalPermutation"
+      "combinatorics/getLexicalPermutation"
     ]
   },
   {
@@ -1506,7 +1506,7 @@
     ],
     "solution": "// we use the Euler's formula for the totient function for all n <= 1 million\n// we start with n, and for each prime p divisible by n, we multiply by ((p - 1) / p)\n// the intuition is as follows:\n// let's take the number 60, which has prime divisors 2, 3, 5\n// 1. we first extract the numbers NOT divisible by 2: p = 2 => 60 * 1/2 = 30;\n// 2. of those numbers, we extract numbers NOT divisible by 3: p = 3 => 30 * 2/3 = 20;\n// 3. finally, we extract from the previous result numbers not divisible by 5: 20 * 4/5 = 16;\n// indeed, the numbers (<60) relatively prime to 60\n// are the numbers which are not divisible by 2, 3, or 5, and there are 16 of them\n// we also use a heuristic to cut down a majority of numbers to test:\n// since we want to maximize n/phi(n), we need to find a number which is highly divisible\n// we do that by MAXIMIZING the number of PRIME divisors, and by MINIMIZING the number itself\n// therefore, we search incrementally with products of prime numbers from smallest to largest,\n// and we stop if the product exceeds 1 million\n// ie. 2, 2*3, 2*3*5, 2*3*5*7, etc.\nconst PRIMES_TABLE = utils.generatePrimesTable(100); // product of primes < 100 is guaranteed to exceed 1 million\nconst PRIMES_ARR = Object.keys(PRIMES_TABLE).map(Number);\nlet maxTotient = 0;\nlet maxTotientNumber = 0;\nfor (let i = 0; i < PRIMES_ARR.length; i++) {\n  const factors = PRIMES_ARR.slice(0, i + 1);\n  const product = factors.reduce((a, c) => a * c, 1);\n  if (product > 1000000) {\n    break;\n  }\n  const reverseTotient = factors.reduce((a, c) => a * c / (c - 1), 1); // shortcut to calculate n/phi(n)\n  if (reverseTotient > maxTotient) {\n    maxTotient = reverseTotient;\n    maxTotientNumber = product;\n  }\n}\nreturn maxTotientNumber;",
     "utils": [
-      "primes.js/generatePrimesTable"
+      "primes/generatePrimesTable"
     ]
   },
   {
@@ -1528,8 +1528,8 @@
     ],
     "solution": "// to minimize n/phi(n), we need to maximize phi(n), ie. we need to find n which is not highly divisible\n// n cannot be prime as phi(n) = n - 1, and n and n - 1 cannot have the same digits\n// NOTE:\n// let p1, p2, ... pm denote the prime factors of n\n// therefore n/phi(n) := p1/(p1-1) * p2/(p2-1) * p3/(p3-1) * ... * pm/(pm-1) (1)\n// in order to minimize the equation above, we need to minimize the number of terms (as each term > 1)\n// and also minimize each term by maximizing the value of the prime factors\nconst PRIMES_TABLE = utils.generatePrimesTable(10000);\n// this number is chosen with the confidence that the minimal ratio < 1.001\nconst PRIMES_ARR = Object.keys(PRIMES_TABLE).reverse().map(Number);\nlet minimalTotientRatio = 1.001; // arbitrarily large number\nlet minimalTotientNumber = 0;\nfor (let i = 0; i < PRIMES_ARR.length - 1; i++) {\n  const p1 = PRIMES_ARR[i];\n  const phi1 = p1 / (p1 - 1);\n  if (phi1 > minimalTotientRatio) {\n    break;\n  }\n  for (let j = PRIMES_ARR.findIndex(x => x < 10000000 / p1); j < PRIMES_ARR.length; j++) {\n    const p2 = PRIMES_ARR[j];\n    const phi2 = p2 / (p2 - 1);\n    if (phi2 > minimalTotientRatio) {\n      break;\n    }\n    const result = p1 * p2;\n    const phi = (p1 - 1) * (p2 - 1);\n    if (utils.haveSameDigits([result, phi])) {\n      const totientRatio = result / phi;\n      if (totientRatio < minimalTotientRatio) {\n        minimalTotientRatio = totientRatio;\n        minimalTotientNumber = result;\n      }\n    }\n  }\n}\nreturn minimalTotientNumber;",
     "utils": [
-      "primes.js/generatePrimesTable",
-      "lang.js/haveSameDigits"
+      "primes/generatePrimesTable",
+      "lang/haveSameDigits"
     ]
   },
   {
@@ -1577,7 +1577,7 @@
     ],
     "solution": "// we are basically calculating phi(2) + ... + phi(1,000,000)\n// note that phi(n) = (f1 - 1) / f1 * (f2 - 1) / f2 + ... + (fm - 1) / fm\n// where f1, f2, ..., fm are the prime factors of n\n// we start by generating all prime numbers below 1000000\n// for each generated prime p, we sieve all multiples of that prime p * 2, p * 3, etc.\n// by multiplying each number by (p - 1) / p\n// eventually each integer below 1000000 will be sieved once by each of its prime factors\nconst target = 1000000;\nconst PRIME_TABLE = utils.generatePrimesTable(target);\nconst INTEGER_TABLE = { ...PRIME_TABLE };\nlet answer = 0;\nfor (let i = 2; i <= target; i++) {\n  if (PRIME_TABLE[i]) {\n    answer += i - 1;\n    for (let j = i; i * j <= target; j++) {\n      if (INTEGER_TABLE[i * j]) {\n        INTEGER_TABLE[i * j] = INTEGER_TABLE[i * j] * (i - 1) / i;\n      } else {\n        INTEGER_TABLE[i * j] = j * (i - 1);\n      }\n    }\n  } else {\n    answer += INTEGER_TABLE[i];\n  }\n}\nreturn answer;",
     "utils": [
-      "primes.js/generatePrimesTable"
+      "primes/generatePrimesTable"
     ]
   },
   {
@@ -1602,7 +1602,7 @@
     ],
     "solution": "let answer = 0;\nfor (let d = 4; d <= 12000; d++) {\n  const lower = d / 3;\n  const upper = d / 2;\n  const lbNumerator = Number.isInteger(lower) ? lower + 1 : Math.ceil(lower); // proper lower bound\n  const ubNumerator = Number.isInteger(upper) ? upper - 1 : Math.floor(upper); // proper upper bound\n  if (lbNumerator > ubNumerator) {\n    continue;\n  }\n  for (let n = lbNumerator; n <= ubNumerator; n++) {\n    if (utils.gcd(n, d) === 1) {\n      answer++;\n    }\n  }\n}\nreturn answer;",
     "utils": [
-      "arithmetic.js/gcd"
+      "arithmetic/gcd"
     ]
   },
   {
@@ -1670,8 +1670,8 @@
     ],
     "solution": "// keys are the length, value are how many time it has been sieved\nconst TRIANGLE_LENGTH_TABLE = {};\nconst target = 1500000;\n// we first generate the table of primitive pythagorean triplets\nfor (let n = 1; n < 612; n++) {\n  for (let m = n + 1; m <= target; m++) {\n    const perimeter = 2 * m * (n + m);\n    if (perimeter > target) {\n      break;\n    }\n    const isCoprime = utils.gcd(m, n) === 1;\n    const isPrimitive = isCoprime && (utils.isEven(m) || utils.isEven(n));\n    if (isPrimitive) {\n      TRIANGLE_LENGTH_TABLE[perimeter] = 1;\n    }\n  }\n}\n// for each generated triplet, we sieve all the multiples of that perimeter\nconst primitivePerimeters = Object.keys(TRIANGLE_LENGTH_TABLE).map(Number);\nfor (let i = 0; i < primitivePerimeters.length; i++) {\n  const primitive = primitivePerimeters[i];\n  for (let k = 2; primitive * k <= target; k++) {\n    TRIANGLE_LENGTH_TABLE[primitive * k] = TRIANGLE_LENGTH_TABLE[primitive * k]\n      ? TRIANGLE_LENGTH_TABLE[primitive * k] + 1\n      : 1;\n  }\n}\n// at the end, for each perimeter, if it has value 1 (ie. it has been sieved exactly once), then it fits the condition\nreturn Object.keys(TRIANGLE_LENGTH_TABLE).filter(p => TRIANGLE_LENGTH_TABLE[p] === 1).length;",
     "utils": [
-      "arithmetic.js/gcd",
-      "arithmetic.js/isEven"
+      "arithmetic/gcd",
+      "arithmetic/isEven"
     ]
   },
   {
@@ -1724,8 +1724,8 @@
     ],
     "solution": "// from problem above, i = 30 was sufficient to generate > 5000 partitions\n// in order to minimize space and time, we will use 46 primes as an upper bound, and increase if necessary\nconst PRIMES = Object.keys(utils.generatePrimesTable(200)).map(Number);\nlet answer = 0;\nlet I = 2;\n// each key is of the form a|b, and the value is the number of partitions of a using primes smaller or equal to b\nconst MEM = { };\nwhile (!answer) {\n  for (let i = 2; i <= I; i++) {\n    for (let j = 0; j < PRIMES.length; j++) {\n      const prime = PRIMES[j];\n      if (prime > i) {\n        MEM[`${i}|${prime}`] = MEM[`${i}|${PRIMES[j - 1]}`];\n        continue;\n      }\n      if (j === 0) {\n        MEM[`${i}|${prime}`] = utils.isEven(i) ? 1 : 0;\n        continue;\n      }\n      const usingPrime = MEM[`${i - prime}|${prime}`] || (i === prime ? 1 : 0);\n      const notUsing = MEM[`${i}|${PRIMES[j - 1]}`] || 0;\n      if (notUsing + usingPrime > 5000) {\n        MEM[`${i}|${prime}`] = notUsing + usingPrime;\n        answer = i;\n        break;\n      }\n      MEM[`${i}|${prime}`] = notUsing + usingPrime;\n    }\n    if (answer) {\n      break;\n    }\n  }\n  I++;\n}\nreturn answer;",
     "utils": [
-      "primes.js/generatePrimesTable",
-      "arithmetic.js/isEven"
+      "primes/generatePrimesTable",
+      "arithmetic/isEven"
     ]
   },
   {
@@ -1805,8 +1805,8 @@
     ],
     "solution": "// we use a memoized table where the entry [i,j] is the optimal path from 0,0 to i,j\n// MEM[i, j] = min(MEM[i - 1, j], MEM[i, j - 1]);\nconst MEM = utils.initTable(80, 80);\nconst raw = fs.readFileSync(path.join(__dirname, './p081_matrix.txt')).toString();\nconst MATRIX = raw.split('\\n').slice(0, 80).map(row => row.split(',').map(Number));\nMEM[0] = MATRIX[0].map((_, i) => utils.sumArray(MATRIX[0].slice(0, i + 1)));\nfor (let row = 1; row < 80; row++) {\n  MEM[row][0] = MATRIX[0][0] + utils.sumArray(MATRIX.map(r => r[0]).slice(1, row + 1));\n  for (let col = 1; col < 80; col++) {\n    MEM[row][col] = MATRIX[row][col] + Math.min(MEM[row - 1][col], MEM[row][col - 1]);\n  }\n}\nreturn MEM[79][79];",
     "utils": [
-      "common.js/initTable",
-      "common.js/sumArray"
+      "common/initTable",
+      "common/sumArray"
     ]
   },
   {
@@ -1833,7 +1833,7 @@
     ],
     "solution": "// we iterate column by column, at each step we memorize the optimal sum from the leftmost column to\n// each element of the current column\nconst raw = fs.readFileSync(path.join(__dirname, './p081_matrix.txt')).toString();\n// parse file into a 2D array\nconst MATRIX = raw.split('\\n').slice(0, 80).map(row => row.split(',').map(Number));\n// initiate MEM to be the first column\nlet MEM = MATRIX.map(x => x[0]);\n// at each iteration, MEM[k] remembers the optimal sum from the leftmost column (any starting row)\n// to the kth element of the current column\nfor (let col = 1; col < MATRIX.length; col++) {\n  // extract current column\n  const column = MATRIX.map(x => x[col]);\n  // keep the data for the next column separate, as we still need the data of current column\n  const nextMEM = [];\n  // find optimal path for each element of column\n  for (let dest = 0; dest < MATRIX.length; dest++) {\n    // keep track of optimal path\n    let optimalSum = Infinity;\n    // calculate all paths from each element of previous column\n    let pathSum = 0;\n    for (let origin = 0; origin < MATRIX.length; origin++) {\n      // calculate all paths from a specific origin row to a specific destination row\n      // paths can only be: 1. go right and up, or 2. go right and down\n      // if the memorized value at `origin` index is already exceeding the optimal sum, we can ignore it\n      if (MEM[origin] > optimalSum) {\n        continue;\n      }\n      if (origin === dest) {\n        // if origin row is the same as destination row, the optimal path is just move right\n        pathSum = MEM[origin] + column[dest];\n      } else if (origin > dest) {\n        // origin is 'lower' (high index == low height) than dest in matrix, move right then up\n        pathSum = MEM[origin] + utils.sumArray(column.slice(dest, origin + 1));\n      } else {\n        // origin is 'higher' than dest in matrix, move right then down\n        pathSum = MEM[origin] + utils.sumArray(column.slice(origin, dest + 1));\n      }\n      if (pathSum < optimalSum) {\n        optimalSum = pathSum;\n      }\n    }\n    // memoize optimal sum\n    nextMEM[dest] = optimalSum;\n  }\n  // prepare for next column\n  MEM = nextMEM;\n}\n// at the last column, MEM contains all the OPTIMAL paths from the first column to each element of the last column\n// the minimal element will then be the optimal path from left to right\nreturn Math.min(...MEM);",
     "utils": [
-      "common.js/sumArray"
+      "common/sumArray"
     ]
   },
   {

@@ -77,7 +77,7 @@ function generateSiteData(file) {
           let utilMatch = utilRegex.exec(uncommented);
           while (utilMatch) {
             const utilFunction = utilMatch[1];
-            utils[`${dependencies[utilFunction]}.js/${utilFunction}`] = true;
+            utils[`${dependencies[utilFunction]}/${utilFunction}`] = true;
             utilsUsage[utilMatch[1]] = utilsUsage[utilMatch[1]] || {};
             utilsUsage[utilMatch[1]][problemData.id] = true;
             utilMatch = utilRegex.exec(uncommented);
