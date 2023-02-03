@@ -222,7 +222,7 @@
       "examples": [
         {
           "input": "10",
-          "output": "{ 1"
+          "output": "{ 1: true, 2: true, 3: true, 6: true, 10: true }"
         }
       ],
       "func": "function generateTriangulars(n) {\n  const table = {};\n  let triangle = 1;\n  let incr = 1;\n  while (triangle < n) {\n    table[triangle] = true;\n    incr++;\n    triangle += incr;\n  }\n  return table;\n}",
@@ -342,7 +342,7 @@
       "examples": [
         {
           "input": "4",
-          "output": "{ 0"
+          "output": "{ 0: 1, 1: 1, 2: 2, 3: 6, 4: 24, 5: 120 }"
         }
       ],
       "func": "function generateFactTable(n) {\n  const table = {\n    0: 1,\n  };\n  for (let i = 1; i <= n; i++) {\n    table[i] = table[i - 1] * i;\n  }\n  return table;\n}",
@@ -787,7 +787,7 @@
       "examples": [
         {
           "input": "15",
-          "output": "{ 2"
+          "output": "{ 2: true, 3: true, 5: true, 7: true, 11: true, 13: true }"
         }
       ],
       "func": "function generatePrimesTable(n) {\n  // array where indexes represent all odd numbers, ie. each index i correspond to the ith odd number (except for 1)\n  // e.g. sieveArr[2] = true is equivalent of saying the 2nd odd number excluding 1 (ie. 5) is prime\n  const sieveArr = [];\n  const root = Math.sqrt(n);\n  for (let i = 1; i < root; i++) {\n    const realRepr = 2 * i + 1; // e.g. i = 2 -> 2nd odd number -> 5\n    if (sieveArr[i] !== false) { // if index is not already sieved\n      sieveArr[i] = true; // then it must be prime\n      // since the indexes represent the odd numbers, we only need to sieve up to a multiple(j) such that:\n      // (ith odd number) * j < n => (2*i+1)*j < n => i * j < n/(2*i+1)\n\n      // sieve all odd multiples of i\n      // e.g. let i = 3 -> we must sieve 9, 15, 21, ...\n      // therefore we sieve their corresponding indexes -> 4, 7, 10, ...\n      let j = 3;\n      while (realRepr * j <= n) {\n        // convert a real index representation to its odd counterpart\n        // e.g 5 -> 2\n        const oddRepr = (realRepr * j - 1) / 2;\n        sieveArr[oddRepr] = false;\n        j += 2;\n      }\n    }\n  }\n  const table = {};\n  for (let k = 0; k <= (n - 1) / 2; k++) {\n    if (k === 0) {\n      table[2] = true;\n    } else if (sieveArr[k] !== false) {\n      table[2 * k + 1] = true;\n    }\n  }\n  return table;\n\n  // performance: intel i5 9400F\n  // 1000: < 0.1ms\n  // 10K: 2.436ms\n  // 100K: 5.967ms\n  // 1M: 57ms\n  // 5M: 382ms\n  // 10M: 919.793ms\n  // 50M: 7376.009ms\n  // 90M: 10404.120ms\n}",

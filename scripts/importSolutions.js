@@ -173,7 +173,9 @@ function generateUtils() {
         }
         if (/\* @example/.test(line)) {
           const _example = line.split('@example')[1].trim();
-          const [_1, input, _2, output] = _example.split(/: |; /g);
+          const [inputString, outputString] = _example.split(';');
+          const input = inputString.split('input: ')[1]
+          const output = outputString.split('output: ')[1]
           const example = { input, output };
           description.examples = description.examples ? [...description.examples, example] : [example];
           return null;
