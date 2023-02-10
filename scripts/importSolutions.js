@@ -19,7 +19,7 @@ Object.keys(UTILS).forEach((file) => {
 });
 
 
-const resolve = (rp) => path.resolve(__filename, rp);
+const resolve = (rp) => path.resolve(__dirname, rp);
 
 const TITLE_REGEX = /^.+\* Problem (\d{1,2}):?\s?/;
 const QUESTION_REGEX = /@question/;
@@ -39,7 +39,7 @@ function generateSiteData(file) {
       return null;
     }
     const lineStreamer = lineReader.createInterface({
-      input: fs.createReadStream(`${readPath}/${file}/index.js`),
+      input: fs.createReadStream(`${resolve(readPath)}/${file}/index.js`),
     });
     let problemData = {};
     let problemDescription = [];
