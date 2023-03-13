@@ -55,6 +55,14 @@ export default class Solution extends React.Component {
     );
   }
 
+  static formatGuide(line) {
+    return (
+      <span
+        dangerouslySetInnerHTML={{ __html: line }}
+      />
+    );
+  }
+
   static formatDescription(line, index) {
     if (line) {
       if (line.includes('@math')) {
@@ -168,6 +176,16 @@ export default class Solution extends React.Component {
             </p>
           </div>
         </div>
+        {solutionData.guide.length && (
+          <div className="description">
+            <div className="description__title">
+              <h3>Guide</h3>
+            </div>
+            <div className="description__description">
+              <p>{solutionData.guide.map(Solution.formatGuide)}</p>
+            </div>
+          </div>
+        )}
         <div className="container">
           <div className="container__header">
             <div className="left" />

@@ -2,12 +2,10 @@ module.exports = {
   /**
    * Problem 1: Multiples of 3 and 5
    * @question Find the sum of all the multiples of 3 or 5 below 1000.
+   * @guide
+   * We add all multiples of 3 and 5, and substract multiples of 15 since these are counted twice.
    */
   e1() {
-    // answer = sum of
-    // 1. sum of all multiples of 3 -> (3 + 6 + 9 + ... + 999) = 3 * (1 + 2 + ... + 333)
-    // 2. sum of all multiples of 5 -> (5 + 10 + 15 + ... 995) = 5 * (1 + 2 + ... + 199);
-    // 3. negative sum of all multiples of 15 -> 15 * (1 + 2 + ... + 66)
     const sum3 = 3 * (333 * 334) / 2; // 3(1 + 2 + ... + 333)
     const sum5 = 5 * (199 * 200) / 2; // 5(1 + 2 + ... + 199)
     const sum15 = 15 * (66 * 67) / 2; // 15(1 + 2 + ... + 66)

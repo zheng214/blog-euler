@@ -18,11 +18,44 @@ Object.keys(UTILS).forEach((file) => {
   });
 });
 
+// console.log(dependencies)
+// {
+//   isOdd: 'arithmetic',
+//   isEven: 'arithmetic',
+//   listPrimeFactors: 'arithmetic',  
+//   gcd: 'arithmetic',
+//   isCoprime: 'arithmetic',
+//   listProperDivisors: 'arithmetic',
+//   computeSumOfDivisors: 'arithmetic',
+//   reduceLCT: 'arithmetic',
+//   generateTriangulars: 'arithmetic',
+//   toPolygonal: 'arithmetic',
+//   isTriangular: 'arithmetic',
+//   isPentagonal: 'arithmetic',
+//   fact: 'combinatorics',
+//   generateFactTable: 'combinatorics',
+//   convertToFactorialBase: 'combinatorics',
+//   getLexicalPermutation: 'combinatorics',
+//   choose: 'combinatorics',
+//   listOrderedCombinations: 'combinatorics',
+//   sumArray: 'common',
+//   contains: 'common',
+//   insertElementSorted: 'common',
+//   initTable: 'common',
+//   containsDuplicate: 'lang',
+//   toArray: 'lang',
+//   flip: 'lang',
+//   isPalindrome: 'lang',
+//   haveSameDigits: 'lang',
+//   isPrime: 'primes',
+//   generatePrimesTable: 'primes'
+// }
 
 const resolve = (rp) => path.resolve(__dirname, rp);
 
 const TITLE_REGEX = /^.+\* Problem (\d{1,2}):?\s?/;
 const QUESTION_REGEX = /@question/;
+const GUIDE_REGEX = /@guide/;
 const SOLUTION_REGEX = /e\d{1,2}\s?\(\)/;
 const utilsUsage = {};
 
@@ -39,22 +72,25 @@ function generateSiteData(file) {
       return null;
     }
     const lineStreamer = lineReader.createInterface({
-      input: fs.createReadStream(`${resolve(readPath)}/${file}/index.js`),
+      input: fs.createReadStream(`${resolve(readPath)}/1/index.js`),
     });
     let problemData = {};
     let problemDescription = [];
     let questionDescription = [];
+    let guideDescription = [];
     let solutionDescription = [];
     let utils = {};
     let bracketBalance = 0;
     let readState = '';
     lineStreamer.on('line', (line) => {
+      // in this scope, return null means go next line
       if (TITLE_REGEX.test(line)) {
         const [_, id, title] = line.split(TITLE_REGEX);
         Object.assign(problemData, { id, title });
         readState = 'description';
-        return null;
+        return null; 
       }
+
       switch (readState) {
         case 'description': {
           if (!QUESTION_REGEX.test(line)) {
@@ -64,13 +100,26 @@ function generateSiteData(file) {
           readState = 'question';
         }
         case 'question':
-          if (!SOLUTION_REGEX.test(line)) {
-            questionDescription.push(line.split(/@question\s?/)[1]);
-            return null;
+          if (QUESTION_REGEX.test(line)) {
+            questionDescription.push(line.split(/@question\s?/)[1]);;
+          } else if (SOLUTION_REGEX.test(line)) {
+            readState = 'solution';
+            bracketBalance = 1;
+          } else if (GUIDE_REGEX.test(line)) {
+            readState = 'guide';
           }
-          readState = 'solution';
-          bracketBalance = 1;
           return null;
+        case 'guide': {
+          if (SOLUTION_REGEX.test(line)) {
+            readState = 'solution';
+            bracketBalance = 1;
+          } else if (line.includes('*/')) {
+            return null;
+          } else {
+            guideDescription.push(line.substring(4, line.length));
+          }
+          return null;
+        }
         case 'solution': {
           const uncommented = line.split('//')[0];
           const utilRegex = /utils\.(\w+)/g;
@@ -78,10 +127,32 @@ function generateSiteData(file) {
           while (utilMatch) {
             const utilFunction = utilMatch[1];
             utils[`${dependencies[utilFunction]}/${utilFunction}`] = true;
-            utilsUsage[utilMatch[1]] = utilsUsage[utilMatch[1]] || {};
-            utilsUsage[utilMatch[1]][problemData.id] = true;
+            if (!utilsUsage[utilFunction]) {
+              utilsUsage[utilFunction] = {};
+            }
+            utilsUsage[utilFunction][problemData.id] = true;
             utilMatch = utilRegex.exec(uncommented);
           }
+          // console.log(utilsUsage)
+          // {
+          // computeSumOfDivisors: { '21': true, '23': true },
+          // convertToFactorialBase: { '24': true },
+          // reduceLCT: { '33': true },
+          // generateFactTable: { '34': true },
+          // isEven: { '39': true, '53': true, '75': true, '77': true },
+          // isCoprime: { '39': true },
+          // getLexicalPermutation: { '41': true, '54': true, '68': true },
+          // generateTriangulars: { '42': true },
+          // containsDuplicate: { '43': true },
+          // isPentagonal: { '44': true, '45': true },
+          // isTriangular: { '45': true },
+          // listOrderedCombinations: { '51': true },
+          // flip: { '55': true },
+          // isPalindrome: { '55': true },
+          // haveSameDigits: { '70': true },
+          // gcd: { '73': true, '75': true },
+          // initTable: { '81': true }
+          // }
           const leftBrackets = (uncommented.match(/\{/g) || []).length;
           const rightBrackets = (uncommented.match(/\}/g) || []).length;
           bracketBalance += leftBrackets - rightBrackets;
@@ -99,13 +170,15 @@ function generateSiteData(file) {
         ...problemData,
         description: problemDescription,
         question: questionDescription,
-        solution: solutionDescription.filter(Boolean).map(x => x.substring(4, x.length)).join('\n'),
+        guide: guideDescription,
+        solution: solutionDescription.filter(Boolean).map(x => x.substring(4, x.length)).join('\n'), // 4 whitespace
         utils: Object.keys(utils),
       };
       data.push(problemData);
       problemData = {};
       problemDescription = [];
       questionDescription = [];
+      guideDescription = [];
       solutionDescription = [];
       utils = {};
       readState = '';
