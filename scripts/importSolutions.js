@@ -116,7 +116,7 @@ function generateSiteData(file) {
           } else if (line.includes('*/')) {
             return null;
           } else {
-            guideDescription.push(line.substring(4, line.length));
+            guideDescription.push(line.substring(5, line.length));
           }
           return null;
         }

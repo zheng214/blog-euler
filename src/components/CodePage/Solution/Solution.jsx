@@ -176,16 +176,16 @@ export default class Solution extends React.Component {
             </p>
           </div>
         </div>
-        {solutionData.guide.length && (
+        {solutionData.guide.length ? (
           <div className="description">
             <div className="description__title">
-              <h3>Guide</h3>
+              <h4>Guide</h4>
             </div>
             <div className="description__description">
               <p>{solutionData.guide.map(Solution.formatGuide)}</p>
             </div>
           </div>
-        )}
+        ) : null}
         <div className="container">
           <div className="container__header">
             <div className="left" />
