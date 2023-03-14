@@ -3,6 +3,8 @@
  * @overview Contains helper functions for code that are often used/repeated
  */
 
+// ⁰¹²³⁴⁵⁶⁷⁸⁹ ⁿ ⁺ ⁻ ⁽ ⁾ ₀ ₁ ₂ ₃ ₅ ₆ ₇ ₈ ₉ ₍ ₎ 
+
 /**
  * @function sumArray
  * @description 'Sum' over all elements of an array, with a mapper applied to each element (similar to mapReduce)

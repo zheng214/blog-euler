@@ -56,14 +56,14 @@ module.exports = {
    * To illustrate how the algorithm works, I will provide an example when n = 10 and n = 11
    * 
    * n = 10, triangle = 55:
-   * Since n is even, we calculate D(n+1), ie. D(11), and store it in <span class="mono">nextComputedDivisorsCount</span>.
-   * We calculate D(55) = D(11) * D(5), D(5) is stored in <span class="mono">lastComputedDivisorsCount</span>, obtained from the previous step, when n = 9.
-   * We transfer <span class="mono">nextComputedDivisorsCount</span> to <span class="mono">lastComputedDivisorsCount</span>.
-   * So now <span class="mono">lastComputedDivisorsCount</span> contains D(11);
+   * Since n is even, we calculate D(n+1), ie. D(11), and store it in <code>nextComputedDivisorsCount</code>.
+   * We calculate D(55) = D(11) * D(5), D(5) is stored in <code>lastComputedDivisorsCount</code>, obtained from the previous step, when n = 9.
+   * We transfer <code>nextComputedDivisorsCount</code> to <code>lastComputedDivisorsCount</code>.
+   * So now <code>lastComputedDivisorsCount</code> contains D(11);
    * 
    * n = 11, triangle = 66:
-   * Since n is odd, we calculate D((n + 1) / 2), ie. D(6), and store it in <span class="mono">nextComputedDivisorsCount</span>.
-   * We calculate D(66) = D(11) * D(6), D(11) is obtained from the previous step, when n = 10, from the variable <span class="mono">lastComputedDivisorsCount</span>.
+   * Since n is odd, we calculate D((n + 1) / 2), ie. D(6), and store it in <code>nextComputedDivisorsCount</code>.
+   * We calculate D(66) = D(11) * D(6), D(11) is obtained from the previous step, when n = 10, from the variable <code>lastComputedDivisorsCount</code>.
    * And we repeat till D(n) > 500.
    */
   e12() {
@@ -115,11 +115,11 @@ module.exports = {
    * @question Work out the first ten digits of the sum of the following one-hundred [50-digit numbers @asset p13_data.txt].
    * @guide
    * The algorithms works as follows:
-   * 1. Add to <span class="mono">sum</span> all digits at position 0 for each number (leftmost)
-   * 2. Multiply <span class="mono">sum</span> by 10.
-   * 3. Add to <span class="mono">sum</span> all digits at position 1 for each number
-   * 4. Multiply <span class="mono">sum</span> by 10.
-   * 5. We repeat this process until the first 10 digits of <span class="mono">sum</span> aren't affected by the sum of digits in the lesser positions.
+   * 1. Add to <code>sum</code> all digits at position 0 for each number (leftmost)
+   * 2. Multiply <code>sum</code> by 10.
+   * 3. Add to <code>sum</code> all digits at position 1 for each number
+   * 4. Multiply <code>sum</code> by 10.
+   * 5. We repeat this process until the first 10 digits of <code>sum</code> aren't affected by the sum of digits in the lesser positions.
    */
   e13() {
     const data13 = require('./p13_data');
@@ -159,7 +159,7 @@ module.exports = {
    *
    * @question Which starting number, under one million, produces the longest chain?
    * @guide
-   * For each number n below one million, we apply the Collatz sequence to it until it reaches 1, while keeping track of the sequence length in the <span class="mono">chainLengthArr</span> array.
+   * For each number n below one million, we apply the Collatz sequence to it until it reaches 1, while keeping track of the sequence length in the <code>chainLengthArr</code> array.
    */
   e14() {
     // we use 2 variables to keep track of the highest chain count and the starting number associated with it
@@ -284,10 +284,10 @@ module.exports = {
    * If the numbers 1 to 5 are written out in words: one, two, three, four, five, then there are 3 + 3 + 5 + 4 + 4 = 19 letters used in total.
    * @question If all the numbers from 1 to 1000 (one thousand) inclusive were written out in words, how many letters would be used?
    * @guide
-   * The comments below illustrates how the counting is performed.
+   * The comments in the code illustrates how the counting is performed.
    * Notation:
-   * - <span class="mono">2<1-9></span> means 21, 22, 23, ..., 29
-   * - <span class="mono"><2-9>0</span> means 20, 30, 40, ..., 90
+   * - <code>2<1-9></code> means 21, 22, 23, ..., 29
+   * - <code><2-9>0</code> means 20, 30, 40, ..., 90
    */
   e17() {
     const oneToNine = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];

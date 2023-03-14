@@ -37,9 +37,9 @@
       "What is the largest prime factor of the number 600851475143."
     ],
     "guide": [
-      "<span>Starting with the given number (<span class=\"mono\">currentlyDividing</span>), and the factor 2 (<span class=\"mono\">currentFactor</span>), we divide the given number by the factor until it is not divisible by it anymore.</span>",
+      "<span>Starting with the given number (<code>currentlyDividing</code>), and the factor 2 (<code>currentFactor</code>), we divide the given number by the factor until it is not divisible by it anymore.</span>",
       "<br />",
-      "<span>We then increment <span class=\"mono\">currentFactor</span>, and repeat, until the given number equals 1.</span>",
+      "<span>We then increment <code>currentFactor</code>, and repeat, until the given number equals 1.</span>",
       "<br />"
     ],
     "solution": "let currentlyDividing = 600851475143;\nlet currentFactor = 2;\n// for each currentFactor,\n// we keep dividing the current number by it until it is incapable of doing so\nwhile (currentlyDividing > 1) {\n  while (currentlyDividing % currentFactor === 0) {\n    currentlyDividing /= currentFactor;\n  }\n  if (currentlyDividing === 1) break;\n  currentFactor++;\n}\nreturn currentFactor;",
@@ -55,7 +55,7 @@
       "Find the largest palindrome made from the product of two 3-digit numbers."
     ],
     "guide": [
-      "Starting with the largest possible number 999999, we iterate through the list of palindromes from biggest to smallest. This is achieved by decrementing 3 digit numbers from 999 and appending its flipped counterpart (ie. 999999, 998899, 997799, ...). For each palindrome, we test whether it is divisible by a 3 digit number, using the <span class=\"mono\">isPalindromeValid</span> function.",
+      "Starting with the largest possible number 999999, we iterate through the list of palindromes from biggest to smallest. This is achieved by decrementing 3 digit numbers from 999 and appending its flipped counterpart (ie. 999999, 998899, 997799, ...). For each palindrome, we test whether it is divisible by a 3 digit number, using the <code>isPalindromeValid</code> function.",
       "<br />",
       "",
       "<br />",
@@ -77,55 +77,61 @@
       "What is the smallest positive number that is evenly divisible by all of the numbers from 1 to 20?"
     ],
     "guide": [
+      "By definition, we are trying to find the least common multiple of 1, 2, 3, ..., 20, or LCM(1, 2, 3, ..., 20)",
+      "<br />",
+      "We use an inductive reasoning to approach this problem. At each step, we ask ourselves: if my number can divide all of the numbers from 1 to n-1, what do I need to do to make my number also divisible by n?",
+      "<br />",
+      "",
+      "<br />",
       "The algorithm works as follows:",
       "<br />",
       "",
       "<br />",
-      "For each number 2, 3, ..., 20.",
+      "For each number 2, 3, ..., 20. (No need to concern about 1, 1 divides every number)",
       "<br />",
       "",
       "<br />",
-      "We extract its prime factorization. (eg. 12 -> 2^2 * 3^1, 18 -> 2^1 * 3^2)",
+      "We extract its prime factorization. (for example, 12 -> 2² * 3¹, 18 -> 2¹ * 3²)",
       "<br />",
       "",
       "<br />",
-      "We add that factorization to the table <span class=\"mono\">totalPrimeFactors</span>. ",
+      "We add that factorization to the table <code>totalPrimeFactors</code>. ",
       "<br />",
       "",
       "<br />",
-      "The table <span class=\"mono\">totalPrimeFactors</span> is encoded such that the keys are the bases, and the entries are the exponents.",
+      "The table <code>totalPrimeFactors</code> is encoded such that the keys are the bases, and the corresponding entries are the exponents. So inserting 12 into our table would yield <code>{ 2: 2, 3: 1 }</code>",
       "<br />",
       "",
       "<br />",
-      "So, going from 2 to 20, iteratively, the array will update as follows:",
+      "So, going from 2 to 20, iteratively, the array will update as follows, step by step:",
       "<br />",
       "",
       "<br />",
-      "<span class=\"mono\">{ 2: 1 }</span> (2 = 2^1)",
+      "<code>{ 2: 1 }</code> 2¹ = 2 = LCM(2)",
       "<br />",
       "",
       "<br />",
-      "<span class=\"mono\">{ 2: 1, 3: 1 }</span> (3 = 3^1)",
+      "<code>{ 2: 1, 3: 1 }</code> 2² * 3¹ = 6 = LCM(2, 3)",
       "<br />",
       "",
       "<br />",
-      "<span class=\"mono\">{ 2: 2, 3: 1 }</span> (4 = 2^2)",
+      "<code>{ 2: 2, 3: 1 }</code> 2² * 3¹ = 12 = LCM(2, 3, 4)",
       "<br />",
       "",
       "<br />",
-      "<span class=\"mono\">{ 2: 2, 3: 1, 5: 1 }</span> (5 = 5^1)",
+      "<code>{ 2: 2, 3: 1, 5: 1 }</code> 2² * 3¹ * 5¹ = 60 = LCM(2, 3, 4, 5)",
       "<br />",
       "",
       "<br />",
-      "<span class=\"mono\">{ 2: 2, 3: 1, 5: 1 }</span> (6 = 2^1 * 3^1) Note that nothing has changed, since 2^1 and 3^1 are already part of the array.",
+      "<code>{ 2: 2, 3: 1, 5: 1 }</code> 2² * 3¹ * 5¹ = 60 = LCM(2, 3, 4, 5, 6) Note that nothing has changed, since 2¹ and 3¹ are already inserted earlier.",
       "<br />",
       "",
       "<br />",
-      "<span class=\"mono\">{ 2: 2, 3: 1, 5: 1, 7: 1 }</span> (7 = 7^1)",
+      "<code>{ 2: 2, 3: 1, 5: 1, 7: 1 }</code> 2² * 3¹ * 5¹ * 7¹ = 420 = LCM(2, 3, 4, 5, 6, 7)",
       "<br />",
       "",
       "<br />",
-      "<span class=\"mono\">{ 2: 3, 3: 1, 5: 1, 7: 1 }</span> (8 = 2^3)",
+      "<code>{ 2: 3, 3: 1, 5: 1, 7: 1 }</code> 2³ * 3¹ * 5¹ * 7¹ = 840 = LCM(2, 3, 4, 5, 6, 7, 8)",
       "<br />",
       "",
       "<br />",
@@ -133,9 +139,9 @@
       "<br />",
       "",
       "<br />",
-      "At each step, the product of the bases, raised to their respective exponents, will be the least common multiple of all numbers from 2 to the number inserted at that step. ",
+      "At step n, the product of the bases, raised to their respective exponents, will be the least common multiple of all numbers from 1 to n. In other words, it is the smallest number which is divisible by all numbers from 1 to n.",
       "<br />",
-      "After the 20th step (we start with step 2), the array will have the information of the least common multiple of all numbers from 2 to 20.",
+      "After the 20th step, the array will have the information of the least common multiple of all numbers from 1 to 20.",
       "<br />"
     ],
     "solution": "const totalPrimeFactors = {};\nfor (let n = 2; n <= 20; n++) {\n  const primeFactors = utils.listPrimeFactors(n); // (1)\n  // we start at 2 since the first two elements are always empty\n  for (let factor = 2; factor < primeFactors.length; factor++) {\n    const computedPower = primeFactors[factor];\n    const existingPower = totalPrimeFactors[factor];\n    if (computedPower && (!existingPower || computedPower > existingPower)) { // (2)\n      totalPrimeFactors[factor] = primeFactors[factor];\n    }\n  }\n}\nreturn Object.keys(totalPrimeFactors).reduce((acc, power) => { // (3)\n  // by definition of totalPrimeFactors, the indexes represent the bases of the prime factorization\n  return acc * (power ** totalPrimeFactors[power]);\n}, 1);",
@@ -288,21 +294,21 @@
       "<br />",
       "n = 10, triangle = 55:",
       "<br />",
-      "Since n is even, we calculate D(n+1), ie. D(11), and store it in <span class=\"mono\">nextComputedDivisorsCount</span>.",
+      "Since n is even, we calculate D(n+1), ie. D(11), and store it in <code>nextComputedDivisorsCount</code>.",
       "<br />",
-      "We calculate D(55) = D(11) * D(5), D(5) is stored in <span class=\"mono\">lastComputedDivisorsCount</span>, obtained from the previous step, when n = 9.",
+      "We calculate D(55) = D(11) * D(5), D(5) is stored in <code>lastComputedDivisorsCount</code>, obtained from the previous step, when n = 9.",
       "<br />",
-      "We transfer <span class=\"mono\">nextComputedDivisorsCount</span> to <span class=\"mono\">lastComputedDivisorsCount</span>.",
+      "We transfer <code>nextComputedDivisorsCount</code> to <code>lastComputedDivisorsCount</code>.",
       "<br />",
-      "So now <span class=\"mono\">lastComputedDivisorsCount</span> contains D(11);",
+      "So now <code>lastComputedDivisorsCount</code> contains D(11);",
       "<br />",
       "",
       "<br />",
       "n = 11, triangle = 66:",
       "<br />",
-      "Since n is odd, we calculate D((n + 1) / 2), ie. D(6), and store it in <span class=\"mono\">nextComputedDivisorsCount</span>.",
+      "Since n is odd, we calculate D((n + 1) / 2), ie. D(6), and store it in <code>nextComputedDivisorsCount</code>.",
       "<br />",
-      "We calculate D(66) = D(11) * D(6), D(11) is obtained from the previous step, when n = 10, from the variable <span class=\"mono\">lastComputedDivisorsCount</span>.",
+      "We calculate D(66) = D(11) * D(6), D(11) is obtained from the previous step, when n = 10, from the variable <code>lastComputedDivisorsCount</code>.",
       "<br />",
       "And we repeat till D(n) > 500.",
       "<br />"
@@ -320,15 +326,15 @@
     "guide": [
       "The algorithms works as follows:",
       "<br />",
-      "1. Add to <span class=\"mono\">sum</span> all digits at position 0 for each number (leftmost)",
+      "1. Add to <code>sum</code> all digits at position 0 for each number (leftmost)",
       "<br />",
-      "2. Multiply <span class=\"mono\">sum</span> by 10.",
+      "2. Multiply <code>sum</code> by 10.",
       "<br />",
-      "3. Add to <span class=\"mono\">sum</span> all digits at position 1 for each number",
+      "3. Add to <code>sum</code> all digits at position 1 for each number",
       "<br />",
-      "4. Multiply <span class=\"mono\">sum</span> by 10.",
+      "4. Multiply <code>sum</code> by 10.",
       "<br />",
-      "5. We repeat this process until the first 10 digits of <span class=\"mono\">sum</span> aren't affected by the sum of digits in the lesser positions.",
+      "5. We repeat this process until the first 10 digits of <code>sum</code> aren't affected by the sum of digits in the lesser positions.",
       "<br />"
     ],
     "solution": "const data13 = require('./p13_data');\n// filter out the first line which is undefined and remove whitespace (see data.js)\nconst numbers = data13.split(/\\n/g).filter(x => x).map(x => x.trim());\nlet sum = 0;\nfor (let position = 0; position < 50; position++) {\n  sum += sumNthDigits(position);\n  const first10DigitsCurrent = sum.toString(10).substring(0, 10);\n  // shift the sum left to prepare for the sum of next 100 digits\n  sum *= 10;\n  // determine if the sum of the next 100 digits can affect the first 10 digits\n  // ie. consider all the digits at the next position are 9s\n  const maxValueForNextPosition = sum + 900;\n  const first10DigitsNext = maxValueForNextPosition.toString(10).substring(0, 10);\n  if (first10DigitsCurrent === first10DigitsNext) {\n    return +(first10DigitsCurrent);\n  }\n}\nfunction sumNthDigits(n) {\n  return numbers.map(num => +(num[n])).reduce((acc, curr) => acc + curr, 0);\n}",
@@ -353,7 +359,7 @@
       "Which starting number, under one million, produces the longest chain?"
     ],
     "guide": [
-      "For each number n below one million, we apply the Collatz sequence to it until it reaches 1, while keeping track of the sequence length in the <span class=\"mono\">chainLengthArr</span> array.",
+      "For each number n below one million, we apply the Collatz sequence to it until it reaches 1, while keeping track of the sequence length in the <code>chainLengthArr</code> array.",
       "<br />"
     ],
     "solution": "// we use 2 variables to keep track of the highest chain count and the starting number associated with it\nlet longestChainNumber = 0;\nlet longestChain = 0;\n// we use an array to keep track of the length of each starting number,\n// where the index correspond to the starting number\nconst chainLengthArr = [];\n// we start at 500000 because if the longest chain c is below 500000,\n// then there must be a longer chain at c * 2\nfor (let i = 500001; i <= 1000000; i += 1) {\n  computeChainLength(i, 0);\n}\nfunction computeChainLength(n, accumulatedLength) {\n  // as mentionned above, we do not need to consider numbers below 500001\n  if (n < 500001) {\n    return accumulatedLength;\n  }\n  if (chainLengthArr[n]) {\n    const totalChainLength = chainLengthArr[n] + accumulatedLength;\n    return totalChainLength;\n  }\n  let result;\n  if (utils.isOdd(n)) {\n    // if n is odd then 3n + 1 is even, we can skip a step by passing (3n+1)/2 as an argument\n    result = computeChainLength((3 * n + 1) / 2, accumulatedLength + 2);\n  } else {\n    result = computeChainLength(n / 2, accumulatedLength + 1);\n  }\n  // when the result returns, we need to update the chain length number of each number in the chain\n  // we do so by subtracting the accumulator associated with that number from the result (back propagation)\n  // eg: 5 -> 16 -> 8 -> 4 -> 2 -> 1\n  // stack trace:\n  // computeChainLength(5, 0) -> result - 0 = 5\n  // computeChainLength(16, 1) -> result - 1 = 4\n  // computeChainLength(8, 2) -> result - 2 = 3\n  // computeChainLength(4, 3) -> result - 3 = 2\n  // computeChainLength(2, 4) -> result - 4 = 1\n  // computeChainLength(1, 5) -> result - 5 = 0\n  // result = 5\n  // the memoized array will then be updated will the correct values (5 with 5, 16 with 4, etc.)\n  chainLengthArr[n] = result - accumulatedLength;\n  if (chainLengthArr[n] > longestChain) {\n    longestChain = chainLengthArr[n];\n    longestChainNumber = n;\n  }\n  return result;\n}\nreturn longestChainNumber;",
@@ -416,13 +422,13 @@
       "If all the numbers from 1 to 1000 (one thousand) inclusive were written out in words, how many letters would be used?"
     ],
     "guide": [
-      "The comments below illustrates how the counting is performed.",
+      "The comments in the code illustrates how the counting is performed.",
       "<br />",
       "Notation:",
       "<br />",
-      "- <span class=\"mono\">2<1-9></span> means 21, 22, 23, ..., 29",
+      "- <code>2<1-9></code> means 21, 22, 23, ..., 29",
       "<br />",
-      "- <span class=\"mono\"><2-9>0</span> means 20, 30, 40, ..., 90",
+      "- <code><2-9>0</code> means 20, 30, 40, ..., 90",
       "<br />"
     ],
     "solution": "const oneToNine = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];\nconst elevenToNineteen = ['eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];\nconst twentyToNinetyBy10 = ['twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];\n// to get count of 1 - 99, we sum the following components:\n// 1. <1-9> * 9 -> [<1-9>, 2<1-9>, 3<1-9>, ..., 9<1-9>]\n// 2. <11-19>\n// 3. <2-9>0 * 10 -> [<2-9>0, <0-9>1, <2-9>2. ..., <2-9>9]\n// 4. <10>\nconst oneTo99 = countLetters(oneToNine) * 9 + countLetters(elevenToNineteen) + countLetters(twentyToNinetyBy10) * 10 + 3;\nconst oneTo999 = oneTo99 * 10 + oneToNine.reduce((acc, x) => {\n  // \"<x> hundred and\" * 99 + \"<x> hundred\"\n  return acc + (x.length + 10) * 99 + (x.length + 7);\n}, 0);\n// <1000>\nreturn oneTo999 + 11;\nfunction countLetters(arr) {\n  return arr.join('').length;\n}",
@@ -511,8 +517,17 @@
     "question": [
       "Evaluate the sum of all the amicable numbers under 10000."
     ],
-    "guide": [],
-    "solution": "const primesUnder10000 = utils.generatePrimesTable(10000);\nconst amicableNumbers = [];\nfor (let i = 0; i < 10000; i++) {\n  if (!primesUnder10000[i] && !amicableNumbers.includes(i)) {\n    // d(i)\n    const sumOfDivisors = utils.computeSumOfDivisors(i);\n    // ensure i is not a perfect number (d(i) = i)\n    // which does not qualify as an amicable number by definition\n    if (sumOfDivisors !== i) {\n      // now check if d(d(i)) === i\n      const sumOfDivisors2 = utils.computeSumOfDivisors(sumOfDivisors);\n      if (sumOfDivisors2 === i) {\n        amicableNumbers.push(i);\n        amicableNumbers.push(sumOfDivisors);\n      }\n    }\n  }\n}\nreturn utils.sumArray(amicableNumbers);",
+    "guide": [
+      "We observe that, by definition, a number n has an amicable pair if and only if d(d(n)) = n.",
+      "<br />",
+      "",
+      "<br />",
+      "A number cannot be an amicable pair to itself, so for each number i under 10000, we check that is not perfect, ie. d(i) = i.",
+      "<br />",
+      "Then if it satisfies d(d(i)) = i, we add it to the list, and sum the list at the end.",
+      "<br />"
+    ],
+    "solution": "const primesUnder10000 = utils.generatePrimesTable(10000);\nconst amicableNumbers = [];\nfor (let i = 0; i < 10000; i++) {\n  if (!primesUnder10000[i] && !amicableNumbers.includes(i)) {\n    // d(i)\n    const sumOfDivisors = utils.computeSumOfDivisors(i);\n    // ensure i is not a perfect number (d(i) = i)\n    // which does not qualify as an amicable number by definition\n    if (sumOfDivisors !== i) {\n      // now check if d(d(i)) === i\n      if (utils.computeSumOfDivisors(sumOfDivisors) === i) {\n        amicableNumbers.push(i);\n        amicableNumbers.push(sumOfDivisors);\n      }\n    }\n  }\n}\nreturn utils.sumArray(amicableNumbers);",
     "utils": [
       "primes/generatePrimesTable",
       "arithmetic/computeSumOfDivisors",
@@ -532,7 +547,10 @@
     "question": [
       "What is the total of all the name scores in the file?"
     ],
-    "guide": [],
+    "guide": [
+      "Very straightforward, just go down the list and add the name scores one by one.",
+      "<br />"
+    ],
     "solution": "const stringNames = fs.readFileSync(path.join(__dirname, 'p22_names.txt')).toString();\nconst arrayNames = stringNames.split(',');\nconst sortedNames = arrayNames.sort();\nreturn sortedNames.reduce(\n  (totalScore, name, index) => {\n    const i = index + 1;\n    const scoreOfName = i * utils.sumArray(\n      name.split(''), // 'AARON' => ['A', 'A', 'R', 'O', 'N']\n      n => n.charCodeAt() - 64, // a -> 1, r -> 18, etc.\n    );\n    return totalScore + scoreOfName;\n  },\n  0,\n);",
     "utils": [
       "common/sumArray"
@@ -555,7 +573,18 @@
     "question": [
       "Find the sum of all the positive integers which cannot be written as the sum of two abundant numbers."
     ],
-    "guide": [],
+    "guide": [
+      "Since all numbers above 28123 can be written as the sum of two abundant numbers, we only need to check numbers from 1 to 28123 inclusively.",
+      "<br />",
+      "",
+      "<br />",
+      "To do so, for each number i in 1 to 28123, we:",
+      "<br />",
+      "1. Check if it's abundant, if so, we insert it in the <code>abundantNumbers</code> table.",
+      "<br />",
+      "2. We substract i by every abundant number encountered so far, if the result of that substraction is another abundant number, then it does not satisfy our condition. And vice-versa.",
+      "<br />"
+    ],
     "solution": "const abundantNumbers = {};\nlet result = 0;\nfor (let i = 1; i <= 28123; i++) {\n  if (utils.computeSumOfDivisors(i) > i) {\n    abundantNumbers[i] = true;\n  }\n  // check if number can be written as sum of two abundant numbers\n  let canBeSummed = false;\n  const abundantNumbersArray = Object.keys(abundantNumbers);\n  for (let j = 0; j < abundantNumbersArray.length; j++) {\n    if (abundantNumbersArray[j] > i / 2) {\n      break; // we don't need to check for numbers above i / 2\n    }\n    if (abundantNumbers[i - abundantNumbersArray[j]]) {\n      canBeSummed = true;\n      break;\n    }\n  }\n  if (!canBeSummed) {\n    result += i;\n  }\n}\nreturn result;",
     "utils": [
       "arithmetic/computeSumOfDivisors"
@@ -578,8 +607,53 @@
     "question": [
       "What is the millionth lexicographic permutation of the digits 0, 1, 2, 3, 4, 5, 6, 7, 8 and 9?"
     ],
-    "guide": [],
-    "solution": "// we convert 1000000 into its factorial number system representation\n// eg.\n// decimal -> factorial\n// 0 -> 00(fact)\n// 1 -> 1 * 1! -> 01 (fact)\n// 2 -> 1 * 2! + 0 * 1! -> 10(fact)\n// 3 -> 1 * 2! + 1 * 1! -> 11(fact)\n// 4 -> 2 * 2! -> 20(fact)\n// 5 -> 2 * 2! + 1 * 1! -> 21(fact)\n//\n// then we iteratively write our permutation, with the following rule:\n// each digit in the factorial representation decides the index\n// from which we grab our next digit from the remaining digits\n//\n// for example, if we want the 5th permutation of 0123456789\n// we get the factorial representation of 4, since we start at 0\n// we obtain 000000020(fact)\n// the first 7 digits are fixed (ie. 0123456)\n// then we grab the second(2) index from the remaining digits 789[2] = 9\n// now the permutation is at 01234569\n// then we grab the 0th(0) index from the remaining digits 78[0] = 7\n// the permutation becomes 012345697\n// there is only the digit 8 left, we append it: 0123456978\n// so the 5th permutation of 0123456789 is 0123456978\nconst ONE_MILLION = 1000000;\nconst factorialRepr = utils.convertToFactorialBase(ONE_MILLION - 1);\nlet remainingDigits = '0123456789';\nlet result = '';\nfor (let k = 0; k < factorialRepr.length; k++) {\n  const indexToGrab = factorialRepr.charAt(k);\n  result += remainingDigits[indexToGrab];\n  remainingDigits = remainingDigits.replace(`${remainingDigits[indexToGrab]}`, '');\n}\n// add last digit remaining\nreturn +(result + remainingDigits);",
+    "guide": [
+      "We achieve the answer to the question in two steps. First we find the factorial number representation of one million. Second we use that representation to 'calculate' our permutation.",
+      "<br />",
+      "",
+      "<br />",
+      "1. Factorial number system representation",
+      "<br />",
+      "For example, let's use the number 5",
+      "<br />",
+      "decimal -> factorial",
+      "<br />",
+      "<code>0 -> 00(fact)</code>",
+      "<br />",
+      "<code>1 -> 1 * 1! -> 01 (fact)</code>",
+      "<br />",
+      "<code>2 -> 1 * 2! + 0 * 1! -> 10(fact)</code>",
+      "<br />",
+      "<code>3 -> 1 * 2! + 1 * 1! -> 11(fact)</code>",
+      "<br />",
+      "<code>4 -> 2 * 2! -> 20(fact)</code>",
+      "<br />",
+      "<code>5 -> 2 * 2! + 1 * 1! -> 21(fact)</code>",
+      "<br />",
+      "<code>6 -> 1 * 3! -> 100(fact)</code>",
+      "<br />",
+      "",
+      "<br />",
+      "2. Using a Factorial number representation to 'calculate' a permutation",
+      "<br />",
+      "We iteratively write our permutation, with the following rule: Each digit in the factorial representation decides the index from which we grab our next digit from the remaining digits. It sounds confusing, so here is an example.",
+      "<br />",
+      "",
+      "<br />",
+      "For example, if we want the 5th permutation of 1234",
+      "<br />",
+      "We find the factorial representation of 5, which is 021.",
+      "<br />",
+      "The first digit is 0, so we pick the 1st digit from 1234, we get 1, this is our first digit of the result.",
+      "<br />",
+      "The second digit is 2, so we pick the 3rd digit from the <i>remaining</i> digits, ie 234, we get 4, this is the second digit of the result.",
+      "<br />",
+      "The third digit is 1, so we pick the 2nd digit from the <i>remaining</i> digits, ie 23, we get 3, this is the third digit of the result.",
+      "<br />",
+      "The only digit left is 2, so our final result is 1432.",
+      "<br />"
+    ],
+    "solution": "const ONE_MILLION = 1000000;\nconst factorialRepr = utils.convertToFactorialBase(ONE_MILLION - 1);\nlet remainingDigits = '0123456789';\nlet result = '';\nfor (let k = 0; k < factorialRepr.length; k++) {\n  const indexToGrab = factorialRepr.charAt(k);\n  result += remainingDigits[indexToGrab];\n  remainingDigits = remainingDigits.replace(`${remainingDigits[indexToGrab]}`, '');\n}\n// add last digit remaining\nreturn +(result + remainingDigits);",
     "utils": [
       "combinatorics/convertToFactorialBase"
     ]
@@ -591,8 +665,15 @@
     "question": [
       "What is the index of the first term in the Fibonacci sequence to contain 1000 digits?"
     ],
-    "guide": [],
-    "solution": "let [a, b] = [[1], [1]];\nlet index = 2;\nwhile (b.length < 1000) {\n  index++;\n  [a, b] = [b, manualSum(a, b)];\n}\nreturn index;\n// since javascript numbers only handles up to ~ 1.7976931348623157e+308\n// we have to add each digit manually and store them inside an array\n// e.g. [2, 4] + [3, 8] => [6, 2]\n// e.g. [1, 4, 5] + [8, 5, 5] => [1, 0, 0, 0]\nfunction manualSum(arr1, arr2) {\n  const a1 = arr1.length >= arr2.length ? [...arr1].reverse() : [...arr2].reverse(); // longer array\n  const a2 = arr1.length >= arr2.length ? [...arr2].reverse() : [...arr1].reverse(); // shorter array\n  const result = [];\n  let carry = 0;\n  for (let i = 0; i < a1.length; i++) {\n    const partialResult = a1[i] + (a2[i] || 0) + carry;\n    if (partialResult >= 10) {\n      carry = 1;\n      result[i] = partialResult - 10;\n    } else {\n      carry = 0;\n      result[i] = partialResult;\n    }\n  }\n  if (carry) {\n    result.push(1);\n  }\n  return result.reverse();\n}",
+    "guide": [
+      "Since javascript numbers only handles up to ~ 1.7976931348623157e+308, we have to add each digit manually and store them inside an array.",
+      "<br />",
+      "e.g. [2, 4] + [3, 8] => [6, 2]",
+      "<br />",
+      "e.g. [1, 4, 5] + [8, 5, 5] => [1, 0, 0, 0]",
+      "<br />"
+    ],
+    "solution": "let [a, b] = [[1], [1]];\nlet index = 2;\nwhile (b.length < 1000) {\n  index++;\n  [a, b] = [b, manualSum(a, b)];\n}\nreturn index;\nfunction manualSum(arr1, arr2) {\n  const a1 = arr1.length >= arr2.length ? [...arr1].reverse() : [...arr2].reverse(); // longer array\n  const a2 = arr1.length >= arr2.length ? [...arr2].reverse() : [...arr1].reverse(); // shorter array\n  const result = [];\n  let carry = 0;\n  for (let i = 0; i < a1.length; i++) {\n    const partialResult = a1[i] + (a2[i] || 0) + carry;\n    if (partialResult >= 10) {\n      carry = 1;\n      result[i] = partialResult - 10;\n    } else {\n      carry = 0;\n      result[i] = partialResult;\n    }\n  }\n  if (carry) {\n    result.push(1);\n  }\n  return result.reverse();\n}",
     "utils": []
   },
   {
@@ -625,7 +706,18 @@
     "question": [
       "Find the value of d < 1000 for which 1/d contains the longest recurring cycle in its decimal fraction part."
     ],
-    "guide": [],
+    "guide": [
+      "First, we can skip numbers that are divisible by 2, 3 or 5, as they are either terminating (2, 5) or have only 1 repeating digit (3).",
+      "<br />",
+      "For each number i in 1 to 1000, we do a manual long division on it, the way we learned in primary school.",
+      "<br />",
+      "At each step in the division, we will obtain a remainder, that remainder will be stored in <code>remainders</code>.",
+      "<br />",
+      "We repeat until we find a remainder that we have already seen, i.e. in the array <code>remainders</code>.",
+      "<br />",
+      "At this point, the length of <code>remainders</code> will be the recurring cycle length.",
+      "<br />"
+    ],
     "solution": "let longestRecurringCycle = 0;\nlet longestRecurringCycleValue = 0;\nfor (let i = 1; i < 1000; i++) {\n  // we can skip numbers that are divisible by 2, 3 or 5, as they are either terminating (2, 5) or have only 1 repeating digit (3)\n  if (i % 2 && i % 3 && i % 5) {\n    // we manually divide 1/i, and keep track of the remainders,\n    // if a remainder is in the list of seen remainders,\n    // then the length of the seen remainders is the length recurrent cycle\n    // the length of the recurrent cycle cannot be greater or equal than i,\n    // as the number of unique remainders obtained by dividing by i are between (0 and i - 1)\n    const remainders = [];\n    let remainder = 1;\n    for (let j = 1; j <= i; j++) {\n      remainder = (remainder * 10) % i;\n      if (remainders.includes(remainder)) {\n        if (remainders.length > longestRecurringCycle) {\n          longestRecurringCycle = remainders.length;\n          longestRecurringCycleValue = i;\n        }\n        break;\n      }\n      remainders.push(remainder);\n    }\n  }\n}\nreturn longestRecurringCycleValue;",
     "utils": []
   },
@@ -633,13 +725,13 @@
     "id": "27",
     "title": "Quadratic primes",
     "description": [
-      "Euler discovered the remarkable quadratic formula: n^2+n+41.",
+      "Euler discovered the remarkable quadratic formula: n²+n+41.",
       null,
       "It turns out that the formula will produce 40 primes for the consecutive integer values 0≤n≤39.",
       null,
-      "However, when n=40,402+40+41=40(40+1)+41 is divisible by 41, and certainly when n=41,412+41+41 is clearly divisible by 41.",
+      "However, when n=40,40²+40+41=40(40+1)+41 is divisible by 41, and certainly when n=41,41²+41+41 is clearly divisible by 41.",
       null,
-      "The incredible formula n2−79n+1601 was discovered, which produces 80 primes for the consecutive values 0≤n≤79.",
+      "The incredible formula n²−79n+1601 was discovered, which produces 80 primes for the consecutive values 0≤n≤79.",
       null,
       "The product of the coefficients, −79 and 1601, is −126479.",
       null,
@@ -651,8 +743,23 @@
     "question": [
       "Find the product of the coefficients, a and b, for the quadratic expression that produces the maximum number of primes for consecutive values of n, starting with n=0."
     ],
-    "guide": [],
-    "solution": "// let Q be a prime generating quadratic polynomial\n// for Q to be valid, b must be a prime number (as Q(0) = b)\nconst primesArray = Object.keys(utils.generatePrimesTable(1000)).map(x => +(x));\nlet longestConsecutivePrimes = 40;\nlet productOfLongest = 0;\nfor (let i = 0; i < primesArray.length; i++) {\n  // since each prime generated must be >= 2, we can constrain the values of a\n  // ie. when n = 1\n  // Q(1) > 1\n  // 1 + a + b > 1\n  // a > -b\n  const b = primesArray[i];\n  for (let a = -b + 1; a < 2; a++) {\n    const consecutivePrimesLength = computeConsecutivePrimesLength(a, b);\n    if (consecutivePrimesLength > longestConsecutivePrimes) {\n      longestConsecutivePrimes = consecutivePrimesLength;\n      productOfLongest = a * b;\n    }\n  }\n}\nreturn productOfLongest;\nfunction computeConsecutivePrimesLength(a, b) {\n  let n = 1;\n  let Q = 1 + a + b;\n  while (utils.isPrime(Q)) {\n    n++;\n    Q = (n ** 2) + a * n + b;\n  }\n  return n;\n}",
+    "guide": [
+      "Instead of searching for every value of a and b between -999 to 999, we can observe the following:",
+      "<br />",
+      "Let Q be a prime generating quadratic polynomial, for Q to be valid, b must be a prime number (as Q(0) = b).",
+      "<br />",
+      "Further, we can see that Q(n) > 1, since primes all are bigger than 1.",
+      "<br />",
+      "Therefore Q(1) > 1.",
+      "<br />",
+      "=> 1 + a + b > 1",
+      "<br />",
+      "=> a > -b",
+      "<br />",
+      "So, b must be a prime and a > -b, which limits our search space.",
+      "<br />"
+    ],
+    "solution": "const primesArray = Object.keys(utils.generatePrimesTable(1000)).map(x => +(x));\nlet longestConsecutivePrimes = 40;\nlet productOfLongest = 0;\nfor (let i = 0; i < primesArray.length; i++) {\n  const b = primesArray[i];\n  for (let a = -b + 1; a < 999; a++) {\n    const consecutivePrimesLength = computeConsecutivePrimesLength(a, b);\n    if (consecutivePrimesLength > longestConsecutivePrimes) {\n      longestConsecutivePrimes = consecutivePrimesLength;\n      productOfLongest = a * b;\n    }\n  }\n}\nreturn productOfLongest;\nfunction computeConsecutivePrimesLength(a, b) {\n  let n = 1;\n  let Q = 1 + a + b;\n  while (utils.isPrime(Q)) {\n    n++;\n    Q = (n ** 2) + a * n + b;\n  }\n  return n;\n}",
     "utils": [
       "primes/generatePrimesTable",
       "primes/isPrime"
@@ -680,8 +787,25 @@
     "question": [
       "What is the sum of the numbers on the diagonals in a 1001 by 1001 spiral formed in the same way?"
     ],
-    "guide": [],
-    "solution": "// by convenience we will say that [01] is on the 0th square\n// we notice that the 4 corner numbers on the nth outer square are spaced apart from each other by 2*n\n// we can also observe that the last encountered diagonal number (top-right corner) is (2n-1)^2\n// then the sum of diagonals of the nth square is\n// (!) (2n-1)^2 + 2n + (2n-1)^2 + 4n + (2n-1)^2 + 6n + (2n-1)^2 + 8n\n// (!) = 4(2n-1)^2 + 20n = 16n^2 + 4n + 4\n// if we have a 1001 by 1001 square then the result is sum of diagonals of 500 squares + 1\nlet sum = 0;\nfor (let i = 1; i <= 500; i++) {\n  sum += (16 * (i ** 2) + (4 * i) + 4);\n}\nreturn sum + 1;",
+    "guide": [
+      "By convenience we will say that [01] is on the 0th square.",
+      "<br />",
+      "We notice that the 4 corner numbers on the nth outer square are spaced apart from each other by 2*n.",
+      "<br />",
+      "We can also observe that the last encountered diagonal number (top-right corner) is (2n-1)^2.",
+      "<br />",
+      "Then the sum of diagonals of the nth square is",
+      "<br />",
+      "(2n-1)² + 2n + (2n-1)² + 4n + (2n-1)² + 6n + (2n-1)² + 8n",
+      "<br />",
+      "= 4(2n-1)² + 20n = 16n² + 4n + 4",
+      "<br />",
+      "In a 5x5 square, there are 2 layers + [01]",
+      "<br />",
+      "If we have a 1001 by 1001 square then we have 500 layers + [01]",
+      "<br />"
+    ],
+    "solution": "let sum = 0;\nfor (let i = 1; i <= 500; i++) {\n  sum += (16 * (i ** 2) + (4 * i) + 4);\n}\nreturn sum + 1;",
     "utils": []
   },
   {
@@ -698,8 +822,41 @@
     "question": [
       "How many distinct terms are in the sequence generated by a^b for 2 ≤ a ≤ 100 and 2 ≤ b ≤ 100?"
     ],
-    "guide": [],
-    "solution": "// we just need to find the number of collisions (ie. 2^4 = 4^2), and subtract that from 99^2\n// collisions only occur for a <= 10, s.t. a != b^c for some b, c between 2 and 10\n// ie. collisions happens only when a = 2, 3, 5, 6, 7, 10\n// for 5,6,7, and 10 there are 49 collisions each, ie. even powers\n// (5^4 collides with 25^2, ..., 5^100 collides with 25^50)\n// we get 196 collisions for those 4 bases\n// next we compute the collisions for powers of 2 (ie. 2, 4, 8, 16, 32, 64)\n// and the collisions for powers of 3 (ie. 3, 9, 27, 81)\n// we obtain the unique values of 2^(m * n) where 1 <= m <= 6 and 1 <= n <= 100 by only looking at the exponent part\n// the power is unique if the exponent part (m * n) is also unique\nconst uniquePowersOf2 = new Set();\nconst uniquePowersOf3 = new Set();\nfor (let i = 2; i <= 100; i++) {\n  for (let m = 1; m <= 6; m++) {\n    // if number is already in the set, ie. we seen that equivalent power before,\n    // the following operation will do nothing\n    uniquePowersOf2.add(i * m);\n    if (m <= 4) {\n      uniquePowersOf3.add(i * m);\n    }\n  }\n}\nconst collisionsOf2 = 6 * 99 - uniquePowersOf2.size;\nconst collisionsOf3 = 4 * 99 - uniquePowersOf3.size;\nconst totalCollisions = collisionsOf2 + collisionsOf3 + 196;\nreturn 99 * 99 - totalCollisions;",
+    "guide": [
+      "We just need to find the number of collisions (ie. 2⁴ = 4²), and subtract that from 99²",
+      "<br />",
+      "Collisions must involve a power of 2, 3, 5, 6, 7, 10",
+      "<br />",
+      "2 will collide with powers of 4, 8, 16, ..., 64",
+      "<br />",
+      "3 will collide with powers of 9, 27, 81",
+      "<br />",
+      "5 will collide with powers of 25, 6 with 36, 7 with 49, and 10 with 100.",
+      "<br />",
+      "For 5,6,7, and 10 there are 49 collisions each, ie. even powers",
+      "<br />",
+      "For example, (5⁴ collides with 25², 5⁶ collides with 25³, ..., 5¹⁰⁰ collides with 25⁵⁰)",
+      "<br />",
+      "We get 196 collisions for those 4 bases.",
+      "<br />",
+      "Next we compute the collisions for powers of 2 (ie. 2, 4, 8, 16, 32, 64), and the collisions for powers of 3 (ie. 3, 9, 27, 81)",
+      "<br />",
+      "",
+      "<br />",
+      "I will explain how to count the collisions for powers of 2, powers of 3 works in the same way.",
+      "<br />",
+      "We reduce all numbers that are powers of two to the base of 2.",
+      "<br />",
+      "For example, instead of writing 32⁶, we write 2⁵⁽⁶⁾ = 2³⁰.",
+      "<br />",
+      "For example, instead of writing 64⁵, we write 2⁶⁽⁵⁾ = 2³⁰.",
+      "<br />",
+      "We reduce all powers of 2 into 2^(m * n) where 1 <= m <= 6 and 1 <= n <= 100.",
+      "<br />",
+      "We then loop through all 1 <= m <= 6 and 1 <= n <= 100, calculate m * n and see how many unique values we get, that is the number of non-collisions.",
+      "<br />"
+    ],
+    "solution": "// the power is unique if the exponent part (m * n) is also unique\nconst uniquePowersOf2 = new Set();\nconst uniquePowersOf3 = new Set();\nfor (let i = 2; i <= 100; i++) {\n  for (let m = 1; m <= 6; m++) {\n    // if i * m is already in the set, ie. we seen that equivalent power before,\n    // the following operation will add nothing\n    uniquePowersOf2.add(i * m);\n    if (m <= 4) {\n      uniquePowersOf3.add(i * m);\n    }\n  }\n}\nconst collisionsOf2 = 6 * 99 - uniquePowersOf2.size;\nconst collisionsOf3 = 4 * 99 - uniquePowersOf3.size;\nconst totalCollisions = collisionsOf2 + collisionsOf3 + 196;\nreturn 99 * 99 - totalCollisions;",
     "utils": []
   },
   {
@@ -722,8 +879,17 @@
     "question": [
       "Find the sum of all the numbers that can be written as the sum of fifth powers of their digits."
     ],
-    "guide": [],
-    "solution": "// let N be a number that can be written as the sum of fifth powers of their digits.\n// we first observe N cannot have more than 6 digits. As for x > 6: x * 9^5 < 10^x\n// N obviously cannot have 1 digit\n// If N has 2 digits, then the only valid values of N are 0, 1, 2, since 3^5 > 99\n// by quickly checking we can also see that N cannot have 2 digits\n// so we need to verify numbers between 3 and 6 digits;\nconst fifthPowerDigits = []; // list of N's defined above\n// table that stores the max allowed digit for a given number length\n// e.g for numbers with 3 digits, the valid numbers that form N are 0 to 3, as 4^5 > 999\nconst maxAllowedDigits = {};\n// if max allowed digit is 9, we don't need to go through the trouble of skipping/pruning\nlet needPruning = true;\nfor (let i = 100; i < 999999; i++) {\n  const digits = i.toString().split('');\n  let maxExceeded = false;\n  if (needPruning) {\n    const numberOfDigits = digits.length;\n    let maxAllowedDigit;\n    if (maxAllowedDigits[numberOfDigits]) {\n      // if max allowed digit is already in table, we grab it\n      maxAllowedDigit = maxAllowedDigits[numberOfDigits];\n    } else {\n      // otherwise, we compute the max allowed digits for a given digits length\n      maxAllowedDigit = 0;\n      while ((maxAllowedDigit + 1) ** 5 < 10 ** numberOfDigits) {\n        maxAllowedDigit++;\n      }\n      maxAllowedDigits[numberOfDigits] = maxAllowedDigit;\n    }\n    if (maxAllowedDigit === 9) {\n      needPruning = false;\n    }\n    // we check if a digit exceed the max, if so we check the next number\n    // e.g. 240 is not a valid number as 4 > 3, so we add 60 (ie. 6 * 10^1, or (10 - 4) * 10 ^ (3 - 2))\n    digits.forEach((digit, position) => {\n      if (+(digit) > maxAllowedDigit) {\n        i += (10 - maxAllowedDigit) * (10 ** (numberOfDigits - position - 1)) - 2;\n        maxExceeded = true;\n      }\n    });\n  }\n  if (!maxExceeded) {\n    const sumOfFifthPowers = utils.sumArray(digits, x => (+(x)) ** 5);\n    if (sumOfFifthPowers === i) {\n      fifthPowerDigits.push(i);\n    }\n  }\n}\nreturn utils.sumArray(fifthPowerDigits);",
+    "guide": [
+      "Let N be a number that can be written as the sum of fifth powers of their digits.",
+      "<br />",
+      "We first observe N cannot have more than 6 digits, as it will be too large for the sum to add up to.",
+      "<br />",
+      "N also obviously cannot have 1 digit, by quickly checking we can also see that N cannot have 2 digits, so we need to verify numbers between 3 and 6 digits.",
+      "<br />",
+      "We use a few heuristics to limit our search space. For example, for numbers with 3 digits, the valid numbers that form N are 0 to 3, as 4^5 > 999",
+      "<br />"
+    ],
+    "solution": "const fifthPowerDigits = []; // list of N's defined above\n// table that stores the max allowed digit for a given number length\n// e.g for numbers with 3 digits, the valid numbers that form N are 0 to 3, as 4^5 > 999\nconst maxAllowedDigits = {};\n// if max allowed digit is 9, we don't need to go through the trouble of skipping/pruning\nlet needPruning = true;\nfor (let i = 100; i < 999999; i++) {\n  const digits = i.toString().split('');\n  let maxExceeded = false;\n  if (needPruning) {\n    const numberOfDigits = digits.length;\n    let maxAllowedDigit;\n    if (maxAllowedDigits[numberOfDigits]) {\n      // if max allowed digit is already in table, we grab it\n      maxAllowedDigit = maxAllowedDigits[numberOfDigits];\n    } else {\n      // otherwise, we compute the max allowed digits for a given digits length\n      maxAllowedDigit = 0;\n      while ((maxAllowedDigit + 1) ** 5 < 10 ** numberOfDigits) {\n        maxAllowedDigit++;\n      }\n      maxAllowedDigits[numberOfDigits] = maxAllowedDigit;\n    }\n    if (maxAllowedDigit === 9) {\n      needPruning = false;\n    }\n    // we check if a digit exceed the max, if so we check the next number\n    // e.g. 240 is not a valid number as 4 > 3, so we add 60 (ie. 6 * 10^1, or (10 - 4) * 10 ^ (3 - 2))\n    digits.forEach((digit, position) => {\n      if (+(digit) > maxAllowedDigit) {\n        i += (10 - maxAllowedDigit) * (10 ** (numberOfDigits - position - 1)) - 2;\n        maxExceeded = true;\n      }\n    });\n  }\n  if (!maxExceeded) {\n    const sumOfFifthPowers = utils.sumArray(digits, x => (+(x)) ** 5);\n    if (sumOfFifthPowers === i) {\n      fifthPowerDigits.push(i);\n    }\n  }\n}\nreturn utils.sumArray(fifthPowerDigits);",
     "utils": [
       "common/sumArray"
     ]
