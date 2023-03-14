@@ -1193,8 +1193,11 @@
     "question": [
       "What is the largest n-digit pandigital prime that exists?"
     ],
-    "guide": [],
-    "solution": "// n cannot be 9, as the digits sum up to 45, and therefore divisible by 3\n// by the same logic, n cannot be 8 either\nconst digits = [7, 6, 5, 4, 3, 2, 1];\n// we don't need to check if the number is prime if the finalDigit is 2, 4, 5, or 6\nconst validFinalDigits = [1, 3, 7];\n// we search from n = 7 to n = 4 (given in problem statement)\nfor (let n = 7; n >= 4; n--) {\n  const validDigits = digits.slice(7 - n);\n  // here i represents the ith lexicographic permutation\n  for (let i = 1; i <= utils.fact(n); i++) {\n    const pandigitalArray = utils.getLexicalPermutation(validDigits, i);\n    const finalDigit = pandigitalArray[pandigitalArray.length - 1];\n    if (validFinalDigits.includes(+(finalDigit))) {\n      const pandigitalNumber = +(pandigitalArray.join(''));\n      if (utils.isPrime(pandigitalNumber)) {\n        return pandigitalNumber;\n      }\n    }\n  }\n}",
+    "guide": [
+      "We don't need to check 9-digit numbers, as the sum of the digits is 45, which makes the number divisible by 3. We can apply the same logic to 8 digit numbers.",
+      "<br />"
+    ],
+    "solution": "const digits = [7, 6, 5, 4, 3, 2, 1];\n// we don't need to check if the number is prime if the finalDigit is 2, 4, 5, or 6\nconst validFinalDigits = [1, 3, 7];\n// we search from n = 7 to n = 4 (given in problem statement)\nfor (let n = 7; n >= 4; n--) {\n  const validDigits = digits.slice(7 - n);\n  // here i represents the ith lexicographic permutation\n  for (let i = 1; i <= utils.fact(n); i++) {\n    const pandigitalArray = utils.getLexicalPermutation(validDigits, i);\n    const finalDigit = pandigitalArray[pandigitalArray.length - 1];\n    if (validFinalDigits.includes(+(finalDigit))) {\n      const pandigitalNumber = +(pandigitalArray.join(''));\n      if (utils.isPrime(pandigitalNumber)) {\n        return pandigitalNumber;\n      }\n    }\n  }\n}",
     "utils": [
       "combinatorics/fact",
       "combinatorics/getLexicalPermutation",
@@ -1216,7 +1219,10 @@
     "question": [
       "Using [p042_words.txt @asset p042_words.txt], a 16K text file containing nearly two-thousand common English words, how many are triangle words?"
     ],
-    "guide": [],
+    "guide": [
+      "Very straightforward, we go through the list of words and check if each word is triangle.",
+      "<br />"
+    ],
     "solution": "// we can assume that a word cannot exceed the word value of 500 (almost 20 consecutive 'z')\n// we generate a table of triangle numbers up to 500\nlet triangleWords = 0;\nconst triangleTable = utils.generateTriangulars(500);\nconst words = fs.readFileSync(path.join(__dirname, 'p042_words.txt'))\n  .toString()\n  .replace(/\"/g, '')\n  .split(',');\nwords.forEach((word) => {\n  const wordValue = utils.sumArray(word.split(''), char => char.charCodeAt(0) - 64);\n  if (triangleTable[wordValue]) {\n    triangleWords++;\n  }\n});\nreturn triangleWords;",
     "utils": [
       "arithmetic/generateTriangulars",
@@ -1250,8 +1256,19 @@
     "question": [
       "Find the sum of all 0 to 9 pandigital numbers with this property."
     ],
-    "guide": [],
-    "solution": "const subdivisibleNumbers = [];\n// we describe our recursion as the following:\n// 1. start by picking the last 3 digits s.t. it is divisible by 17, ie. 017, 034, ...\n// 2. we then pick d7 s.t. d7d8d9 is divisible by 13, if such d7 does not exist, we go to the next iteration\n// 3. if it does exist, we pick d6 s.t. d6d7d8 is divisible by 11, etc.\nconst digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];\n// 58 * 17 = 986, largest 3-digit number which is divisible by 17\nfor (let i = 1; i <= 58; i++) {\n  const last3 = (i * 17).toString().padStart(3, '0'); // 1 -> '017', 2 -> '034, etc\n  if (!utils.containsDuplicate(last3)) {\n    buildNumber(\n      last3,\n      digits.filter(x => !last3.includes(x)),\n      [2, 3, 5, 7, 11, 13],\n    );\n  }\n}\n// recursively build a number digit by digit, ensuring divisibility at each step\nfunction buildNumber(acc, remainingDigits, remainingDividers) {\n  if (!remainingDividers.length) {\n    return subdivisibleNumbers.push(`${remainingDigits[0]}${acc}`);\n  }\n  const divider = remainingDividers.pop();\n  for (let j = 0; j < remainingDigits.length; j++) {\n    const leadingDigit = remainingDigits[j];\n    const trailingDigits = +acc.slice(0, 2);\n    const numToCheck = leadingDigit * 100 + trailingDigits;\n    if (numToCheck % divider === 0) {\n      buildNumber(\n        `${leadingDigit}${acc}`,\n        [...remainingDigits].filter(x => x !== leadingDigit),\n        [...remainingDividers],\n      );\n    }\n  }\n}\nreturn utils.sumArray(subdivisibleNumbers, x => +x);",
+    "guide": [
+      "Our algorithm is as follows:",
+      "<br />",
+      "1. start by picking the last 3 digits such that it is divisible by 17, ie. 017, 034, ...",
+      "<br />",
+      "2. we then pick d7 such that d7d8d9 is divisible by 13, if such d7 does not exist, we go to the next multiple of 17",
+      "<br />",
+      "3. if it does exist, we pick d6 s.t. d6d7d8 is divisible by 11, etc.",
+      "<br />",
+      "4. repeat until we find d2d3d4 s.t. it is divisible by 2.",
+      "<br />"
+    ],
+    "solution": "const subdivisibleNumbers = [];\nconst digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];\n// 58 * 17 = 986, largest 3-digit number which is divisible by 17\nfor (let i = 1; i <= 58; i++) {\n  const last3 = (i * 17).toString().padStart(3, '0'); // 1 -> '017', 2 -> '034, etc\n  if (!utils.containsDuplicate(last3)) {\n    buildNumber(\n      last3,\n      digits.filter(x => !last3.includes(x)),\n      [2, 3, 5, 7, 11, 13],\n    );\n  }\n}\n// recursively build a number digit by digit, ensuring divisibility at each step\nfunction buildNumber(acc, remainingDigits, remainingDividers) {\n  if (!remainingDividers.length) {\n    return subdivisibleNumbers.push(`${remainingDigits[0]}${acc}`);\n  }\n  const divider = remainingDividers.pop();\n  for (let j = 0; j < remainingDigits.length; j++) {\n    const leadingDigit = remainingDigits[j];\n    const trailingDigits = +acc.slice(0, 2);\n    const numToCheck = leadingDigit * 100 + trailingDigits;\n    if (numToCheck % divider === 0) {\n      buildNumber(\n        `${leadingDigit}${acc}`,\n        [...remainingDigits].filter(x => x !== leadingDigit),\n        [...remainingDividers],\n      );\n    }\n  }\n}\nreturn utils.sumArray(subdivisibleNumbers, x => +x);",
     "utils": [
       "lang/containsDuplicate",
       "common/sumArray"
@@ -1272,8 +1289,13 @@
     "question": [
       "Find the pair of pentagonal numbers, Pj and Pk, for which their sum and difference are pentagonal and D = |Pk − Pj| is minimized; what is the value of D?"
     ],
-    "guide": [],
-    "solution": "// we loop through each pentagonal number Pk, and for each Pk loop through each Pj smaller than Pk\n// we check whether Pk - Pj AND Pk + Pj is pentagonal, if so return the difference\nlet k = 2;\nwhile (true) {\n  const Pk = pentg(k);\n  let j = k;\n  while (j >= 1) {\n    const Pj = pentg(j);\n    if (utils.isPentagonal(Pk - Pj) && utils.isPentagonal(Pk + Pj)) {\n      return Pk - Pj;\n    }\n    j--;\n  }\n  k++;\n}\nfunction pentg(n) {\n  return ((3 * (n ** 2)) - n) / 2;\n}",
+    "guide": [
+      "We loop through each pentagonal number Pk, and for each Pk loop through each Pj smaller than Pk",
+      "<br />",
+      "We check whether Pk - Pj AND Pk + Pj is pentagonal, if so return the difference",
+      "<br />"
+    ],
+    "solution": "let k = 2;\nwhile (true) {\n  const Pk = pentg(k);\n  let j = k;\n  while (j >= 1) {\n    const Pj = pentg(j);\n    if (utils.isPentagonal(Pk - Pj) && utils.isPentagonal(Pk + Pj)) {\n      return Pk - Pj;\n    }\n    j--;\n  }\n  k++;\n}\nfunction pentg(n) {\n  return ((3 * (n ** 2)) - n) / 2;\n}",
     "utils": [
       "arithmetic/isPentagonal"
     ]
@@ -1296,7 +1318,10 @@
     "question": [
       "Find the next triangle number that is also pentagonal and hexagonal."
     ],
-    "guide": [],
+    "guide": [
+      "We go through each hexagonal number until we find one that is both pentagonal and triangle.",
+      "<br />"
+    ],
     "solution": "let h = 144;\nwhile (true) {\n  const hexagonal = hexg(h);\n  if (utils.isPentagonal(hexagonal) && utils.isTriangular(hexagonal)) {\n    return hexagonal;\n  }\n  h++;\n}\nfunction hexg(n) {\n  return (n * ((2 * n) - 1));\n}",
     "utils": [
       "arithmetic/isPentagonal",
@@ -1327,8 +1352,11 @@
     "question": [
       "What is the smallest odd composite that cannot be written as the sum of a prime and twice a square?"
     ],
-    "guide": [],
-    "solution": "// check each odd number for primality; if it is composite, check for conjecture validity\nlet num = 9;\nwhile (true) {\n  if (!utils.isPrime(num)) {\n    if (!conjValid(num)) {\n      return num;\n    }\n  }\n  num += 2;\n}\n// determines whether a number is valid for Goldbach's conjecture\nfunction conjValid(n) {\n  const rootUB = Math.sqrt((n - 2) / 2);\n  for (let i = 1; i <= rootUB; i++) {\n    const twiceSquare = (i ** 2) * 2;\n    if (utils.isPrime(n - twiceSquare)) {\n      return true;\n    }\n  }\n  return false;\n}",
+    "guide": [
+      "We check each odd number for primality; if it is composite, check for conjecture validity.",
+      "<br />"
+    ],
+    "solution": "let num = 9;\nwhile (true) {\n  if (!utils.isPrime(num)) {\n    if (!conjValid(num)) {\n      return num;\n    }\n  }\n  num += 2;\n}\n// determines whether a number is valid for Goldbach's conjecture\nfunction conjValid(n) {\n  const rootUB = Math.sqrt((n - 2) / 2);\n  for (let i = 1; i <= rootUB; i++) {\n    const twiceSquare = (i ** 2) * 2;\n    if (utils.isPrime(n - twiceSquare)) {\n      return true;\n    }\n  }\n  return false;\n}",
     "utils": [
       "primes/isPrime"
     ]
@@ -1355,7 +1383,12 @@
     "question": [
       "Find the first four consecutive integers to have four distinct prime factors each. What is the first of these numbers?"
     ],
-    "guide": [],
+    "guide": [
+      "Starting with the smallest number, <code>first</code>, which has 4 distinct prime factors(DPF), 2 * 3 * 5 * 7, we check if the next 3 consecutive number also has 4 DPF.",
+      "<br />",
+      "If yes, we found our solution, if not, we increment <code>first</code>.",
+      "<br />"
+    ],
     "solution": "// assume for now that we don't need prime factors over 1000\nconst first1000Primes = Object.keys(utils.generatePrimesTable(1000));\nlet first = 2 * 3 * 5 * 7;\nwhile (first < 1000000) {\n  const second = first + 1;\n  const third = first + 2;\n  const fourth = first + 3;\n  if (isDPFValid(first)) {\n    if (isDPFValid(second)) {\n      if (isDPFValid(third)) {\n        if (isDPFValid(fourth)) {\n          return first;\n        } // if the fourth number is not valid, skip over the next four numbers\n        first += 4;\n      } else { // if the third number is not valid, skip over the next 3 numbers, etc.\n        first += 3;\n      }\n    } else {\n      first += 2;\n    }\n  } else {\n    first++;\n  }\n}\n// we implement a tailored function which returns true iff n has exactly 4 distinct prime factors\nfunction isDPFValid(n) {\n  let quotient = n;\n  let DPFCount = 0;\n  for (let primeIndex = 0; primeIndex < first1000Primes.length; primeIndex++) {\n    const primeFactor = first1000Primes[primeIndex];\n    if (primeFactor > quotient) {\n      return DPFCount === 4;\n    }\n    if (quotient % primeFactor === 0) {\n      DPFCount++;\n    }\n    while (quotient % primeFactor === 0) {\n      if (DPFCount > 4) {\n        return false;\n      }\n      quotient /= primeFactor;\n    }\n  }\n}",
     "utils": [
       "primes/generatePrimesTable"
@@ -1371,7 +1404,10 @@
     "question": [
       "Find the last ten digits of the series, 1¹ + 2² + 3³ + ... + 1000¹⁰⁰⁰."
     ],
-    "guide": [],
+    "guide": [
+      "For each number, we only need to keep track of the last ten digits. For example, when calculating 32³², we iteratively multiply the last ten digits by 32, and keep the last 10 digits of the result, instead of computing the whole number.",
+      "<br />"
+    ],
     "solution": "let result = 0;\nfor (let i = 1; i <= 1000; i++) {\n  result = getLast10Digits(result) + getSelfPower(i);\n}\nreturn result;\nfunction getSelfPower(n) {\n  // returns the last 10 digits of n^n\n  if (n % 10 === 0) {\n    // if n = 10 * k, then n^n = (k*10)^(k*10) = (k*10)^k * 10^(k*10) = C * 10^(k*10)\n    // => last 10 digits will be 0s\n    return 0;\n  }\n  return [...Array(n - 1)].reduce(acc => getLast10Digits(acc) * n, n);\n}\nfunction getLast10Digits(n) {\n  // returns the last 10 digits of a number\n  return +n.toString().slice(-10);\n}",
     "utils": []
   },
@@ -1390,7 +1426,10 @@
     "question": [
       "There are no arithmetic sequences made up of three 1-, 2-, or 3-digit primes, exhibiting this property, but there is one other 4-digit increasing sequence. What 12-digit number do you form by concatenating the three terms in this sequence?"
     ],
-    "guide": [],
+    "guide": [
+      "The comments in the code explains how the search is performed.",
+      "<br />"
+    ],
     "solution": "// we generate all primes under 10000,\n// for each prime generated we sort their digits from lower to higher, and classify them in a table\n// Equivalence Class table, the key represents the equivalence class number (e.g 1478)\n// And the value will be the list of primes in that equivalence class\n// e.g. for 1478, the value will be [ '1487', '1847', '4817', '4871', '7481', '7841', '8147', '8741' ]\nconst permutationClassTable = {};\nconst fourDigitPrimes = Object.keys(utils.generatePrimesTable(10000)).filter(x => x >= 1000);\nfor (let i = 0; i < fourDigitPrimes.length; i++) {\n  const sortedDigits = fourDigitPrimes[i].toString().split('').sort().join('');\n  const permutations = permutationClassTable[sortedDigits];\n  if (permutations) {\n    permutationClassTable[sortedDigits].push(fourDigitPrimes[i]);\n  } else {\n    permutationClassTable[sortedDigits] = [fourDigitPrimes[i]];\n  }\n}\n// now that we have our equivalence class table\n// we loop over the keys and for each key, we check the list of corresponding primes\n// for whether or not one number is the average of 2 other numbers\nconst keys = Object.keys(permutationClassTable);\nfor (let i = 0; i < keys.length; i++) {\n  const key = keys[i];\n  if (key !== '1478') { // this answer is given in problem statement\n    const primes = permutationClassTable[key];\n    if (primes.length >= 3) {\n      for (let j = 0; j < primes.length - 2; j++) {\n        for (let k = j + 2; k < primes.length; k++) {\n          const avg = (+primes[j] + +primes[k]) / 2;\n          if (primes.includes(avg.toString())) {\n            return `${primes[j]}${avg}${primes[k]}`;\n          }\n        }\n      }\n    }\n  }\n}",
     "utils": [
       "primes/generatePrimesTable"
@@ -1412,8 +1451,11 @@
     "question": [
       "Which prime, below one-million, can be written as the sum of the most consecutive primes?"
     ],
-    "guide": [],
-    "solution": "// we begin by generating the list of primes under 1 million\nconst primesTable = utils.generatePrimesTable(1000000);\nconst primesList = Object.keys(primesTable).map(x => +x);\n// next we determine the upper bound for the number of consecutive primes s.t. their sum does not exceed one million\nconst upperConsec = [...primesList].reduce(\n  (sum, curr, i, arr) => {\n    if (sum >= 1000000) {\n      // if sum exceeds one million, returns the number of terms and exit from the reducer\n      arr.splice(1);\n      return i;\n    }\n    return sum + curr;\n  },\n); // spoiler: the upper bound is 547\nlet largestSum = 0;\n// t := number of terms in the sum\n// for each t, we sum t consecutive primes and check if their sum is also prime\n// if it is we store that number and continue checking for the current t\n// once we are done we just return the largest sum obtained at the current t\nfor (let t = upperConsec; t >= 21; t--) {\n  let j = 0;\n  let sum = utils.sumArray(primesList.slice(j, j + t));\n  while (sum < 1000000) {\n    if (primesTable[sum] && sum > largestSum) {\n      largestSum = sum;\n    }\n    j++;\n    sum = utils.sumArray(primesList.slice(j, j + t));\n  }\n  if (largestSum > 0) {\n    return largestSum;\n  }\n}",
+    "guide": [
+      "Guide is in the code comments.",
+      "<br />"
+    ],
+    "solution": "// we begin by generating the list of primes under 1 million\nconst primesTable = utils.generatePrimesTable(1000000);\nconst primesList = Object.keys(primesTable).map(x => +x);\n// next we determine the upper bound for the number of consecutive primes s.t. their sum does not exceed one million\nconst upperConsec = [...primesList].reduce(\n  (sum, curr, i, arr) => {\n    if (sum >= 1000000) {\n      // if sum exceeds one million, returns the number of terms and exit from the reducer\n      arr.splice(1);\n      return i;\n    }\n    return sum + curr;\n  },\n); // spoiler: the upper bound is 547, ie. if you try to add 548 primes, their sum will always exceed one million.\nlet largestSum = 0;\n// t := number of terms in the sum\n// for each t, we sum t consecutive primes and check if their sum is also prime\n// if it is we store that number and continue checking for the current t\n// once we are done we just return the largest sum obtained at the current t\nfor (let t = upperConsec; t >= 21; t--) {\n  let j = 0;\n  let sum = utils.sumArray(primesList.slice(j, j + t));\n  while (sum < 1000000) {\n    if (primesTable[sum] && sum > largestSum) {\n      largestSum = sum;\n    }\n    j++;\n    sum = utils.sumArray(primesList.slice(j, j + t));\n  }\n  if (largestSum > 0) {\n    return largestSum;\n  }\n}",
     "utils": [
       "primes/generatePrimesTable",
       "common/sumArray"

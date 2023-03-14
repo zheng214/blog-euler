@@ -11,10 +11,10 @@ module.exports = {
    * For example, 2143 is a 4-digit pandigital and is also prime.
    *
    * @question What is the largest n-digit pandigital prime that exists?
+   * @guide
+   * We don't need to check 9-digit numbers, as the sum of the digits is 45, which makes the number divisible by 3. We can apply the same logic to 8 digit numbers.
    */
   e41() {
-    // n cannot be 9, as the digits sum up to 45, and therefore divisible by 3
-    // by the same logic, n cannot be 8 either
     const digits = [7, 6, 5, 4, 3, 2, 1];
 
     // we don't need to check if the number is prime if the finalDigit is 2, 4, 5, or 6
@@ -47,6 +47,8 @@ module.exports = {
    * By converting each letter in a word to a number corresponding to its alphabetical position and adding these values we form a word value. For example, the word value for SKY is 19 + 11 + 25 = 55 = t10. If the word value is a triangle number then we shall call the word a triangle word.
    *
    * @question Using [p042_words.txt @asset p042_words.txt], a 16K text file containing nearly two-thousand common English words, how many are triangle words?
+   * @guide
+   * Very straightforward, we go through the list of words and check if each word is triangle.
    */
   e42() {
     // we can assume that a word cannot exceed the word value of 500 (almost 20 consecutive 'z')
@@ -88,13 +90,15 @@ module.exports = {
    * d8d9d10=289 is divisible by 17
    *
    * @question Find the sum of all 0 to 9 pandigital numbers with this property.
+   * @guide
+   * Our algorithm is as follows:
+   * 1. start by picking the last 3 digits such that it is divisible by 17, ie. 017, 034, ...
+   * 2. we then pick d7 such that d7d8d9 is divisible by 13, if such d7 does not exist, we go to the next multiple of 17
+   * 3. if it does exist, we pick d6 s.t. d6d7d8 is divisible by 11, etc.
+   * 4. repeat until we find d2d3d4 s.t. it is divisible by 2.
    */
   e43() {
     const subdivisibleNumbers = [];
-    // we describe our recursion as the following:
-    // 1. start by picking the last 3 digits s.t. it is divisible by 17, ie. 017, 034, ...
-    // 2. we then pick d7 s.t. d7d8d9 is divisible by 13, if such d7 does not exist, we go to the next iteration
-    // 3. if it does exist, we pick d6 s.t. d6d7d8 is divisible by 11, etc.
     const digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     // 58 * 17 = 986, largest 3-digit number which is divisible by 17
     for (let i = 1; i <= 58; i++) {
@@ -140,10 +144,11 @@ module.exports = {
    * It can be seen that P4 + P7 = 22 + 70 = 92 = P8. However, their difference, 70 − 22 = 48, is not pentagonal.
    *
    * @question Find the pair of pentagonal numbers, Pj and Pk, for which their sum and difference are pentagonal and D = |Pk − Pj| is minimized; what is the value of D?
+   * @guide
+   * We loop through each pentagonal number Pk, and for each Pk loop through each Pj smaller than Pk
+   * We check whether Pk - Pj AND Pk + Pj is pentagonal, if so return the difference
    */
   e44() {
-    // we loop through each pentagonal number Pk, and for each Pk loop through each Pj smaller than Pk
-    // we check whether Pk - Pj AND Pk + Pj is pentagonal, if so return the difference
     let k = 2;
     while (true) {
       const Pk = pentg(k);
@@ -176,6 +181,8 @@ module.exports = {
    * It can be verified that T(285) = P(165) = H(143) = 40755.
    *
    * @question Find the next triangle number that is also pentagonal and hexagonal.
+   * @guide
+   * We go through each hexagonal number until we find one that is both pentagonal and triangle.
    */
   e45() {
     let h = 144;
@@ -210,9 +217,10 @@ module.exports = {
    * It turns out that the conjecture was false.
    *
    * @question What is the smallest odd composite that cannot be written as the sum of a prime and twice a square?
+   * @guide
+   * We check each odd number for primality; if it is composite, check for conjecture validity.
    */
   e46() {
-    // check each odd number for primality; if it is composite, check for conjecture validity
     let num = 9;
     while (true) {
       if (!utils.isPrime(num)) {
@@ -253,6 +261,9 @@ module.exports = {
    * 646 = 2 × 17 × 19.
    *
    * @question Find the first four consecutive integers to have four distinct prime factors each. What is the first of these numbers?
+   * @guide
+   * Starting with the smallest number, <code>first</code>, which has 4 distinct prime factors(DPF), 2 * 3 * 5 * 7, we check if the next 3 consecutive number also has 4 DPF.
+   * If yes, we found our solution, if not, we increment <code>first</code>.
    */
   e47() {
     // assume for now that we don't need prime factors over 1000
@@ -307,6 +318,8 @@ module.exports = {
    * The series, 1¹ + 2² + 3³ + ... + 10¹⁰ = 10405071317.
    *
    * @question Find the last ten digits of the series, 1¹ + 2² + 3³ + ... + 1000¹⁰⁰⁰.
+   * @guide
+   * For each number, we only need to keep track of the last ten digits. For example, when calculating 32³², we iteratively multiply the last ten digits by 32, and keep the last 10 digits of the result, instead of computing the whole number.
    */
   e48() {
     let result = 0;
@@ -341,6 +354,8 @@ module.exports = {
    * (ii) each of the 4-digit numbers are permutations of one another.
    *
    * @question There are no arithmetic sequences made up of three 1-, 2-, or 3-digit primes, exhibiting this property, but there is one other 4-digit increasing sequence. What 12-digit number do you form by concatenating the three terms in this sequence?
+   * @guide
+   * The comments in the code explains how the search is performed.
    */
   e49() {
     // we generate all primes under 10000,
@@ -394,6 +409,8 @@ module.exports = {
    * The longest sum of consecutive primes below one-thousand that adds to a prime, contains 21 terms, and is equal to 953.
    *
    * @question Which prime, below one-million, can be written as the sum of the most consecutive primes?
+   * @guide
+   * Guide is in the code comments.
    */
   e50() {
     // we begin by generating the list of primes under 1 million
@@ -409,7 +426,7 @@ module.exports = {
         }
         return sum + curr;
       },
-    ); // spoiler: the upper bound is 547
+    ); // spoiler: the upper bound is 547, ie. if you try to add 548 primes, their sum will always exceed one million.
 
     let largestSum = 0;
 
