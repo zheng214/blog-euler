@@ -692,7 +692,7 @@ module.exports = {
    * @question Find the lowest sum for a set of five primes for which any two primes concatenate to produce another prime.
    * @guide
    * 1. We first generate a list of primes, 100000 should be enough.
-   * 2. We then build a table with pairs of primes which satisfy our condition above, by going through every pair of primes.
+   * 2. We then build a table with pairs of primes which satisfy our condition outlined in the problem, by going through every pair of primes.
    * 3. We then go through each prime and try to find one which forms a triple with the members built in step 2.
    * 4. Repeat until we find a quintuple.
    */
