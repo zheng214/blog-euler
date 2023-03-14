@@ -15,6 +15,9 @@ module.exports = {
    * 1×£1 + 1×50p + 2×20p + 1×5p + 1×2p + 3×1p
    *
    * @question How many different ways can £2 be made using any number of coins?
+   * @guide
+   * Starting out with 2£, we branch out all the possible scenarios for using each amount of each type of coin, going from largest coin to smallest.
+   * The comments in the code explain in detail how it's done.
    */
   e31() {
     const CHANGES = [1, 2, 5, 10, 20, 50, 100, 200];
@@ -25,8 +28,8 @@ module.exports = {
     // we start with the top level: 200
     // [tree level: 200] we create 2 branches: left (using 200) and right (not using 200)
     // from each branch we find the amount of combinations of the next coin
-    // [tree level: 100] left branch used 200, has 0 left, return 1 (1 way to make 200 using 200p coins)
-    // [tree level: 100] right branch did not use 200, has 200 left, now we can either:
+    // [tree level: 200] left branch used 200, has 0 left, return 1 (1 way to make 200 using 200p coins)
+    // [tree level: 200] right branch did not use 200, has 200 left, now we can either:
     // [tree level: 100] use 2 100p coins, 1 100p coins, or 0 100p coins, -> we create 3 branches for the next level
     // the tree looks like this:
     // [root]            200
@@ -74,13 +77,13 @@ module.exports = {
    * @question Find the sum of all products whose multiplicand/multiplier/product identity can be written as a 1 through 9 pandigital.
    *
    * @question HINT: Some products can be obtained in more than one way so be sure to only include it once in your sum.
+   * @guide
+   * Let a * b = c (for convenience, assume a < b), we know that c must have 4 digits because if digits(c) > 4, a * b < c and if digits(c) < 4, a * b > c.
+   * We just need to check values of c from 1234 to 9876, and find 1 < a <= 98 st. our condition is satisfied
    */
   e32() {
     const DIGITS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     const pandigitalProducts = [];
-    // let a * b = c (for convenience, assume a < b), we know that c must have 4 digits because if
-    // digits(c) > 4, a * b < c and if digits(c) < 4, a * b > c
-    // we just need to check values of c from 1234 to 9876, and find 1 < a <= 98 st. our condition is satisfied
     for (let i = 1111; i <= 9876; i++) {
       const selectionIndexes = i.toString().split('');
       // we only check if the selection is valid
@@ -159,17 +162,17 @@ module.exports = {
    * There are exactly four non-trivial examples of this type of fraction, less than one in value, and containing two digits in the numerator and denominator.
    *
    * @question If the product of these four fractions is given in its lowest common terms, find the value of the denominator.
+   * @guide
+   * We check all fractions of the form mx/xn, where:
+   * 1. 1 <= m, n, x <= 9
+   * 2. m =/= n
    */
   e33() {
-    // we first check all fractions of the form mx/xn, where
-    // a. 1 <= m, n <= 9
-    // b. m < x <= 9
-    // c. m != n
-    const curiousFractions = [];
+       const curiousFractions = [];
     for (let m = 1; m <= 9; m++) {
       for (let n = 1; n <= 9; n++) {
         if (m !== n) {
-          for (let x = m; x <= 9; x++) {
+          for (let x = 1; x <= 9; x++) {
             const numerator = (10 * m) + x;
             const denominator = (x * 10) + n;
             const fraction = numerator / denominator;
@@ -203,6 +206,8 @@ module.exports = {
    * @question Find the sum of all numbers which are equal to the sum of the factorial of their digits.
    *
    * @question Note: as 1! = 1 and 2! = 2 are not sums they are not included.
+   * @guide
+   * We just search through all numbers, with some pruning explained in the comments in the code.
    */
   e34() {
     const FACTORIALS = utils.generateFactTable(9);
@@ -314,61 +319,58 @@ module.exports = {
    * 2, 3, 5, 7, 11, 13, 17, 31, 37, 71, 73, 79, and 97.
    *
    * @question How many circular primes are there below one million?
+   * @guide
+   * We generate a table of 1 million primes. For each prime, we check if every rotation is also in the table.
    */
   e35() {
-    // table containing numbers we have tested to avoid duplicate testing
-    const testedNumbers = {};
-    // any number containing a digit outside of this list will have a composite rotation
-    const validDigits = [1, 3, 7, 9];
-    const primeRotations = []; // result containing all rotation primes
+    const PRIMES_TABLE = utils.generatePrimesTable(1000000);
+    const PRIMES = Object.keys(PRIMES_TABLE);
+    const circularPrimes = {};
 
-    // we check all numbers within 3 to 6 digits
-    for (let digits = 3; digits <= 6; digits++) {
-      const permutationsCount = 4 ** digits;
-      for (let permutation = 0; permutation < permutationsCount; permutation++) {
-        // map permutation into an array of indexes specifying the digit to include at that index
-        // eg. 0 -> [0, 0, 0] -> 111, 1 -> [0, 0, 1] -> 113, 5 -> [1, 0, 1] -> 313, etc.
-        const permSpec = permutation.toString(4).padStart(digits, '0').split('');
-        const numberToTest = permSpec.map(perm => validDigits[perm]).join('');
-        if (!testedNumbers[numberToTest]) {
-          let rotationIndex = 0;
-          const rotations = new Set(); // we use set as rotations may be counted twice, eg. 1111
-          let isRotationPrime = true;
-          while (rotationIndex < digits) {
-            const left = numberToTest.slice(rotationIndex, numberToTest.length);
-            const right = numberToTest.slice(0, rotationIndex);
-            const rotatedNumber = +(`${left}${right}`);
-            rotations.add(rotatedNumber);
-            if (!utils.isPrime(rotatedNumber)) {
-              isRotationPrime = false;
-            }
-            testedNumbers[rotatedNumber] = true;
-            rotationIndex++;
-            if (numberToTest.split('').every(x => x === numberToTest.charAt(0))) {
-              // test if all digits in number are equal. If true, no need to continue rotations
-              break;
-            }
-          }
-          if (isRotationPrime) {
-            primeRotations.push(...Array.from(rotations));
-          }
+    for (let p of PRIMES) {
+      // if p < 100, skip it
+      if (p < 100) {
+        continue;
+      }
+      // if p contains a digit that is even, we can skip it.
+      if (p.toString().split('').some(x => ['0', '2', '4', '6', '8'].includes(x))) {
+        continue;
+      }
+      let allRotations = computeRotations(p);
+      if (allRotations.every(x => PRIMES_TABLE[x])) {
+        for (r of allRotations) {
+          circularPrimes[r] = true;
         }
       }
     }
 
-    return primeRotations.length + 13; // there are 13 rotations under 13 (given)
+    // returns an array with all rotations of p, including p itself
+    function computeRotations(p) {
+      const rotations = [p];
+      const numberString = p.toString();
+      const digits = numberString.split('').length;
+      for (let i = 1; i < digits; i++) {
+        const left = numberString.substring(0, i);
+        const right = numberString.substring(i, numberString.length);
+        rotations.push(+`${right}${left}`);
+      }
+      return rotations;
+    }
+
+    return Object.keys(circularPrimes).length + 13; // there are 13 rotations under 100 (given)
   },
 
   /**
    * Problem 36: Double-base palindromes
    * The decimal number, 585 = 1001001001 (binary), is palindromic in both bases.
    * @question Find the sum of all numbers, less than one million, which are palindromic in base 10 and base 2.
+   * @guide
+   * We loop through each decimal palindrome and check whether its binary representation is also palindromic
+   * Note that even numbers cannot be palindromic in its binary representation
    */
   e36() {
     const doublePalindromes = [];
-    // we loop through each decimal palindrome and check whether its binary representation is also palindromic
-    // note that even numbers cannot be palindromic in its binary representation
-    for (let i = 1; i <= 999; i++) {
+      for (let i = 1; i <= 999; i++) {
       // we can skip the numbers whose leading digit is even
       if (i.toString().charAt(0) & 1) {
         // we generate a list of palindromes based on current index
@@ -401,11 +403,20 @@ module.exports = {
    * @question Find the sum of the only eleven primes that are both truncatable from left to right and right to left.
    *
    * @question NOTE: 2, 3, 5, and 7 are not considered to be truncatable primes.
+   * @guide
+   * We start with two arrays, the append array [2, 3, 5, 7], which we will append numbers to, and the preppend array [3, 7], which we will preppend numbers to.
+   * After one step, the append array will become [3, 5, 7, 21, 23, 27, 29]
+   * After two step, it will become [5, 7, 21, 23, 27, 29, 31, 33, 37, 39]
+   * After one step, the preppend array will become [7, 13, 23, 33, 53, 73, 93]
+   * After two step, it will become [13, 23, 33, 53, 73, 93, 17, 27, 37, 57, 77, 97]
+   * A truncatable prime is valid only if we can find it in both the append array and the preppend array.
+   * In the example given above, 37 is the only prime satisfying those conditions, and it is a truncatable prime.
+   * We keep expanding our arrays until none of the numbers in our array are prime.
    */
   e37() {
     const truncatedPrimes = [];
 
-    // we can see that the only valid digit in a truncated prime are 1,3,7,9
+    // Appending an even number, or the number 5, to any number, will make that number composite.
     const validDigitsA = [1, 3, 7, 9];
 
     // 2 and 5 are valid digit for preppending, however, they are only valid as the leading digit in a number
@@ -485,17 +496,20 @@ module.exports = {
    * The same can be achieved by starting with 9 and multiplying by 1, 2, 3, 4, and 5, giving the pandigital, 918273645, which is the concatenated product of 9 and (1,2,3,4,5)
    *
    * @question What is the largest 1 to 9 pandigital 9-digit number that can be formed as the concatenated product of an integer with (1,2, ... , n) where n > 1?
+   * @guide
+   * We are given that the answer is >= 918273645
+   * 
+   * If our multiplicand (in the example of the question the multiplicand would be 192) has two digits, then it must be >= 91, since our answer >= 918273645.
+   * Successive multiplication by 1, 2, 3, 4 will yield products of 2 digits, 3 digits, 3 digits, 3 digits = 11 digits > 9 digits.
+   * 
+   * We can apply the same logic to 3 digit multiplicands: 3 + 4 + 4 > 9
+   * 
+   * For 5 digits and above, the result of multipliying by 1 and 2 will result (respectively) in a >5 and >6 digit number => > 9 digits
+   * 
+   * So we can only check 4-digits multiplicands where m * 1 has 4 digits and m * 2 has 5 digits, 4 + 5 = 9.
+   * we dont have to check numbers > 9500 as multipliying by 2 will yield 19..., and the number will contain 2 9's, and won't be pandigital.
    */
   e38() {
-    // we are given that the answer is >= 918273645
-    // given that our multiplicand (m) has 2 digits, then it must be >= 91
-    // successive multiplication by 1, 2, 3, 4 will yield products of
-    // 2 digits, 3 digits, 3 digits, 3 digits = 11 digits > 9 digits
-    // we can apply the same logic to 3 digit multiplicands: 3 + 4 + 4 > 9
-    // for 5 digits and above, the result of multipliying by 1 and 2
-    // will result (respectively) in a >5 and >6 digit multiplicand => > 9 digits
-    // so we can only check 4-digits multiplicands where m * 1 has 4 digits and m * 2 has 5 digits, 4 + 5 = 9
-    // we dont have to check numbers > 9500 as multipliying by 2 will yield 19...
     let largestPandigitalProduct = 918273645;
     for (let m = 9182; m <= 9487; m++) {
       const multiplicandArr = m.toString().split('');
@@ -521,6 +535,14 @@ module.exports = {
    * {20,48,52}, {24,45,51}, {30,40,50}
    *
    * @question For which value of p ≤ 1000, is the number of solutions maximised?
+   * @guide
+   * We generate each primitive triplet one by one, then we multiply the perimeter by integer multiples to get its non-primitive triplets.
+   * For example, (3,4,5) is a primitive triplet, but (6,8,10) is not.
+   * In a table, we store as the keys the perimeter, and we store as the values the number of solutions for that perimeter.
+   * So starting with m = 2, n = 1, we get a perimeter of 12.
+   * We multiply that perimeter until it is close to 1000, and so our table will look like { 12: 1, 24: 1, ..., 996: 1 }
+   * We then go to the next primitive solution, and repeat, until the tables is filled with multiples of all primitive solutions.
+   * The key-value pair with the largest value will be the perimeter with the most solutions.
    */
   e39() {
     // we can generate all unique primitive pythagorean triples given a pair of integers m, n:
@@ -572,51 +594,41 @@ module.exports = {
    * @question If d_n represents the nth digit of the fractional part, find the value of the following expression.
    *
    * @question d_1 × d_10 × d_100 × d_1000 × d_10000 × d_100000 × d_1000000
+   * @guide
+   * We split the fractional part into sections.
+   * The first section contains the numbers with one digit (1,2,3,...,9). 9 digits
+   * The second section contains the 2-digits numbers (10,11,12,...,99). 180 digits
+   * The third section contains the 2-digits numbers (100,101,102,...,999). 2700 digits
+   * The sections after will contain 36000, 450000, and 5400000 digits.
+   * So we first find the section, then we find the number in the section, and finally the digit in the number.
    */
   e40() {
-    // we split the fractional part into sections,
-    // where the first section contains the numbers with one digit (1,2,3,...,9),
-    // the second section contains the 2-digits numbers (11,12,...,99), etc.
-    // it can be seen that each section contains 9i * 10^(i-1) digits total
     const searchIndexes = [1, 10, 100, 1000, 10000, 100000, 1000000];
-    const foundDigits = [];
+    const foundDigits = searchIndexes.map(x => champernowne(x));
 
-    let section = 1;
+    function champernowne(index) {
+      // it can be seen that each section contains 9i * 10^(i-1) digits total
+      let countSectionNumbers = section => 9 * section * 10 ** (section - 1);
 
-    let currentIndex = 0; // d_n
-
-    while (searchIndexes.length) {
-      // we find the last index of the current section
-      const lastIndexOfSection = currentIndex + 9 * section * (10 ** (section - 1));
-      // we find all the d_i where i < last index of current section
-      while (searchIndexes[0] < lastIndexOfSection) {
-        const indexToFind = searchIndexes.shift();
-        // find the matching number corresponding to an index
-        // e.g. for section 2: {10,11 -> 10}, {12,13 -> 11}, {14,15 -> 12}, etc
-        // e.g. for section 3: {190, 190, 192 -> 100}, {193, 194, 195 -> 101}, etc.
-        const matchedNumber = (10 ** (section - 1)) - 1 + Math.ceil((indexToFind - currentIndex) / section);
-
-        // find the corresponding digit in the matched number
-        // e.g. for section 2: {10 -> 1, 11 -> 0}, {12 -> 1, 13 -> 1}, {14 -> 1, 15 -> 2}, etc.
-        // e.g. for section 3: {190 -> 1, 191 -> 0, 192 -> 0}, {193 -> 1, 194 -> 0, 195 -> 1}, etc.
-        const matchedDigitIndex = ((indexToFind - currentIndex) % section);
-
-        // we adjust the matched index based on the modulus
-        // e.g. if the matched number has 3 digits (section 3), then we must modify the index like so:
-        // 1 -> 0, 2 -> 1, 0 -> 2
-        // ie. we convert index of the format
-        // {1,2,0} (obtained by {1/3, 2/3, 3/3}) to
-        // {0,1,2} (accurate representation of the index we want)
-        const adjustedDigitIndex = matchedDigitIndex
-          ? matchedDigitIndex - 1
-          : matchedNumber.toString().length - 1;
-        const matchedDigit = +(matchedNumber.toString().charAt(adjustedDigitIndex));
-        foundDigits.push(matchedDigit);
+      // first find section
+      let section = 1;
+      while (countSectionNumbers(section) < index) {
+        section++;
       }
-      // go to next index
-      section++;
-      // set the start index as the end of last section
-      currentIndex = lastIndexOfSection;
+      
+      for (let i = 1; i < section; i++) {
+        index -= countSectionNumbers(i);
+      }
+      
+      // find number in section
+      let nth = Math.floor(index / section);
+      if (section > 1) {
+        nth += 10 ** (section - 1)
+      }
+
+      // find digit in number
+      let nthdigit = (index - 1) % section; // have to substract by 1 because 0th index is actually the first digit, etc.
+      return nth.toString().split('')[nthdigit]
     }
 
     return foundDigits.reduce((a, c) => a * c, 1);
