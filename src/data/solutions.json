@@ -1479,8 +1479,25 @@
     "question": [
       "Find the smallest prime which, by replacing part of the number (not necessarily adjacent digits) with the same digit, is part of an eight prime value family."
     ],
-    "guide": [],
-    "solution": "// define * as the \"variable\" part, and the rest of digits as the \"fixed\" part\n// the number of * must be a multiple of 3, as otherwise there will be at least 3 numbers in each family which will be divisible by 3\n// because the sum of their digits will be a multiple of 3.\n// we first try with 3 variable digits and 3 fixed digits or less;\nconst candidates = [];\nfor (let fixedDigits = 1; fixedDigits <= 999; fixedDigits++) {\n  // for each fixed set of digits, generate the list of combinations comprising of fixed digits and *'s\n  const binomialCombinations = utils.listOrderedCombinations(fixedDigits, '***');\n  for (let i = 0; i < binomialCombinations.length; i++) {\n    const family = [];\n    let composites = 0;\n    for (let repl = 0; repl <= 9; repl++) { // replacement\n      if (repl !== 0 || binomialCombinations[i][0] !== '*') { // leading 0's aren't valid\n        const familyMember = +binomialCombinations[i].join('').replace(/\\*/g, repl);\n        if (utils.isPrime(familyMember)) {\n          family.push(familyMember);\n          if (family.length >= 8) {\n            candidates.push(family);\n          }\n        } else {\n          composites++;\n          if (composites >= 3) {\n            break;\n          }\n        }\n      }\n    }\n  }\n}\n// from the list of candidates, return the family with the smallest member\nreturn Math.min(candidates.map(x => x[0]));",
+    "guide": [
+      "The most important observation is that the number of digits substituted must be a multiple of 3.",
+      "<br />",
+      "",
+      "<br />",
+      "To explain this, let's look at the sum of digits of a family. Remember that our family has 8 members.",
+      "<br />",
+      "The only way to make all our 8 numbers' digits NOT sum up to a multiple of 3, is for the fixed part to NOT sum up to a multiple of 3, and for the substituted part to always sum up to a multiple of 3.",
+      "<br />",
+      "That way, this will ensure that no number will have their digits sum up to a multiple of 3.",
+      "<br />",
+      "",
+      "<br />",
+      "If the number of digits being substituted is NOT a multiple of 3, then, within the same family, we will find a substituted part s.t. its sum will add up to all of 3k, 3k + 1, and 3k + 2 after substituting for 8 different digits.",
+      "<br />",
+      "Adding that to the sum of digits of the fixed part will guarantee that one of the numbers will have its sum of digits be a multiple of 3.",
+      "<br />"
+    ],
+    "solution": "// define * as the \"variable\" part, and the rest of digits as the \"fixed\" part\n// we first try with 3 variable digits and 3 fixed digits or less;\nconst candidates = [];\nfor (let fixedDigits = 1; fixedDigits <= 999; fixedDigits++) {\n  // for each fixed set of digits, generate the list of combinations comprising of fixed digits and *'s\n  const binomialCombinations = utils.listOrderedCombinations(fixedDigits, '***');\n  for (let i = 0; i < binomialCombinations.length; i++) {\n    const family = [];\n    let composites = 0;\n    for (let repl = 0; repl <= 9; repl++) { // replacement\n      if (repl !== 0 || binomialCombinations[i][0] !== '*') { // leading 0's aren't valid\n        const familyMember = +binomialCombinations[i].join('').replace(/\\*/g, repl);\n        if (utils.isPrime(familyMember)) {\n          family.push(familyMember);\n          if (family.length >= 8) {\n            candidates.push(family);\n          }\n        } else {\n          composites++;\n          if (composites >= 3) {\n            break;\n          }\n        }\n      }\n    }\n  }\n}\n// from the list of candidates, return the family with the smallest member\nreturn Math.min(candidates.map(x => x[0]));",
     "utils": [
       "combinatorics/listOrderedCombinations",
       "primes/isPrime"
@@ -1495,8 +1512,19 @@
     "question": [
       "Find the smallest positive integer, x, such that 2x, 3x, 4x, 5x, and 6x, contain the same digits."
     ],
-    "guide": [],
-    "solution": "// let d denote the number of digits of a number,\n// for each d = 2, 3, 4, 5, 6, 7, ...\n// we only need to check up to 10^d/6 as number greater than this will overflow an extra digit\n// optimizations:\n// 1. we can skip numbers which ends with a 0, since if such a number is qualified,\n// we would already have found a qualified number by dividing this number by 10\n// 2. we can skip even numbers which do not contain 0, as multiplying by 5 will produce a 0 in the result\n// and we can skip odd numbers which do not contain a 5\n// 3. we can skip numbers which do not contain any digit greater than 5, as multiplying by 2 will double the digit sum of the result\n// return console.log(containSameDigits(142857, 285714, 5))\n// search between 2 to 8 digits\nfor (let d = 1; d <= 7; d++) {\n  // define search range for a particular d\n  const min = 10 ** d;\n  const max = Math.floor((10 ** (d + 1)) / 6);\n  let even = false;\n  for (let n = min; n <= max; n++) {\n    even = !even; // we flip the parity flag instead of checking for parity each time\n    if (!canSkip(n, d, even)) { // skip numbers which fulfill the criteria above\n      let failed = false;\n      for (let m = 2; m <= 6; m++) {\n        const product = m * n;\n        if (!containSameDigits(product, n, d)) {\n          failed = true;\n          break;\n        }\n      }\n      if (!failed) {\n        return n;\n      }\n      // if all tests pass, return result\n    }\n  }\n}\n// return true if a contains the same digits of b, where d := number of digits - 1\nfunction containSameDigits(a, b, d) {\n  const balanceArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];\n  // index of this arr represents the digit found in a and b\n  // content of an index i represents the number of occurrences of digit i in a minus the number of occurrences of digit i in b\n  // a and b contain the same digits if, at the end, this array contains all 0s\n  for (let i = 0; i <= d; i++) {\n    balanceArr[+a.toString().charAt(i)]++;\n    balanceArr[+b.toString().charAt(i)]--;\n  }\n  return balanceArr.every(x => x === 0);\n}\n// evaluates if a number is skippable\nfunction canSkip(number, digits, even) {\n  const stringNumber = number.toString();\n  if (stringNumber.charAt(digits) === '0') {\n    return true;\n  }\n  if (even && !stringNumber.includes('0')) {\n    return true;\n  }\n  if (!even && !stringNumber.includes('5')) {\n    return true;\n  }\n  if (stringNumber.split('').every(x => +x < 5)) {\n    return true;\n  }\n  return false;\n}",
+    "guide": [
+      "We search every number with a optimization in mind:",
+      "<br />",
+      "1. Let d denote the number of digits of a number, for each d = 2, 3, 4, 5, 6, 7, ..., we only need to check up to 10^d/6, ie. 166...6 as any number greater than this will overflow an extra digit.",
+      "<br />",
+      "2. We can skip numbers which ends with a 0, since if such a number is qualified, we would already have found a qualified number by dividing this number by 10.",
+      "<br />",
+      "3. We can skip even numbers which do not contain 0, as multiplying by 5 will produce a 0 in the result and we can skip odd numbers which do not contain a 5, as multiplying by 5 will produce a 5 in the result.",
+      "<br />",
+      "4. We can skip numbers which do not contain any digit greater than 5, as multiplying by 2 will double the digit sum of the result.",
+      "<br />"
+    ],
+    "solution": "// search between 2 to 8 digits\nfor (let d = 1; d <= 7; d++) {\n  // define search range for a particular d\n  const min = 10 ** d;\n  const max = Math.floor((10 ** (d + 1)) / 6);\n  let even = false;\n  for (let n = min; n <= max; n++) {\n    even = !even; // we flip the parity flag instead of checking for parity each time\n    if (!canSkip(n, d, even)) { // skip numbers which fulfill the criteria above\n      let failed = false;\n      for (let m = 2; m <= 6; m++) {\n        const product = m * n;\n        if (!containSameDigits(product, n, d)) {\n          failed = true;\n          break;\n        }\n      }\n      if (!failed) {\n        return n;\n      }\n      // if all tests pass, return result\n    }\n  }\n}\n// return true if a contains the same digits of b, where d := number of digits - 1\nfunction containSameDigits(a, b, d) {\n  const balanceArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];\n  // index of this arr represents the digit found in a and b\n  // content of an index i represents the number of occurrences of digit i in a minus the number of occurrences of digit i in b\n  // a and b contain the same digits if, at the end, this array contains all 0s\n  for (let i = 0; i <= d; i++) {\n    balanceArr[+a.toString().charAt(i)]++;\n    balanceArr[+b.toString().charAt(i)]--;\n  }\n  return balanceArr.every(x => x === 0);\n}\n// evaluates if a number is skippable\nfunction canSkip(number, digits, even) {\n  const stringNumber = number.toString();\n  if (stringNumber.charAt(digits) === '0') {\n    return true;\n  }\n  if (even && !stringNumber.includes('0')) {\n    return true;\n  }\n  if (!even && !stringNumber.includes('5')) {\n    return true;\n  }\n  if (stringNumber.split('').every(x => +x < 5)) {\n    return true;\n  }\n  return false;\n}",
     "utils": []
   },
   {
@@ -1517,8 +1545,19 @@
     "question": [
       "How many, not necessarily distinct, values of C(n, r) for 1 ≤ n ≤ 100, are greater than one-million?"
     ],
-    "guide": [],
-    "solution": "// we generate the table of 100 x 100 where each cell, row i, column j holds the result C(i, j)\n// instead of calculating each combination using the formula, we can use basic algebra for the follow update rules:\n// 1. C(n + 1, r) = C(n, r) * N where N = (n+1)/(n-r+1)\n// 2. C(n, r + 1) = C(n, r) * R where R = (n-r)/(r+1) => C(n, r - 1) = C(n, r) * r/(n-r+1)\n// we also know that C(n, r) is greater than one million for all n >= 23 and r = 10, so we don't need to check for r > 10\nlet totalCount = 4; // for n = 23, obvious from problem statement\nconst combinationTable = new Array(101); // for convenience, n = 0 ... 100\nfor (let i = 23; i <= 100; i++) {\n  combinationTable[i] = new Array(11); // r = 0 ... 10\n}\ncombinationTable[23][10] = 1144066;\nfor (let n = 24; n <= 100; n++) { // we can start at 24 given by problem statement\n  for (let r = 10; r > 0; r--) {\n    if (r === 10 && n !== 23) {\n      combinationTable[n][r] = combinationTable[n - 1][r] * n / (n - r);\n    } else {\n      combinationTable[n][r] = combinationTable[n][r + 1] * (r + 1) / (n - r);\n    }\n    if (combinationTable[n][r] < 1000000) {\n      const increment = utils.isEven(n)\n        ? 1 + 2 * (n / 2 - r - 1)\n        : 2 * ((n + 1) / 2 - r - 1);\n      totalCount += increment;\n      break;\n    }\n  }\n}\nreturn totalCount;",
+    "guide": [
+      "We generate the table of 100 x 100 where each cell, row i, column j holds the result C(i, j)",
+      "<br />",
+      "Instead of calculating each combination using the formula, we can use basic algebra for the follow update rules:",
+      "<br />",
+      "1. C(n + 1, r) = C(n, r) * N where N = (n+1)/(n-r+1)",
+      "<br />",
+      "2. C(n, r + 1) = C(n, r) * R where R = (n-r)/(r+1) => C(n, r - 1) = C(n, r) * r/(n-r+1)",
+      "<br />",
+      "We also know that C(n, r) is greater than one million for all n >= 23 and r = 10, so we don't need to check for r > 10.",
+      "<br />"
+    ],
+    "solution": "let totalCount = 4; // for n = 23, obvious from problem statement\nconst combinationTable = new Array(101); // for convenience, n = 0 ... 100\nfor (let i = 23; i <= 100; i++) {\n  combinationTable[i] = new Array(11); // r = 0 ... 10\n}\ncombinationTable[23][10] = 1144066;\nfor (let n = 24; n <= 100; n++) { // we can start at 24 given by problem statement\n  for (let r = 10; r > 0; r--) {\n    if (r === 10 && n !== 23) {\n      combinationTable[n][r] = combinationTable[n - 1][r] * n / (n - r);\n    } else {\n      combinationTable[n][r] = combinationTable[n][r + 1] * (r + 1) / (n - r);\n    }\n    if (combinationTable[n][r] < 1000000) {\n      const increment = utils.isEven(n)\n        ? 1 + 2 * (n / 2 - r - 1)\n        : 2 * ((n + 1) / 2 - r - 1);\n      totalCount += increment;\n      break;\n    }\n  }\n}\nreturn totalCount;",
     "utils": [
       "arithmetic/isEven"
     ]
@@ -1564,7 +1603,10 @@
     "question": [
       "How many hands does Player 1 win?"
     ],
-    "guide": [],
+    "guide": [
+      "For each hand, we use an array to represent its score. The details of how the array works in commented in the code below, above the function <code>evaluateHand</code>",
+      "<br />"
+    ],
     "solution": "// list of possible ranks\nconst RANKS = [2, 3, 4, 5, 6, 7, 8, 9, 'T', 'J', 'Q', 'K', 'A'];\n// generate the list of combinations of straights and all their combinations\n// the keys of the table are the valid combinations of strings of 5 characters (not necessarily in order) which form a straight, ie. J8TQ9\n// the value of each key is the highest rank of that straight\n// note: this method may not be the fastest solution for this problem, but it is much more scalable (eg. 1 million hands instead of 1000)\nconst STRAIGHTS_TABLE = ['A', ...RANKS].reduce( // ace to ace\n  (table, curr, index, arr) => {\n    if (curr === 'J') {\n      arr.splice(1);\n    }\n    const highest = index + 5;\n    const base = arr.slice(index, index + 5);\n    for (let i = 0; i <= 120; i++) {\n      table[utils.getLexicalPermutation(base, i).join('')] = highest;\n    }\n    return table;\n  },\n  {},\n);\nconst GAMES = fs.readFileSync(path.join(__dirname, 'p054_poker.txt')).toString().split('\\n');\nreturn GAMES.reduce((p1Score, currentGame) => {\n  const [p1Hand, p2Hand] = [currentGame.substring(0, 14), currentGame.substring(15, 29)];\n  if (!p1Hand) { // end of games\n    return p1Score;\n  }\n  const [p1HandValue, p2HandValue] = [evaluateHand(p1Hand), evaluateHand(p2Hand)];\n  for (let i = 0; i < p1HandValue.length; i++) {\n    if (p1HandValue[i] > p2HandValue[i]) {\n      return p1Score + 1;\n    }\n    if (p1HandValue[i] < p2HandValue[i]) {\n      return p1Score;\n    }\n  }\n  return p1Score;\n}, 0);\n// input: string of 5 cards, separated by a space\n// output: score of hand, which is an array of size up to 6\n// first element is the rank of the hand, where 9: straight flush, 8: four of a kind, etc.\n// second element is the value of the first type within that rank, ie. a hand with 4 aces will have value 13, a hand with 4 kings value 12, etc.\n// third element is the value of the second type within that rank, ie. if both players have 2 pair of aces and 3 singles, then we compare the\n// second highest value etc.\nfunction evaluateHand(hand) {\n  const cards = hand.split(' ');\n  // FLUSH check\n  // check if every card has the same suit as the first card\n  const firstSuit = cards[0].charAt(1);\n  const isFlush = cards.every(card => card.charAt(1) === firstSuit);\n  // STRAIGHT check\n  // check the generated table of all possible straights\n  const highestStraight = STRAIGHTS_TABLE[cards.map(card => card.charAt(0)).join('')] || false;\n  // same of a kind table, keys are the ranks, values are the number of occurences of that rank\n  const rankTable = cards.reduce((table, currentCard) => {\n    const rank = currentCard.charAt(0);\n    table[rank] = table[rank] ? table[rank] + 1 : 1;\n    return table;\n  }, {});\n  // inverted table of above, keys are occurrences and corresponding values are the ranks that fit that occurrence\n  const occurencesTable = Object.entries(rankTable).reduce((table, [key, value]) => {\n    if (table[value]) {\n      table[value].push(key);\n    } else {\n      table[value] = [key];\n    }\n    return table;\n  }, {});\n  // now that we have all the variables we need, we attempt to match a hand with each hand type from strongest to weakest\n  // STRAIGHT FLUSH\n  if (highestStraight && isFlush) {\n    return [9, getRank(highestStraight)];\n  }\n  // FOUR OF A KIND\n  if (occurencesTable['4']) {\n    return [8, getRank(occurencesTable['4'][0]), getRank(occurencesTable['1'])];\n  }\n  // FULL HOUSE\n  if (occurencesTable['3'] && occurencesTable['2']) {\n    return [7, getRank(occurencesTable['3'][0]), getRank(occurencesTable['2'][0])];\n  }\n  // FLUSH\n  if (isFlush) {\n    return [6, ...occurencesTable['1'].map(getRank).sort(sortBiggest)];\n  }\n  // STRAIGHT\n  if (highestStraight) {\n    return [5, getRank(highestStraight)];\n  }\n  // THREE OF A KIND\n  if (occurencesTable['3']) {\n    return [4, getRank(occurencesTable['3'][0]), ...occurencesTable['1'].map(getRank).sort(sortBiggest)];\n  }\n  // TWO PAIRS\n  if (occurencesTable['2'] && occurencesTable['2'].length === 2) {\n    return [3, ...occurencesTable['2'].map(getRank).sort(sortBiggest), getRank(occurencesTable['1'][0])];\n  }\n  // ONE PAIR\n  if (occurencesTable['2']) {\n    return [2, getRank(occurencesTable['2'][0]), ...occurencesTable['1'].map(getRank).sort(sortBiggest)];\n  }\n  // HIGH CARD\n  return [1, ...occurencesTable['1'].map(getRank).sort(sortBiggest)];\n}\nfunction sortBiggest(a, b) {\n  return b - a;\n}\n// returns the numerical rank of a card from a character\nfunction getRank(card) {\n  if (+card) {\n    return +card;\n  }\n  return {\n    T: 10,\n    J: 11,\n    Q: 12,\n    K: 13,\n    A: 14,\n  }[card];\n}",
     "utils": [
       "combinatorics/getLexicalPermutation"
@@ -1601,7 +1643,10 @@
     "question": [
       "How many Lychrel numbers are there below ten-thousand?"
     ],
-    "guide": [],
+    "guide": [
+      "We just check each number one by one. In checking the numbers, we store the intermittent results in a table, so we don't check the same number twice.",
+      "<br />"
+    ],
     "solution": "const lychrelNumbers = {}; // memoized table for all lychrel numbers (doesnt terminate)\nconst nonLychrelNumbers = {}; // numbers which produce a palindrome through reverse add\nfor (let n = 1; n <= 10000; n++) {\n  testLychrel(n);\n}\nfunction testLychrel(n) {\n  const encounteredNumbers = {};\n  let sum = n;\n  for (let i = 1; i <= 50; i++) {\n    const flipped = utils.flip(sum);\n    encounteredNumbers[sum] = true;\n    if (sum % 10) {\n      encounteredNumbers[flipped] = true;\n    }\n    if (nonLychrelNumbers[sum]) {\n      Object.assign(nonLychrelNumbers, encounteredNumbers);\n      break;\n    }\n    if (lychrelNumbers[sum] || i === 50) {\n      Object.assign(lychrelNumbers, encounteredNumbers);\n      break;\n    }\n    sum += flipped;\n    if (utils.isPalindrome(sum)) {\n      Object.assign(nonLychrelNumbers, encounteredNumbers);\n      break;\n    }\n  }\n}\nreturn Object.keys(lychrelNumbers).filter(x => x <= 10000).length;",
     "utils": [
       "lang/flip",
@@ -1621,9 +1666,14 @@
       null
     ],
     "question": [
-      "Considering natural numbers of the form, ab, where a, b < 100, what is the maximum digital sum?"
+      "Considering natural numbers of the form, a^b, where a, b < 100, what is the maximum digital sum?"
     ],
-    "guide": [],
+    "guide": [
+      "To calculate the sum of digits of very large numbers, a long multiplication function is used, very tedious but I guess it's necessary.",
+      "<br />",
+      "Maybe there is a trick to this problem which doesn't require it, but it eludes me.",
+      "<br />"
+    ],
     "solution": "const expTable = [...Array(99)].map((x, i) => [(i + 1).toString()]); // initialize\nlet largestDigitSum = 0;\nexpTable.forEach((column, colIndex) => {\n  const base = colIndex + 1;\n  // each column i contains the result of [i ^ 1, i ^ 2, ..., i ^ 99]\n  // we will skip numbers < 10 and multiples of 10\n  if (base < 10 || base % 10 === 0) {\n    return null;\n  }\n  for (let exp = 1; exp <= 99; exp++) {\n    const result = longMultiply(column[exp - 1], base.toString());\n    const digitSum = utils.sumArray(result, x => +x);\n    if (digitSum > largestDigitSum) {\n      largestDigitSum = digitSum;\n    }\n    column.push(result.reverse().join(''));\n  }\n});\nreturn largestDigitSum;\n// takes 2 strings of numbers as params, returns an array containing the digits of the product of the 2 numbers\n// multiplies the 2 numbers using long multiplication\nfunction longMultiply(a, b) {\n  const mTable = {};\n  const [n1, n2] = [a.split('').reverse(), b.split('').reverse()];\n  const partialResultsTable = n2.reduce(\n    (acc, curr, idx) => {\n      if (curr) {\n        const power = idx;\n        const results = mTable[curr] || n1.map(x => x * curr);\n        mTable[curr] = results;\n        results.forEach((partialProduct, i) => {\n          if (!acc[power + i + 1]) acc[power + i + 1] = [];\n          if (partialProduct < 10) {\n            acc[power + i].push(partialProduct);\n          } else {\n            acc[power + i].push(partialProduct.toString().split('')[1]);\n            acc[power + i + 1].push(partialProduct.toString().split('')[0]);\n          }\n        });\n      }\n      return acc;\n    },\n    [[]],\n  );\n  // add the digits with respect to their positions\n  return consolidatePartialResults(partialResultsTable);\n}\nfunction consolidatePartialResults(table) {\n  const flatResults = [];\n  let carry = 0;\n  for (let columnIndex = 0; columnIndex < table.length; columnIndex++) {\n    const col = table[columnIndex];\n    const sum = (col.reduce((a, c) => +c + a, 0) + +carry).toString();\n    const retainedDigit = sum.slice(-1);\n    carry = sum.slice(0, sum.length - 1);\n    flatResults.push(retainedDigit);\n  }\n  return flatResults;\n}",
     "utils": [
       "common/sumArray"
@@ -1650,7 +1700,16 @@
     "question": [
       "In the first one-thousand expansions, how many fractions contain a numerator with more digits than the denominator?"
     ],
-    "guide": [],
+    "guide": [
+      "We can observe that, at each step:",
+      "<br />",
+      "1. The numerator = 2 * previous denominator + previous numerator.",
+      "<br />",
+      "2. The denominator = previous denominator + previous numerator.",
+      "<br />",
+      "We use this simple update rule and build our fractions.",
+      "<br />"
+    ],
     "solution": "let currentExpansion = [3n, 2n];\nlet numeratorDigitExcessCount = 0;\nfor (let i = 1; i < 1000; i++) {\n  currentExpansion = computeNextCF(currentExpansion);\n  if (currentExpansion[0].toString().length > currentExpansion[1].toString().length) {\n    numeratorDigitExcessCount++;\n  }\n}\n// compute the next continued fraction expansion based on the current expansion\nfunction computeNextCF([n, d]) {\n  return [2n * d + n, d + n];\n}\nreturn numeratorDigitExcessCount;",
     "utils": []
   },
@@ -1682,8 +1741,13 @@
     "question": [
       "If this process is continued, what is the side length of the square spiral for which the ratio of primes along both diagonals first falls below 10%?"
     ],
-    "guide": [],
-    "solution": "// generate a table of 1 million primes\n// const PRIMES = utils.generatePrimesTable(10000000);\n// start from the second layer\nlet currentNumber = 9;\nlet primes = 3;\nlet diagonals = 5;\nlet sideLength = 3;\nwhile (`${primes}0` >= diagonals) {\n  sideLength += 2;\n  diagonals += 4;\n  const incr = sideLength - 1;\n  for (let i = 0; i < 4; i++) {\n    currentNumber += incr;\n    if (utils.isPrime(currentNumber)) {\n      primes++;\n    }\n  }\n}\nreturn sideLength;",
+    "guide": [
+      "We proceed layer by layer, in each layer, 4 new numbers are introduced, we check how many of those are prime, and compare it to the total. We exit once the number of primes * 10 < number of numbers in the diagonal.",
+      "<br />",
+      "",
+      "<br />"
+    ],
+    "solution": "// generate a table of 1 million primes\n// const PRIMES = utils.generatePrimesTable(10000000);\n// start from the second layer\nlet currentNumber = 9;\nlet primes = 3;\nlet diagonals = 5;\nlet sideLength = 3;\nwhile (primes * 10 >= diagonals) {\n  sideLength += 2;\n  diagonals += 4;\n  const incr = sideLength - 1;\n  for (let i = 0; i < 4; i++) {\n    currentNumber += incr;\n    if (utils.isPrime(currentNumber)) {\n      primes++;\n    }\n  }\n}\nreturn sideLength;",
     "utils": [
       "primes/isPrime"
     ]
@@ -1707,8 +1771,21 @@
     "question": [
       "Using [p059_cipher.txt @asset p059_cipher.txt], a file containing the encrypted ASCII codes, and the knowledge that the plain text must contain common English words, decrypt the message and find the sum of the ASCII values in the original text."
     ],
-    "guide": [],
-    "solution": "// we start by compiling a list of valid password characters for each position\n// we check each character of the password one by one, that is, we start with 'a', and we XOR it with the 1st, 4th, 7th, etc. characters of the cyphertext\n// if at any point we xor a resulting character which is not a valid character for english text, ie. a-z, A-Z and punctuations, we discard it\n// we repeat for the second and third character of the password p059_cipher.txt\nconst formatted = fs.readFileSync('6/p059_cipher.txt').toString().split(',').map(x => +x);\nconst filtered = {\n  first: formatted.filter((_, i) => i % 3 === 0), // every third ascii starting from pos 0\n  second: formatted.filter((_, i) => i % 3 === 1), // every third ascii starting from pos 1\n  third: formatted.filter((_, i) => i % 3 === 2), // every third ascii starting from pos 2\n};\nconst validPass = {\n  first: [],\n  second: [],\n  third: [],\n};\nfor (let i = 97; i <= 122; i++) {\n  if (isPassValid(i, 'first')) {\n    validPass.first.push(i);\n  }\n  if (isPassValid(i, 'second')) {\n    validPass.second.push(i);\n  }\n  if (isPassValid(i, 'third')) {\n    validPass.third.push(i);\n  }\n}\nfunction isAsciiValid(ascii) {\n  // include all characters that can be typed on a standard english keyboard,\n  // except fractions, tab, and the following: \\{}|`~^_\n  return (ascii >= 32 && ascii <= 90) || (ascii >= 97 && ascii <= 122) || ascii === 91 || ascii === 93;\n}\nfunction isPassValid(code, startPosition) {\n  const encryptedChars = filtered[startPosition];\n  const isValid = encryptedChars.every((x) => {\n    return isAsciiValid((x ^ code));\n  });\n  return isValid;\n}\n// console.log(validPass) // this will yield { first: [101], second: [120], third: [112] }\nconst password = [101, 120, 112];\nconst plaintext = formatted.map((char, i) => char ^ password[i % 3]);\n// console.log(String.fromCharCode(...plaintext)); // this will yield the following plaintext output\n/*\nAn extract taken from the introduction of one of Euler's most celebrated papers,\n\"De summis serierum reciprocarum\" [On the sums of series of reciprocals]: I have\nrecently found, quite unexpectedly, an elegant expression for the entire sum of\nthis series 1 + 1/4 + 1/9 + 1/16 + etc., which depends on the quadrature of the\ncircle, so that if the true sum of this series is obtained, from it at once the\nquadrature of the circle follows. Namely, I have found that the sum of this series\nis a sixth part of the square of the perimeter of the circle whose diameter is 1;\nor by putting the sum of this series equal to s, it has the ratio sqrt(6) multiplied\nby s to 1 of the perimeter to the diameter. I will soon show that the sum of this\nseries to be approximately 1.644934066842264364; and from multiplying this number\nby six, and then taking the square root, the number 3.141592653589793238 is indeed\nproduced, which expresses the perimeter of a circle whose diameter is 1. Following\nagain the same steps by which I had arrived at this sum, I have discovered that the\nsum of the series 1 + 1/16 + 1/81 + 1/256 + 1/625 + etc. also depends on the\nquadrature of the circle. Namely, the sum of this multiplied by 90 gives the biquadrate\n(fourth power) of the circumference of the perimeter of a circle whose\ndiameter is 1. And by similar reasoning I have likewise been able to determine the sums\nof the subsequent series in which the exponents are even numbers.\n*/\nreturn utils.sumArray(plaintext);",
+    "guide": [
+      "We start by compiling a list of valid password characters for each position.",
+      "<br />",
+      "We check each character of the password one by one, that is, we start with 'a', and we XOR it with the 1st, 4th, 7th, etc. characters of the cyphertext.",
+      "<br />",
+      "",
+      "<br />",
+      "If at any point we xor a resulting character which is not a valid character for english text, ie. a-z, A-Z and punctuations, we discard it, ",
+      "<br />",
+      "",
+      "<br />",
+      "We repeat for the second and third character of the password p059_cipher.txt",
+      "<br />"
+    ],
+    "solution": "const formatted = fs.readFileSync('6/p059_cipher.txt').toString().split(',').map(x => +x);\nconst filtered = {\n  first: formatted.filter((_, i) => i % 3 === 0), // every third ascii starting from pos 0\n  second: formatted.filter((_, i) => i % 3 === 1), // every third ascii starting from pos 1\n  third: formatted.filter((_, i) => i % 3 === 2), // every third ascii starting from pos 2\n};\nconst validPass = {\n  first: [],\n  second: [],\n  third: [],\n};\nfor (let i = 97; i <= 122; i++) {\n  if (isPassValid(i, 'first')) {\n    validPass.first.push(i);\n  }\n  if (isPassValid(i, 'second')) {\n    validPass.second.push(i);\n  }\n  if (isPassValid(i, 'third')) {\n    validPass.third.push(i);\n  }\n}\nfunction isAsciiValid(ascii) {\n  // include all characters that can be typed on a standard english keyboard,\n  // except fractions, tab, and the following: \\{}|`~^_\n  return (ascii >= 32 && ascii <= 90) || (ascii >= 97 && ascii <= 122) || ascii === 91 || ascii === 93;\n}\nfunction isPassValid(code, startPosition) {\n  const encryptedChars = filtered[startPosition];\n  const isValid = encryptedChars.every((x) => {\n    return isAsciiValid((x ^ code));\n  });\n  return isValid;\n}\n// console.log(validPass) // this will yield { first: [101], second: [120], third: [112] }\nconst password = [101, 120, 112];\nconst plaintext = formatted.map((char, i) => char ^ password[i % 3]);\n// console.log(String.fromCharCode(...plaintext)); // this will yield the following plaintext output\n/*\nAn extract taken from the introduction of one of Euler's most celebrated papers,\n\"De summis serierum reciprocarum\" [On the sums of series of reciprocals]: I have\nrecently found, quite unexpectedly, an elegant expression for the entire sum of\nthis series 1 + 1/4 + 1/9 + 1/16 + etc., which depends on the quadrature of the\ncircle, so that if the true sum of this series is obtained, from it at once the\nquadrature of the circle follows. Namely, I have found that the sum of this series\nis a sixth part of the square of the perimeter of the circle whose diameter is 1;\nor by putting the sum of this series equal to s, it has the ratio sqrt(6) multiplied\nby s to 1 of the perimeter to the diameter. I will soon show that the sum of this\nseries to be approximately 1.644934066842264364; and from multiplying this number\nby six, and then taking the square root, the number 3.141592653589793238 is indeed\nproduced, which expresses the perimeter of a circle whose diameter is 1. Following\nagain the same steps by which I had arrived at this sum, I have discovered that the\nsum of the series 1 + 1/16 + 1/81 + 1/256 + 1/625 + etc. also depends on the\nquadrature of the circle. Namely, the sum of this multiplied by 90 gives the biquadrate\n(fourth power) of the circumference of the perimeter of a circle whose\ndiameter is 1. And by similar reasoning I have likewise been able to determine the sums\nof the subsequent series in which the exponents are even numbers.\n*/\nreturn utils.sumArray(plaintext);",
     "utils": [
       "common/sumArray"
     ]
@@ -1726,7 +1803,16 @@
     "question": [
       "Find the lowest sum for a set of five primes for which any two primes concatenate to produce another prime."
     ],
-    "guide": [],
+    "guide": [
+      "1. We first generate a list of primes, 100000 should be enough.",
+      "<br />",
+      "2. We then build a table with pairs of primes which satisfy our condition above, by going through every pair of primes.",
+      "<br />",
+      "3. We then go through each prime and try to find one which forms a triple with the members built in step 2.",
+      "<br />",
+      "4. Repeat until we find a quintuple.",
+      "<br />"
+    ],
     "solution": "const PRIMES_TABLE = utils.generatePrimesTable(100000);\ndelete PRIMES_TABLE['2'];\ndelete PRIMES_TABLE['5'];\nconst PRIMES_ARR = Object.keys(PRIMES_TABLE);\nconst largestGeneratedPrime = PRIMES_ARR[PRIMES_ARR.length - 1];\n// we build tables which contains matching pairs, matching triples and matching quads\n// we iteratively build them on top of each other\n// for example, if we found a prime which matches with an existing member in the table of matched pairs\n// then we can insert that prime, along with the matched pair, into the table of matched triples\n// so on and so forth until we reach a matched quintuple\nconst matchingPairsTable = {}; // prime pairs\nconst matchingTriplesTable = {}; // connected prime triples\nconst matchingQuadsTable = {}; // connected prime quads\nconst matchingQuintsTable = {}; // connected prime quint (answer)\nfor (let i = 0; i < PRIMES_ARR.length; i++) {\n  const prime = PRIMES_ARR[i];\n  const newMatchingPairs = {};\n  for (let j = 0; j < i; j++) {\n    const smallerPrime = PRIMES_ARR[j];\n    if (doesMatch(smallerPrime, prime)) {\n      newMatchingPairs[`${smallerPrime}|${prime}`] = true;\n    }\n  }\n  const newMatchingTriples = {};\n  const matchingPairs = Object.keys(matchingPairsTable);\n  matchingPairs.forEach((pair) => {\n    if (pair.split('|').every(part => newMatchingPairs[`${part}|${prime}`])) {\n      newMatchingTriples[`${pair}|${prime}`] = true;\n    }\n  });\n  const newMatchingQuads = {};\n  const matchingTriples = Object.keys(matchingTriplesTable);\n  matchingTriples.forEach((triple) => {\n    if (triple.split('|').every(part => newMatchingPairs[`${part}|${prime}`])) {\n      newMatchingQuads[`${triple}|${prime}`] = true;\n    }\n  });\n  const newMatchingQuints = {};\n  const matchingQuads = Object.keys(matchingQuadsTable);\n  matchingQuads.forEach((quad) => {\n    if (quad.split('|').every(part => newMatchingPairs[`${part}|${prime}`])) {\n      newMatchingQuints[`${quad}|${prime}`] = true;\n    }\n  });\n  Object.assign(matchingPairsTable, newMatchingPairs);\n  Object.assign(matchingTriplesTable, newMatchingTriples);\n  Object.assign(matchingQuadsTable, newMatchingQuads);\n  Object.assign(matchingQuintsTable, newMatchingQuints);\n  if (Object.keys(matchingQuintsTable).length) {\n    return utils.sumArray(Object.keys(matchingQuintsTable)[0].split('|').map(x => +x));\n  }\n}\n// returns true if a member can be accepted into a family\nfunction doesMatch(oldPrime, newPrime) {\n  const concat1 = concat(+oldPrime, +newPrime);\n  const concat2 = concat(+newPrime, +oldPrime);\n  return (concat1 > largestGeneratedPrime || concat2 > largestGeneratedPrime\n    ? utils.isPrime(concat1) && utils.isPrime(concat2)\n    : PRIMES_TABLE[concat1] && PRIMES_TABLE[concat2]);\n}\nfunction concat(n1, n2) {\n  return n1 * (10 ** n2.toString().length) + n2;\n}",
     "utils": [
       "primes/generatePrimesTable",

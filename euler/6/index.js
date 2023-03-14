@@ -17,11 +17,18 @@ module.exports = {
    * Consequently 56003, being the first member of this family, is the smallest prime with this property.
    *
    * @question Find the smallest prime which, by replacing part of the number (not necessarily adjacent digits) with the same digit, is part of an eight prime value family.
+   * @guide
+   * The most important observation is that the number of digits substituted must be a multiple of 3.
+   * 
+   * To explain this, let's look at the sum of digits of a family. Remember that our family has 8 members.
+   * The only way to make all our 8 numbers' digits NOT sum up to a multiple of 3, is for the fixed part to NOT sum up to a multiple of 3, and for the substituted part to always sum up to a multiple of 3.
+   * That way, this will ensure that no number will have their digits sum up to a multiple of 3.
+   * 
+   * If the number of digits being substituted is NOT a multiple of 3, then, within the same family, we will find a substituted part s.t. its sum will add up to all of 3k, 3k + 1, and 3k + 2 after substituting for 8 different digits.
+   * Adding that to the sum of digits of the fixed part will guarantee that one of the numbers will have its sum of digits be a multiple of 3.
    */
   e51() {
     // define * as the "variable" part, and the rest of digits as the "fixed" part
-    // the number of * must be a multiple of 3, as otherwise there will be at least 3 numbers in each family which will be divisible by 3
-    // because the sum of their digits will be a multiple of 3.
     // we first try with 3 variable digits and 3 fixed digits or less;
     const candidates = [];
     for (let fixedDigits = 1; fixedDigits <= 999; fixedDigits++) {
@@ -56,19 +63,14 @@ module.exports = {
    * Problem 52 Permuted multiples
    * It can be seen that the number, 125874, and its double, 251748, contain exactly the same digits, but in a different order.
    * @question Find the smallest positive integer, x, such that 2x, 3x, 4x, 5x, and 6x, contain the same digits.
+   * @guide
+   * We search every number with a optimization in mind:
+   * 1. Let d denote the number of digits of a number, for each d = 2, 3, 4, 5, 6, 7, ..., we only need to check up to 10^d/6, ie. 166...6 as any number greater than this will overflow an extra digit.
+   * 2. We can skip numbers which ends with a 0, since if such a number is qualified, we would already have found a qualified number by dividing this number by 10.
+   * 3. We can skip even numbers which do not contain 0, as multiplying by 5 will produce a 0 in the result and we can skip odd numbers which do not contain a 5, as multiplying by 5 will produce a 5 in the result.
+   * 4. We can skip numbers which do not contain any digit greater than 5, as multiplying by 2 will double the digit sum of the result.
    */
   e52() {
-    // let d denote the number of digits of a number,
-    // for each d = 2, 3, 4, 5, 6, 7, ...
-    // we only need to check up to 10^d/6 as number greater than this will overflow an extra digit
-    // optimizations:
-    // 1. we can skip numbers which ends with a 0, since if such a number is qualified,
-    // we would already have found a qualified number by dividing this number by 10
-    // 2. we can skip even numbers which do not contain 0, as multiplying by 5 will produce a 0 in the result
-    // and we can skip odd numbers which do not contain a 5
-    // 3. we can skip numbers which do not contain any digit greater than 5, as multiplying by 2 will double the digit sum of the result
-    // return console.log(containSameDigits(142857, 285714, 5))
-
     // search between 2 to 8 digits
     for (let d = 1; d <= 7; d++) {
       // define search range for a particular d
@@ -139,13 +141,14 @@ module.exports = {
    * It is not until n=23, that a value exceeds one-million: C(23, 10)=1144066.
    *
    * @question How many, not necessarily distinct, values of C(n, r) for 1 ≤ n ≤ 100, are greater than one-million?
+   * @guide
+   * We generate the table of 100 x 100 where each cell, row i, column j holds the result C(i, j)
+   * Instead of calculating each combination using the formula, we can use basic algebra for the follow update rules:
+   * 1. C(n + 1, r) = C(n, r) * N where N = (n+1)/(n-r+1)
+   * 2. C(n, r + 1) = C(n, r) * R where R = (n-r)/(r+1) => C(n, r - 1) = C(n, r) * r/(n-r+1)
+   * We also know that C(n, r) is greater than one million for all n >= 23 and r = 10, so we don't need to check for r > 10.
    */
   e53() {
-    // we generate the table of 100 x 100 where each cell, row i, column j holds the result C(i, j)
-    // instead of calculating each combination using the formula, we can use basic algebra for the follow update rules:
-    // 1. C(n + 1, r) = C(n, r) * N where N = (n+1)/(n-r+1)
-    // 2. C(n, r + 1) = C(n, r) * R where R = (n-r)/(r+1) => C(n, r - 1) = C(n, r) * r/(n-r+1)
-    // we also know that C(n, r) is greater than one million for all n >= 23 and r = 10, so we don't need to check for r > 10
     let totalCount = 4; // for n = 23, obvious from problem statement
     const combinationTable = new Array(101); // for convenience, n = 0 ... 100
     for (let i = 23; i <= 100; i++) {
@@ -207,6 +210,8 @@ module.exports = {
    * You can assume that all hands are valid (no invalid characters or repeated cards), each player's hand is in no specific order, and in each hand there is a clear winner.
    *
    * @question How many hands does Player 1 win?
+   * @guide
+   * For each hand, we use an array to represent its score. The details of how the array works in commented in the code below, above the function <code>evaluateHand</code>
    */
   e54() {
     // list of possible ranks
@@ -375,6 +380,8 @@ module.exports = {
    * Surprisingly, there are palindromic numbers that are themselves Lychrel numbers; the first example is 4994.
    *
    * @question How many Lychrel numbers are there below ten-thousand?
+   * @guide
+   * We just check each number one by one. In checking the numbers, we store the intermittent results in a table, so we don't check the same number twice.
    */
   e55() {
     const lychrelNumbers = {}; // memoized table for all lychrel numbers (doesnt terminate)
@@ -421,7 +428,10 @@ module.exports = {
    *
    * Despite their size, the sum of the digits in each number is only 1.
    *
-   * @question Considering natural numbers of the form, ab, where a, b < 100, what is the maximum digital sum?
+   * @question Considering natural numbers of the form, a^b, where a, b < 100, what is the maximum digital sum?
+   * @guide
+   * To calculate the sum of digits of very large numbers, a long multiplication function is used, very tedious but I guess it's necessary.
+   * Maybe there is a trick to this problem which doesn't require it, but it eludes me.
    */
   e56() {
     const expTable = [...Array(99)].map((x, i) => [(i + 1).toString()]); // initialize
@@ -505,6 +515,11 @@ module.exports = {
    * The next three expansions are 41/29, 99/70, and 239/169, but the 8th expansion, 1393/985, is the first example where the number of digits in the numerator exceeds the number of digits in the denominator.
    *
    * @question In the first one-thousand expansions, how many fractions contain a numerator with more digits than the denominator?
+   * @guide
+   * We can observe that, at each step:
+   * 1. The numerator = 2 * previous denominator + previous numerator.
+   * 2. The denominator = previous denominator + previous numerator.
+   * We use this simple update rule and build our fractions.
    */
   e57() {
     let currentExpansion = [3n, 2n];
@@ -548,6 +563,8 @@ module.exports = {
    * If one complete new layer is wrapped around the spiral above, a square spiral with side length 9 will be formed.
    *
    * @question If this process is continued, what is the side length of the square spiral for which the ratio of primes along both diagonals first falls below 10%?
+   * @guide
+   * We proceed layer by layer, in each layer, 4 new numbers are introduced, we check how many of those are prime, and compare it to the total. We exit once the number of primes * 10 < number of numbers in the diagonal.
    */
 
   e58() {
@@ -560,7 +577,7 @@ module.exports = {
     let diagonals = 5;
     let sideLength = 3;
 
-    while (`${primes}0` >= diagonals) {
+    while (primes * 10 >= diagonals) {
       sideLength += 2;
       diagonals += 4;
       const incr = sideLength - 1;
@@ -589,12 +606,15 @@ module.exports = {
    * Your task has been made easy, as the encryption key consists of three lower case characters.
    *
    * @question Using [p059_cipher.txt @asset p059_cipher.txt], a file containing the encrypted ASCII codes, and the knowledge that the plain text must contain common English words, decrypt the message and find the sum of the ASCII values in the original text.
+   * @guide
+   * We start by compiling a list of valid password characters for each position.
+   * We check each character of the password one by one, that is, we start with 'a', and we XOR it with the 1st, 4th, 7th, etc. characters of the cyphertext.
+   * 
+   * If at any point we xor a resulting character which is not a valid character for english text, ie. a-z, A-Z and punctuations, we discard it, 
+   * 
+   * We repeat for the second and third character of the password p059_cipher.txt
    */
   e59() {
-    // we start by compiling a list of valid password characters for each position
-    // we check each character of the password one by one, that is, we start with 'a', and we XOR it with the 1st, 4th, 7th, etc. characters of the cyphertext
-    // if at any point we xor a resulting character which is not a valid character for english text, ie. a-z, A-Z and punctuations, we discard it
-    // we repeat for the second and third character of the password p059_cipher.txt
     const formatted = fs.readFileSync('6/p059_cipher.txt').toString().split(',').map(x => +x);
     const filtered = {
       first: formatted.filter((_, i) => i % 3 === 0), // every third ascii starting from pos 0
@@ -670,6 +690,11 @@ module.exports = {
    * For example, taking 7 and 109, both 7109 and 1097 are prime. The sum of these four primes, 792, represents the lowest sum for a set of four primes with this property.
    *
    * @question Find the lowest sum for a set of five primes for which any two primes concatenate to produce another prime.
+   * @guide
+   * 1. We first generate a list of primes, 100000 should be enough.
+   * 2. We then build a table with pairs of primes which satisfy our condition above, by going through every pair of primes.
+   * 3. We then go through each prime and try to find one which forms a triple with the members built in step 2.
+   * 4. Repeat until we find a quintuple.
    */
   e60() {
     const PRIMES_TABLE = utils.generatePrimesTable(100000);
