@@ -61,7 +61,7 @@ module.exports = {
    * @question Find the largest palindrome made from the product of two 3-digit numbers.
    * @guide
    * Starting with the largest possible number 999999, we iterate through the list of palindromes from biggest to smallest. This is achieved by decrementing 3 digit numbers from 999 and appending its flipped counterpart (ie. 999999, 998899, 997799, ...). For each palindrome, we test whether it is divisible by a 3 digit number, using the <span class="mono">isPalindromeValid</span> function.
-   * <br /><br />
+   * 
    * The function first calculates the square root of the palindrome. If the palindrome is valid, it must have a divisor bigger than the square root AND a divisor smaller than the square root.
    * For small optimization purposes, if the square root is closer to 100, we search all 3 digit numbers between the square root and 100, Otherwise, we search all 3 digit numbers between the square root and 999.
    */
@@ -127,33 +127,33 @@ module.exports = {
    * @question What is the smallest positive number that is evenly divisible by all of the numbers from 1 to 20?
    * @guide
    * The algorithm works as follows:
-   * <br />
+   * 
    * For each number 2, 3, ..., 20.
-   * <br />
+   * 
    * We extract its prime factorization. (eg. 12 -> 2^2 * 3^1, 18 -> 2^1 * 3^2)
-   * <br />
+   * 
    * We add that factorization to the table <span class="mono">totalPrimeFactors</span>. 
-   * <br />
+   * 
    * The table <span class="mono">totalPrimeFactors</span> is encoded such that the keys are the bases, and the entries are the exponents.
-   * <br />
+   * 
    * So, going from 2 to 20, iteratively, the array will update as follows:
-   * <br />
+   * 
    * <span class="mono">{ 2: 1 }</span> (2 = 2^1)
-   * <br />
+   * 
    * <span class="mono">{ 2: 1, 3: 1 }</span> (3 = 3^1)
-   * <br />
+   * 
    * <span class="mono">{ 2: 2, 3: 1 }</span> (4 = 2^2)
-   * <br />
+   * 
    * <span class="mono">{ 2: 2, 3: 1, 5: 1 }</span> (5 = 5^1)
-   * <br />
+   * 
    * <span class="mono">{ 2: 2, 3: 1, 5: 1 }</span> (6 = 2^1 * 3^1) Note that nothing has changed, since 2^1 and 3^1 are already part of the array.
-   * <br />
+   * 
    * <span class="mono">{ 2: 2, 3: 1, 5: 1, 7: 1 }</span> (7 = 7^1)
-   * <br />
+   * 
    * <span class="mono">{ 2: 3, 3: 1, 5: 1, 7: 1 }</span> (8 = 2^3)
-   * <br />
+   * 
    * etc.
-   * <br />
+   * 
    * At each step, the product of the bases, raised to their respective exponents, will be the least common multiple of all numbers from 2 to the number inserted at that step. 
    * After the 20th step (we start with step 2), the array will have the information of the least common multiple of all numbers from 2 to 20.
    */
@@ -216,7 +216,7 @@ module.exports = {
    * @question Find the thirteen adjacent digits in the [1000-digit number @asset 'p8_data.txt'] that have the greatest product.
    * @guide
    * We start out by "slimming" our input. If 12 or less digits are wrapped between two 0s, we can collapse it down to a single 0.
-   * <br />
+   * 
    * Then, for each step, we "move" to the right, and, instead of multiplying all 13 numbers, we divide by the leftmost number and multiply by the rightmost number.
    */
   e8() {
@@ -254,11 +254,11 @@ module.exports = {
    * @question There exists exactly one Pythagorean triplet for which a + b + c = 1000. Find the product abc.
    * @guide
    * There is a formula for generating Pythagorean triplets from 2 numbers m > n > 0: 
-   * <br />
+   * 
    * a = m^2-n^2, b = 2mn, c = m^2+n^2 (euclid)
-   * <br />
+   * 
    * We use simple algebra to find the following: a+b+c = 1000 => 2m(m+n) = 1000 => m(m+n) = 500; (ie. we must find 2 numbers, m and n, such that m(m+n) = 500)
-   * <br />
+   * 
    * Since m(m+n) = 500, we can observe that m < sqrt(500). So we search m by decrementing from sqrt(500).
    */
   e9() {

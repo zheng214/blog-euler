@@ -16,7 +16,7 @@ import './style.scss';
 export default function TopBar({ darkMode, toggleDark }) {
   return (
     <div className="topbar">
-      <div className="topbar__side left"><Link to="/e">SOLUTIONS</Link></div>
+      <Link to="/e"><div className="topbar__side left">SOLUTIONS</div></Link>
       <div className="topbar__center">
         <h2><Link to="/">project euler blog</Link></h2>
       </div>

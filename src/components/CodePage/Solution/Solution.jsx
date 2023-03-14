@@ -119,9 +119,7 @@ export default class Solution extends React.Component {
   }
 
   static formatHelpers(utilLink, props) {
-    console.log({ utilLink, props })
     const [file, method] = utilLink.split('/');
-    console.log({ UTILS, file })
     const utilInfo = UTILS[file][method];
     return (
       <>

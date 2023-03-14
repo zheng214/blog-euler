@@ -72,7 +72,7 @@ function generateSiteData(file) {
       return null;
     }
     const lineStreamer = lineReader.createInterface({
-      input: fs.createReadStream(`${resolve(readPath)}/1/index.js`),
+      input: fs.createReadStream(`${resolve(readPath)}/${file}/index.js`),
     });
     let problemData = {};
     let problemDescription = [];
@@ -117,6 +117,7 @@ function generateSiteData(file) {
             return null;
           } else {
             guideDescription.push(line.substring(5, line.length));
+            guideDescription.push('<br />')
           }
           return null;
         }
