@@ -59,7 +59,7 @@ export default class Main extends React.Component {
       // solution view
       const solutionId = breadcrumbs[2];
       if (solutionId) {
-        this.setState({ solutionId }, () => {
+        this.setState({ solutionId, utility: '' }, () => {
           if (this.props.history.location.scrollTo) {
             window.scrollTo(0, this.props.history.location.scrollTo);
           } else {
@@ -71,7 +71,7 @@ export default class Main extends React.Component {
       // utility view
       const [_, _2, filename, utility] = breadcrumbs;
       if (filename && utility) {
-        this.setState({ filename, utility }, () => window.scrollTo(0, 0));
+        this.setState({ filename, utility, solutionId: 0 }, () => window.scrollTo(0, 0));
       }
     }
   }
@@ -101,7 +101,7 @@ export default class Main extends React.Component {
         </div>
         <div className="main-content">
           <div className="main-content__left">
-            <Sidebar history={history} solutionId={solutionId} />
+            <Sidebar history={history} solutionId={solutionId} utility={utility} />
           </div>
           <div className={cn('main-content__center')}>
             <Switch>

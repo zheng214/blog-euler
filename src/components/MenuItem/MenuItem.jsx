@@ -40,6 +40,7 @@ export default class Menu extends React.Component {
 }
 
 export function Item(props) {
+  // console.log({ label: props.label, highlighted: props.highlighted })
   return (
     <div className="e-item">
       <button

@@ -33,6 +33,7 @@ export default class Sidebar extends React.Component {
   generateUtilMenu = () => Object.keys(UTILS).map(
     (file) => {
       const filename = file.split('.')[0];
+      console.log(12, this.props.utility)
       return (
         <Menu
           label={`${filename.split('').shift().toUpperCase()}${filename.substring(1, filename.length)}`}
