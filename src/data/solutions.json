@@ -1851,8 +1851,49 @@
     "question": [
       "Find the sum of the only ordered set of six cyclic 4-digit numbers for which each polygonal type: triangle, square, pentagonal, hexagonal, heptagonal, and octagonal, is represented by a different number in the set."
     ],
-    "guide": [],
-    "solution": "const polygonalTables = [{}, {}, {}, {}, {}, {}];\nconst startingIndexes = [45, 32, 26, 23, 21, 19];\nconst polygonGenerators = [\n  n => n * (n + 1) / 2,\n  n => n * n,\n  n => n * (3 * n - 1) / 2,\n  n => n * (2 * n - 1),\n  n => n * (5 * n - 3) / 2,\n  n => n * (3 * n - 2),\n];\n// table indexed by prefixes\n// constructed such that finding all the polygonals starting with any 2 digits can be done with O(1)\nconst prefixLookup = {};\nfor (let i = 0; i < startingIndexes.length; i++) {\n  const side = i + 3;\n  const startingIndex = startingIndexes[i];\n  let generatedNumber = 0;\n  for (let n = startingIndex; generatedNumber < 10000; n++) {\n    generatedNumber = polygonGenerators[i](n);\n    const [prefix, suffix] = `${generatedNumber}`.match(/\\d{1,2}/g);\n    if (suffix.charAt(0) === '0' || generatedNumber > 9999) {\n      // third digit is 0, cannot be in a cycle\n      continue;\n    }\n    polygonalTables[i][generatedNumber] = true;\n    if (!prefixLookup[prefix]) {\n      prefixLookup[prefix] = {};\n    }\n    if (!prefixLookup[prefix][side]) {\n      prefixLookup[prefix][side] = [];\n    }\n    prefixLookup[prefix][side].push(generatedNumber);\n  }\n}\nconst octagons = polygonalTables[5];\n// simulate a tree, recursively find a path of length 6\nfunction findPath(path, acc) {\n  // cycle complete\n  if (path.length === 6) {\n    const first = path[0];\n    const last = path[5];\n    if (Math.floor(first / 100) === last % 100) {\n      // FOUND!\n      return path;\n    }\n    return false;\n  }\n  const last = path[path.length - 1];\n  const suffix = last.toString().match(/\\d{1,2}/g)[1];\n  // all polygonals starting with the current suffix\n  const nextPolygons = prefixLookup[suffix];\n  if (!nextPolygons) {\n    return false;\n  }\n  // find the next polygon from all sides which are still missing from the cycle\n  const missingSides = Object.keys(acc).filter(key => !acc[key]);\n  for (let i = 0; i < missingSides.length; i++) {\n    const missingSide = missingSides[i];\n    const nextMatchingPolygons = nextPolygons[missingSide];\n    if (nextMatchingPolygons) {\n      for (let j = 0; j < nextMatchingPolygons.length; j++) {\n        const nextPolygon = nextMatchingPolygons[j];\n        // if a valid path is found, return it, otherwise keep looping\n        const findNextPath = findPath([...path, nextPolygon], { ...acc, [missingSide]: nextPolygon });\n        if (findNextPath) {\n          return findNextPath;\n        }\n      }\n    }\n  }\n  // if no polygons are found with none of the missing sides, return false\n  return false;\n}\n// we start our path from the octagons to minimize loop count\nfor (let o = 0; o < Object.keys(octagons).length; o++) {\n  const octagon = +Object.keys(octagons)[o];\n  const validPath = findPath([octagon], {\n    3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: octagon,\n  });\n  if (validPath) {\n    return utils.sumArray(validPath);\n  }\n}",
+    "guide": [
+      "We start by building a few tables:",
+      "<br />",
+      "1. <code>polygonalTables</code>: this array contains the tables of triangles, squares, pentagonal, ..., and octogonal numbers. In each table, the keys are the numbers itself, and the values are truthy placeholders.",
+      "<br />",
+      "2. <code>prefixLookup</code>: This table would look like something like this:",
+      "<br />",
+      "{",
+      "<br />",
+      "   10: {",
+      "<br />",
+      "       3: [triangle numbers starting with 10],",
+      "<br />",
+      "       4: [squares starting with 10],",
+      "<br />",
+      "       ...,",
+      "<br />",
+      "       8: [octogonal numbers starting with 10],",
+      "<br />",
+      "   },",
+      "<br />",
+      "   11: {",
+      "<br />",
+      "       3: [triangle numbers starting with 11],",
+      "<br />",
+      "       ...,",
+      "<br />",
+      "       8: [octogonal numbers starting with 11],",
+      "<br />",
+      "   }",
+      "<br />",
+      "}",
+      "<br />",
+      "",
+      "<br />",
+      "Then, for each octogonal number, we attempt to build a path.",
+      "<br />",
+      "For example, starting with 1045, we find in the prefix table all figurate numbers starting with 45, and recursively attempt to build a path from each of those numbers, while respecting that each number must correspond to a different figure.",
+      "<br />",
+      "If we manage to build a path of length 6, and the first 2 digits of first number in the path = the last 2 digits of last number in the path, we are done.",
+      "<br />"
+    ],
+    "solution": "const polygonalTables = [{}, {}, {}, {}, {}, {}];\nconst startingIndexes = [45, 32, 26, 23, 21, 19];\nconst polygonGenerators = [\n  n => n * (n + 1) / 2,\n  n => n * n,\n  n => n * (3 * n - 1) / 2,\n  n => n * (2 * n - 1),\n  n => n * (5 * n - 3) / 2,\n  n => n * (3 * n - 2),\n];\n// table indexed by prefixes\n// constructed such that finding all the polygonals starting with any 2 digits can be done with O(1)\nconst prefixLookup = {};\nfor (let i = 0; i < startingIndexes.length; i++) {\n  const side = i + 3;\n  const startingIndex = startingIndexes[i];\n  let generatedNumber = 0;\n  for (let n = startingIndex; generatedNumber < 10000; n++) {\n    generatedNumber = polygonGenerators[i](n);\n    const [prefix, suffix] = `${generatedNumber}`.match(/\\d{1,2}/g);\n    if (suffix.charAt(0) === '0' || generatedNumber > 9999) {\n      // third digit is 0, cannot be in a cycle\n      continue;\n    }\n    polygonalTables[i][generatedNumber] = true;\n    if (!prefixLookup[prefix]) {\n      prefixLookup[prefix] = {};\n    }\n    if (!prefixLookup[prefix][side]) {\n      prefixLookup[prefix][side] = [];\n    }\n    prefixLookup[prefix][side].push(generatedNumber);\n  }\n}\nconst octagons = polygonalTables[5];\n// simulate a tree, recursively find a path of length 6\nfunction findPath(path, acc) {\n  // cycle complete\n  if (path.length === 6) {\n    const first = path[0];\n    const last = path[5];\n    if (Math.floor(first / 100) === last % 100) { // the first 2 digits of first = the last 2 digits of last\n      // FOUND!\n      return path;\n    }\n    return false;\n  }\n  const last = path[path.length - 1];\n  const suffix = last.toString().match(/\\d{1,2}/g)[1];\n  // all polygonals starting with the current suffix\n  const nextPolygons = prefixLookup[suffix];\n  if (!nextPolygons) {\n    return false;\n  }\n  // find the next polygon from all sides which are still missing from the cycle\n  const missingSides = Object.keys(acc).filter(key => !acc[key]);\n  for (let i = 0; i < missingSides.length; i++) {\n    const missingSide = missingSides[i];\n    const nextMatchingPolygons = nextPolygons[missingSide];\n    if (nextMatchingPolygons) {\n      for (let j = 0; j < nextMatchingPolygons.length; j++) {\n        const nextPolygon = nextMatchingPolygons[j];\n        // if a valid path is found, return it, otherwise keep looping\n        const findNextPath = findPath([...path, nextPolygon], { ...acc, [missingSide]: nextPolygon });\n        if (findNextPath) {\n          return findNextPath;\n        }\n      }\n    }\n  }\n  // if no polygons are found with none of the missing sides, return false\n  return false;\n}\n// we start our path from the octagons to minimize loop count\nfor (let o = 0; o < Object.keys(octagons).length; o++) {\n  const octagon = +Object.keys(octagons)[o];\n  const validPath = findPath([octagon], {\n    3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: octagon,\n  });\n  if (validPath) {\n    return utils.sumArray(validPath);\n  }\n}",
     "utils": [
       "common/sumArray"
     ]
@@ -1870,8 +1911,13 @@
     "question": [
       "Find the smallest cube for which exactly five permutations of its digits are cube."
     ],
-    "guide": [],
-    "solution": "// we generate a cube, sort its digits, and index it\n// whenever an index has length 5, return result\nconst cubeClasses = {};\nlet base = 1;\nlet found = false;\nwhile (!found) {\n  const cube = base ** 3;\n  const sortedKey = cube.toString().split('').sort().join('');\n  if (!cubeClasses[sortedKey]) {\n    cubeClasses[sortedKey] = [cube];\n  } else {\n    cubeClasses[sortedKey].push(cube);\n  }\n  if (cubeClasses[sortedKey].length > 4) {\n    found = true;\n    return cubeClasses[sortedKey][0];\n  }\n  base++;\n}",
+    "guide": [
+      "We generate cubes one by one. For each cube, we sort its digit and index it in <code>cubeClasses</code>, we store along it the original cube as well.",
+      "<br />",
+      "When an index has 5 cubes in it, we found our result.",
+      "<br />"
+    ],
+    "solution": "const cubeClasses = {};\nlet base = 1;\nlet found = false;\nwhile (!found) {\n  const cube = base ** 3;\n  const sortedKey = cube.toString().split('').sort().join('');\n  if (!cubeClasses[sortedKey]) {\n    cubeClasses[sortedKey] = [cube];\n  } else {\n    cubeClasses[sortedKey].push(cube);\n  }\n  if (cubeClasses[sortedKey].length > 4) {\n    found = true;\n    return cubeClasses[sortedKey][0];\n  }\n  base++;\n}",
     "utils": []
   },
   {
@@ -1884,8 +1930,19 @@
     "question": [
       "How many n-digit positive integers exist which are also an nth power?"
     ],
-    "guide": [],
-    "solution": "let answer = 0;\n// we reach the limit when the number of digits of 9^n is smaller than n\nlet limitReached = false;\nlet exponent = 1;\nwhile (!limitReached) {\n  for (let digit = 9; digit > 0; digit--) {\n    const power = digit ** exponent;\n    const digitCount = power.toString().length;\n    if (digitCount < exponent) {\n      if (digit === 9) {\n        limitReached = true;\n        return answer;\n      }\n      break;\n    }\n    answer++;\n  }\n  exponent++;\n}",
+    "guide": [
+      "First observe that the base must be strictly smaller than 10, since 10^n will have at least n+1 digits.",
+      "<br />",
+      "We then check one by one, as follows:",
+      "<br />",
+      "9¹, 9², 9³, ... and stop when the number of digits in the result is less than the exponent",
+      "<br />",
+      "Repeat the same for 8, 7, ..., 1",
+      "<br />",
+      "Each time we pass the loop, it means that the number of digits in the result is equal to the exponent, so we increment our answer.",
+      "<br />"
+    ],
+    "solution": "let answer = 0;\nfor (let base = 9; base > 0; base--) {\n  let exponent = 1;\n  let power = base ** exponent;\n  let digitCount = power.toString().length;\n  while (digitCount === exponent) {\n    answer++;\n    exponent++;\n    power = base ** exponent;\n    digitCount = power.toString().length;\n  }\n}\nreturn answer;",
     "utils": []
   },
   {
@@ -1946,7 +2003,10 @@
     "question": [
       "How many continued fractions for N≤10000 have an odd period?"
     ],
-    "guide": [],
+    "guide": [
+      "The code \"simply\" implements the procedure outlined in the question. This was very fun for me.",
+      "<br />"
+    ],
     "solution": "const squares = [...Array(100)].reduce((acc, _, i) => {\n  acc[i ** 2] = true;\n  return acc;\n}, {});\nlet answer = 0;\nfor (let N = 2; N < 10000; N++) {\n  if (squares[N]) {\n    continue;\n  }\n  // we generate the sequence of isolated integers (ie. leading numbers in the continued fraction sequence) by\n  // 1. Normalizing our irrational fraction (ie. numerator/(root-offset)) by multiplying by (root+offset)/(root+offset)\n  // 2. Isolating the next leading integer by finding the integral part of our normalized fraction\n  // 3. flip the fractional part to use for the next iteration\n  const root = Math.sqrt(N);\n  const floor = Math.floor(root);\n  let repetitionFound = false; // if a repetition has been found, we can exit the loop (explained below)\n  // the following variables are updated on every iteration\n  let period = 0; // period count\n  let isolatedInteger = floor; // leading digit of our current iteration\n  let normalizedDenominator; // the denominator as a result of normalization\n  // the normalized and reduced denominator (by the initial numerator) of the previous iteration\n  let initialNumerator = 1;\n  // the offset found in the denominator as a result of isolating the leading integer from the previous iteration\n  let denominatorOffset = floor;\n  while (!repetitionFound) {\n    // normalize\n    normalizedDenominator = N - (denominatorOffset ** 2);\n    // isolate\n    isolatedInteger = Math.floor(initialNumerator * (floor + denominatorOffset) / normalizedDenominator);\n    period++;\n    if (normalizedDenominator === initialNumerator) {\n      // the initialNumerator always starts with 1\n      // if the above two variables are equal, then the next initialNumerator will be 1,\n      // which will cause the cycle to repeat\n      repetitionFound = true;\n      if (period & 1) {\n        answer++;\n      }\n      break;\n    }\n    // update for next iteration\n    initialNumerator = normalizedDenominator / initialNumerator;\n    denominatorOffset = Math.abs(denominatorOffset - initialNumerator * isolatedInteger);\n  }\n}\nreturn answer;",
     "utils": []
   },
@@ -1986,7 +2046,10 @@
     "question": [
       "Find the sum of digits in the numerator of the 100th convergent of the continued fraction e"
     ],
-    "guide": [],
+    "guide": [
+      "We start from the 100th leading integer, and work our way down. At each step, we compute the partial fraction result.",
+      "<br />"
+    ],
     "solution": "function getNthLeadingInteger(n) {\n  if (n < 3) {\n    return n;\n  }\n  if (n % 3 === 2) {\n    return 2 * (Math.floor(n / 3) + 1);\n  }\n  return 1;\n}\nconst target = 100;\nlet numerator = 1n;\nlet denominator = BigInt(getNthLeadingInteger(target - 1));\nfor (let i = target - 1; i >= 1; i--) {\n  const nextLeadingInteger = BigInt(getNthLeadingInteger(i - 1));\n  [numerator, denominator] = [denominator, nextLeadingInteger * denominator + numerator];\n}\nnumerator += (denominator * 2n); // add leading constant\nreturn utils.sumArray(numerator.toString().split(''), n => +n);",
     "utils": [
       "common/sumArray"
@@ -2021,7 +2084,10 @@
     "question": [
       "Find the value of D ≤ 1000 in minimal solutions of x for which the largest value of x is obtained."
     ],
-    "guide": [],
+    "guide": [
+      "This methods uses continued fractions to solve for x and y. There is a connection between the continued fraction expansion of sqrt(D) and the solutions x and y. <a target=\"__blank\" href=\"https://en.wikipedia.org/wiki/Pell's_equation#Fundamental_solution_via_continued_fractions\">Wikipedia</a>. ",
+      "<br />"
+    ],
     "solution": "// to solve for (x,y) for any D, we need to:\n// 1. find the sequence of leading digits for the continued fractions of sqrt(D)\n// 2. from the list above, expand continued fractions until a solution is found\nlet largestSolution = 0n;\nlet ANSWER = 0;\n// we combine the previous 2 solutions to achieve the steps above\nfor (let D = 2; D <= 1000; D++) {\n  // find leading digits\n  const sqrt = Math.sqrt(D);\n  const floor = Math.floor(sqrt);\n  if (sqrt === floor) {\n    continue;\n  }\n  let repetitionFound = false; // if a repetition has been found, we can exit the loop (explained below)\n  // Step 1: Sequence of leading digits\n  const leadingDigits = [];\n  let isolatedInteger = floor; // leading digit of our current iteration\n  let normalizedDenominator; // the denominator as a result of normalization\n  // the normalized and reduced denominator (by the initial numerator) of the previous iteration\n  let initialNumerator = 1;\n  // the offset found in the denominator as a result of isolating the leading integer from the previous iteration\n  let denominatorOffset = floor;\n  while (!repetitionFound) {\n    // normalize\n    normalizedDenominator = D - (denominatorOffset ** 2);\n    // isolate\n    isolatedInteger = Math.floor(initialNumerator * (floor + denominatorOffset) / normalizedDenominator);\n    leadingDigits.push(isolatedInteger);\n    if (normalizedDenominator === initialNumerator) {\n      // the initialNumerator always starts with 1\n      // if the above two variables are equal, then the next initialNumerator will be 1,\n      // which will cause the cycle to repeat\n      repetitionFound = true;\n      break;\n    }\n    // update for next iteration\n    initialNumerator = normalizedDenominator / initialNumerator;\n    denominatorOffset = Math.abs(denominatorOffset - initialNumerator * isolatedInteger);\n  }\n  // Step 2: search for solution\n  // solution verifier\n  const isSolution = (x, y) => (((x ** 2n) - (BigInt(D) * (y ** 2n))) === 1n);\n  // returns nth leading integer in the continued fraction expansion of sqrt(D)\n  const getNthLeadingInteger = n => leadingDigits[(n - 1) % leadingDigits.length];\n  // initial values\n  let target = 1;\n  let numerator = BigInt(1);\n  let denominator = BigInt(getNthLeadingInteger(target));\n  // loop while a solution is not found\n  while (!isSolution(numerator, denominator)) {\n    numerator = BigInt(1);\n    denominator = BigInt(getNthLeadingInteger(target));\n    // find the convergent at the `target` index by using backtracking\n    for (let i = target - 1; i >= 1; i--) {\n      const nextLeadingInteger = BigInt(getNthLeadingInteger(i));\n      [numerator, denominator] = [denominator, nextLeadingInteger * denominator + numerator];\n    }\n    numerator += (denominator * BigInt(floor));\n    target++;\n  }\n  if (numerator > largestSolution) {\n    largestSolution = numerator;\n    ANSWER = D;\n  }\n}\nreturn ANSWER;",
     "utils": []
   },
@@ -2046,7 +2112,10 @@
     "question": [
       "Find the maximum total from top to bottom in [triangle.txt @asset p067_triangle.txt], a 15K text file containing a triangle with one-hundred rows."
     ],
-    "guide": [],
+    "guide": [
+      "This is exactly the same problem and solution as problem 18, but with a larger triangle.",
+      "<br />"
+    ],
     "solution": "const rows = fs.readFileSync(path.join(__dirname, './p067_triangle.txt'))\n  .toString()\n  .split('\\n')\n  .map(row => row.split(' ').map(Number));\n// keeps track of the maximum score from the top to each number in the previous row\nlet previousRowScores = [];\nrows.forEach((row, rowIndex) => {\n  const currentRowScores = [];\n  row.forEach((number, position) => {\n    const isFirst = position === 0;\n    const isLast = position === row.length - 1;\n    if (rowIndex === 0) {\n      // first row: score is just the number\n      currentRowScores[0] = number;\n    } else if (isFirst) {\n      // first number of row: score is the score of the first element of previous row + this number\n      currentRowScores[0] = previousRowScores[0] + number;\n    } else if (isLast) {\n      // last number of row: same as above\n      currentRowScores[position] = previousRowScores[position - 1] + number;\n    } else {\n      const leftParent = previousRowScores[position - 1];\n      const rightParent = previousRowScores[position];\n      if (leftParent > rightParent) {\n        // if the number is in the middle of a row (not first nor last), simply check which 'parent' is larger\n        currentRowScores[position] = number + leftParent;\n      } else {\n        currentRowScores[position] = number + rightParent;\n      }\n    }\n  });\n  previousRowScores = currentRowScores;\n});\nreturn Math.max(...previousRowScores);",
     "utils": []
   },
@@ -2087,7 +2156,10 @@
     "question": [
       "Using the numbers 1 to 10, and depending on arrangements, it is possible to form 16- and 17-digit strings. What is the maximum 16-digit string for a \"magic\" 5-gon ring?"
     ],
-    "guide": [],
+    "guide": [
+      "The solution works by inputting every single permutation of numbers in the ring, and check if it gives a valid solution. More details are given in comments in the code.",
+      "<br />"
+    ],
     "solution": "// The first step consists of generating the list of permutations of digits in the inner and outer ring\nconst DIGITS = [1, 2, 3, 4, 5, 6, 7, 8, 9];\nconst innerPermutations = [];\nconst outerPermutations = [];\nfor (let i1 = 1; i1 <= 5; i1++) {\n  for (let i2 = i1 + 1; i2 <= 6; i2++) {\n    for (let i3 = i2 + 1; i3 <= 7; i3++) {\n      for (let i4 = i3 + 1; i4 <= 8; i4++) {\n        for (let i5 = i4 + 1; i5 <= 9; i5++) {\n          const innerRing = [i1, i2, i3, i4, i5];\n          innerPermutations.push(innerRing);\n          outerPermutations.push(DIGITS.filter(x => !innerRing.includes(x)));\n        }\n      }\n    }\n  }\n}\nlet maxSolution = 0;\n// then, for each permutation, we check if it is a legitimate solution with the helper function below\nfor (let i = 0; i < innerPermutations.length; i++) {\n  const leadingDigit = innerPermutations[i][0];\n  const basePermutation = innerPermutations[i].slice(1);\n  const outerDigits = outerPermutations[i];\n  for (let j = 1; j <= 24; j++) {\n    const currentPermutation = utils.getLexicalPermutation(basePermutation, j).map(Number);\n    currentPermutation.unshift(leadingDigit);\n    const commonSum = findSolution(currentPermutation, outerDigits);\n    if (commonSum) {\n      // if a soution is found, find maximal string corresponding to that solution\n      // first, find the index of the inner ring adjacent to the smallest outer digit\n      const innerStartIndex = currentPermutation.findIndex((permDigit, permIndex) => {\n        const currentInnerDigit = permDigit;\n        const nextInnerDigit = currentPermutation[(permIndex + 1) % 5];\n        return currentInnerDigit + nextInnerDigit === commonSum - outerDigits[0];\n      });\n      // then we go around the inner ring (clockwise) and preppend the corresponding outer digit\n      let solutionString = '';\n      for (let k = 0; k <= 4; k++) {\n        const currentInnerRingDigit = currentPermutation[(innerStartIndex + k) % 5];\n        const nextInnerRingDigit = currentPermutation[(innerStartIndex + k + 1) % 5];\n        const currentSum = currentInnerRingDigit + nextInnerRingDigit;\n        const correspondingOuterDigit = commonSum - currentSum;\n        solutionString += `${correspondingOuterDigit}${currentInnerRingDigit}${nextInnerRingDigit}`;\n      }\n      const solution = +solutionString;\n      if (solution > maxSolution) {\n        maxSolution = solution;\n      }\n    }\n  }\n}\nreturn maxSolution;\n// given a sequence of inner ring, return the common sum if a solution exists, false otherwise\nfunction findSolution(inner, outer) {\n  // we go around the inner ring and extract all the sums of adjacent digits\n  const sumsToTest = [...inner].reduce(\n    (acc, curr, idx, arr) => {\n      const nextIndex = idx === 4 ? 0 : idx + 1;\n      const sum = curr + inner[nextIndex];\n      if (acc[sum]) {\n        // if there are duplicate sums in the inner ring,\n        // a solution cannot exist as the outer ring numbers are all disinct\n        arr.splice(1);\n        return null;\n      }\n      acc[sum] = true;\n      return acc;\n    },\n    {},\n  );\n  if (!sumsToTest) { // duplicate sums detected\n    return false;\n  }\n  // the digits of the outer ring are sorted from smallest to largest by design\n  // therefore we sort the sums of the inner ring from largest to smallest\n  const partialSums = Object.keys(sumsToTest).map(Number).sort((a, b) => b - a);\n  const SOLUTION_SUM = partialSums[4] + 10; // smallest inner sum + 10\n  // we check if adding the corresponding index of the outer ring will result in the solution sum\n  for (let i = 0; i <= 3; i++) {\n    if (partialSums[i] + outer[i] !== SOLUTION_SUM) {\n      return false;\n    }\n  }\n  return SOLUTION_SUM;\n}",
     "utils": [
       "combinatorics/getLexicalPermutation"
@@ -2108,8 +2180,39 @@
     "question": [
       "Find the value of n ≤ 1,000,000 for which n/φ(n) is a maximum."
     ],
-    "guide": [],
-    "solution": "// we use the Euler's formula for the totient function for all n <= 1 million\n// we start with n, and for each prime p divisible by n, we multiply by ((p - 1) / p)\n// the intuition is as follows:\n// let's take the number 60, which has prime divisors 2, 3, 5\n// 1. we first extract the numbers NOT divisible by 2: p = 2 => 60 * 1/2 = 30;\n// 2. of those numbers, we extract numbers NOT divisible by 3: p = 3 => 30 * 2/3 = 20;\n// 3. finally, we extract from the previous result numbers not divisible by 5: 20 * 4/5 = 16;\n// indeed, the numbers (<60) relatively prime to 60\n// are the numbers which are not divisible by 2, 3, or 5, and there are 16 of them\n// we also use a heuristic to cut down a majority of numbers to test:\n// since we want to maximize n/phi(n), we need to find a number which is highly divisible\n// we do that by MAXIMIZING the number of PRIME divisors, and by MINIMIZING the number itself\n// therefore, we search incrementally with products of prime numbers from smallest to largest,\n// and we stop if the product exceeds 1 million\n// ie. 2, 2*3, 2*3*5, 2*3*5*7, etc.\nconst PRIMES_TABLE = utils.generatePrimesTable(100); // product of primes < 100 is guaranteed to exceed 1 million\nconst PRIMES_ARR = Object.keys(PRIMES_TABLE).map(Number);\nlet maxTotient = 0;\nlet maxTotientNumber = 0;\nfor (let i = 0; i < PRIMES_ARR.length; i++) {\n  const factors = PRIMES_ARR.slice(0, i + 1);\n  const product = factors.reduce((a, c) => a * c, 1);\n  if (product > 1000000) {\n    break;\n  }\n  const reverseTotient = factors.reduce((a, c) => a * c / (c - 1), 1); // shortcut to calculate n/phi(n)\n  if (reverseTotient > maxTotient) {\n    maxTotient = reverseTotient;\n    maxTotientNumber = product;\n  }\n}\nreturn maxTotientNumber;",
+    "guide": [
+      "We use the Euler's formula for the totient function for all n <= 1 million.",
+      "<br />",
+      "For each n and for each prime p divisible by n, we multiply by ((p - 1) / p).",
+      "<br />",
+      "",
+      "<br />",
+      "The intuition is as follows:",
+      "<br />",
+      "Let's take the number 60, which has prime divisors 2, 3, 5.",
+      "<br />",
+      "1. We first extract the numbers NOT divisible by 2: p = 2 => 60 * 1/2 = 30. ie. there are 30 numbers NOT divisible by 2.",
+      "<br />",
+      "2. Of those numbers, we extract numbers NOT divisible by 3: p = 3 => 30 * 2/3 = 20.",
+      "<br />",
+      "3. finally, we extract from the previous result numbers not divisible by 5: 20 * 4/5 = 16.",
+      "<br />",
+      "Indeed, the numbers relatively prime to 60 are the numbers which are not divisible by 2, 3, or 5, and there are 16 of them.",
+      "<br />",
+      "",
+      "<br />",
+      "We also use a heuristic to cut down a majority of numbers to test:",
+      "<br />",
+      "Since we want to maximize n/phi(n), we want to minimize phi(n), we need to find a number which is highly divisible.",
+      "<br />",
+      "We do that by MAXIMIZING the number of PRIME divisors, and by MINIMIZING the number n itself.",
+      "<br />",
+      "Therefore, we search incrementally with products of prime numbers from smallest to largest, and we stop if the product exceeds 1 million.",
+      "<br />",
+      "ie. 2, 2*3, 2*3*5, 2*3*5*7, etc.",
+      "<br />"
+    ],
+    "solution": "const PRIMES_TABLE = utils.generatePrimesTable(100); // product of primes < 100 is guaranteed to exceed 1 million\nconst PRIMES_ARR = Object.keys(PRIMES_TABLE).map(Number);\nlet maxTotient = 0;\nlet maxTotientNumber = 0;\nfor (let i = 0; i < PRIMES_ARR.length; i++) {\n  const factors = PRIMES_ARR.slice(0, i + 1);\n  const product = factors.reduce((a, c) => a * c, 1);\n  if (product > 1000000) {\n    break;\n  }\n  const reverseTotient = factors.reduce((a, c) => a * c / (c - 1), 1); // shortcut to calculate n/phi(n)\n  if (reverseTotient > maxTotient) {\n    maxTotient = reverseTotient;\n    maxTotientNumber = product;\n  }\n}\nreturn maxTotientNumber;",
     "utils": [
       "primes/generatePrimesTable"
     ]
@@ -2128,10 +2231,25 @@
       null
     ],
     "question": [
-      "Find the value of n, 1 < n < 107, for which φ(n) is a permutation of n and the ratio n/φ(n) produces a minimum."
+      "Find the value of n, 1 < n < 10⁷, for which φ(n) is a permutation of n and the ratio n/φ(n) produces a minimum."
     ],
-    "guide": [],
-    "solution": "// to minimize n/phi(n), we need to maximize phi(n), ie. we need to find n which is not highly divisible\n// n cannot be prime as phi(n) = n - 1, and n and n - 1 cannot have the same digits\n// NOTE:\n// let p1, p2, ... pm denote the prime factors of n\n// therefore n/phi(n) := p1/(p1-1) * p2/(p2-1) * p3/(p3-1) * ... * pm/(pm-1) (1)\n// in order to minimize the equation above, we need to minimize the number of terms (as each term > 1)\n// and also minimize each term by maximizing the value of the prime factors\nconst PRIMES_TABLE = utils.generatePrimesTable(10000);\n// this number is chosen with the confidence that the minimal ratio < 1.001\nconst PRIMES_ARR = Object.keys(PRIMES_TABLE).reverse().map(Number);\nlet minimalTotientRatio = 1.001; // arbitrarily large number\nlet minimalTotientNumber = 0;\nfor (let i = 0; i < PRIMES_ARR.length - 1; i++) {\n  const p1 = PRIMES_ARR[i];\n  const phi1 = p1 / (p1 - 1);\n  if (phi1 > minimalTotientRatio) {\n    break;\n  }\n  for (let j = PRIMES_ARR.findIndex(x => x < 10000000 / p1); j < PRIMES_ARR.length; j++) {\n    const p2 = PRIMES_ARR[j];\n    const phi2 = p2 / (p2 - 1);\n    if (phi2 > minimalTotientRatio) {\n      break;\n    }\n    const result = p1 * p2;\n    const phi = (p1 - 1) * (p2 - 1);\n    if (utils.haveSameDigits([result, phi])) {\n      const totientRatio = result / phi;\n      if (totientRatio < minimalTotientRatio) {\n        minimalTotientRatio = totientRatio;\n        minimalTotientNumber = result;\n      }\n    }\n  }\n}\nreturn minimalTotientNumber;",
+    "guide": [
+      "To minimize n/phi(n), we need to maximize phi(n), ie. we need to find n which is not highly divisible.",
+      "<br />",
+      "n cannot be prime as phi(n) = n - 1, and n and n - 1 cannot have the same digits.",
+      "<br />",
+      "",
+      "<br />",
+      "Let p1, p2, ... pm denote the prime factors of n.",
+      "<br />",
+      "Therefore n/phi(n) := p1/(p1-1) * p2/(p2-1) * p3/(p3-1) * ... * pm/(pm-1).",
+      "<br />",
+      "In order to minimize the equation above, we need to minimize the number of terms (as each term > 1).",
+      "<br />",
+      "We also need to minimize each term by maximizing the value of the prime factors.",
+      "<br />"
+    ],
+    "solution": "const PRIMES_TABLE = utils.generatePrimesTable(10000);\n// the number 10000 is chosen with the confidence that we can find 2 primes such that both are relatively large (4 digits).\n// our choice would fail if ALL solutions we can find consist of a prime larger than 10000 and a prime smaller than 1000.\n// ie. there exists no number n which satisfies the following conditions:\n// 1. n = p1 * p2\n// 2. φ(n) and n have the same digits \n// 3. p1 and p2 are relatively large.\nconst PRIMES_ARR = Object.keys(PRIMES_TABLE).reverse().map(Number);\nlet minimalTotientRatio = 1.001; // arbitrarily large number\nlet minimalTotientNumber = 0;\nfor (let i = 0; i < PRIMES_ARR.length - 1; i++) {\n  const p1 = PRIMES_ARR[i];\n  const phi1 = p1 / (p1 - 1);\n  if (phi1 > minimalTotientRatio) {\n    break;\n  }\n  for (let j = 0; j < PRIMES_ARR.length; j++) {\n    const p2 = PRIMES_ARR[j];\n    if (p1 * p2 > 10 ** 7) {\n      continue;\n    }\n    const phi2 = p2 / (p2 - 1);\n    if (phi2 > minimalTotientRatio) {\n      break;\n    }\n    const result = p1 * p2;\n    const phi = (p1 - 1) * (p2 - 1);\n    if (utils.haveSameDigits([result, phi])) {\n      const totientRatio = result / phi;\n      if (totientRatio < minimalTotientRatio) {\n        minimalTotientRatio = totientRatio;\n        minimalTotientNumber = result;\n      }\n    }\n  }\n}\nreturn minimalTotientNumber;",
     "utils": [
       "primes/generatePrimesTable",
       "lang/haveSameDigits"

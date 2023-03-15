@@ -29,6 +29,27 @@ module.exports = {
    * 3. This is the only set of 4-digit numbers with this property.
    *
    * @question Find the sum of the only ordered set of six cyclic 4-digit numbers for which each polygonal type: triangle, square, pentagonal, hexagonal, heptagonal, and octagonal, is represented by a different number in the set.
+   * @guide
+   * We start by building a few tables:
+   * 1. <code>polygonalTables</code>: this array contains the tables of triangles, squares, pentagonal, ..., and octogonal numbers. In each table, the keys are the numbers itself, and the values are truthy placeholders.
+   * 2. <code>prefixLookup</code>: This table would look like something like this:
+   * {
+   *    10: {
+   *        3: [triangle numbers starting with 10],
+   *        4: [squares starting with 10],
+   *        ...,
+   *        8: [octogonal numbers starting with 10],
+   *    },
+   *    11: {
+   *        3: [triangle numbers starting with 11],
+   *        ...,
+   *        8: [octogonal numbers starting with 11],
+   *    }
+   * }
+   * 
+   * Then, for each octogonal number, we attempt to build a path.
+   * For example, starting with 1045, we find in the prefix table all figurate numbers starting with 45, and recursively attempt to build a path from each of those numbers, while respecting that each number must correspond to a different figure.
+   * If we manage to build a path of length 6, and the first 2 digits of first number in the path = the last 2 digits of last number in the path, we are done.
    */
   e61() {
     const polygonalTables = [{}, {}, {}, {}, {}, {}];
@@ -79,7 +100,7 @@ module.exports = {
       if (path.length === 6) {
         const first = path[0];
         const last = path[5];
-        if (Math.floor(first / 100) === last % 100) {
+        if (Math.floor(first / 100) === last % 100) { // the first 2 digits of first = the last 2 digits of last
           // FOUND!
           return path;
         }
@@ -136,10 +157,11 @@ module.exports = {
    * In fact, 41063625 is the smallest cube which has exactly three permutations of its digits which are also cube.
    *
    * @question Find the smallest cube for which exactly five permutations of its digits are cube.
+   * @guide
+   * We generate cubes one by one. For each cube, we sort its digit and index it in <code>cubeClasses</code>, we store along it the original cube as well.
+   * When an index has 5 cubes in it, we found our result.
    */
   e62() {
-    // we generate a cube, sort its digits, and index it
-    // whenever an index has length 5, return result
     const cubeClasses = {};
 
     let base = 1;
@@ -166,29 +188,27 @@ module.exports = {
    *
    * The 5-digit number, 16807=7^5, is also a fifth power. Similarly, the 9-digit number, 134217728=8^9, is a ninth power.
    * @question How many n-digit positive integers exist which are also an nth power?
+   * @guide
+   * First observe that the base must be strictly smaller than 10, since 10^n will have at least n+1 digits.
+   * We then check one by one, as follows:
+   * 9¹, 9², 9³, ... and stop when the number of digits in the result is less than the exponent
+   * Repeat the same for 8, 7, ..., 1
+   * Each time we pass the loop, it means that the number of digits in the result is equal to the exponent, so we increment our answer.
    */
   e63() {
     let answer = 0;
-
-    // we reach the limit when the number of digits of 9^n is smaller than n
-    let limitReached = false;
-    let exponent = 1;
-
-    while (!limitReached) {
-      for (let digit = 9; digit > 0; digit--) {
-        const power = digit ** exponent;
-        const digitCount = power.toString().length;
-        if (digitCount < exponent) {
-          if (digit === 9) {
-            limitReached = true;
-            return answer;
-          }
-          break;
-        }
+    for (let base = 9; base > 0; base--) {
+      let exponent = 1;
+      let power = base ** exponent;
+      let digitCount = power.toString().length;
+      while (digitCount === exponent) {
         answer++;
+        exponent++;
+        power = base ** exponent;
+        digitCount = power.toString().length;
       }
-      exponent++;
     }
+    return answer;
   },
 
   /**
@@ -244,6 +264,8 @@ module.exports = {
    * Exactly four continued fractions, for N≤13, have an odd period.
    *
    * @question How many continued fractions for N≤10000 have an odd period?
+   * @guide
+   * The code "simply" implements the procedure outlined in the question. This was very fun for me.
    */
   e64() {
     const squares = [...Array(100)].reduce((acc, _, i) => {
@@ -335,6 +357,8 @@ module.exports = {
    * The sum of digits in the numerator of the 10th convergent is 1+4+5+7=17.
    *
    * @question Find the sum of digits in the numerator of the 100th convergent of the continued fraction e
+   * @guide
+   * We start from the 100th leading integer, and work our way down. At each step, we compute the partial fraction result.
    */
   e65() {
     function getNthLeadingInteger(n) {
@@ -385,6 +409,8 @@ module.exports = {
    * Hence, by considering minimal solutions in x for D ≤ 7, the largest x is obtained when D=5.
    *
    * @question Find the value of D ≤ 1000 in minimal solutions of x for which the largest value of x is obtained.
+   * @guide
+   * This methods uses continued fractions to solve for x and y. There is a connection between the continued fraction expansion of sqrt(D) and the solutions x and y. <a target="__blank" href="https://en.wikipedia.org/wiki/Pell's_equation#Fundamental_solution_via_continued_fractions">Wikipedia</a>. 
    */
   e66() {
     // to solve for (x,y) for any D, we need to:
@@ -483,6 +509,8 @@ module.exports = {
    * That is, 3 + 7 + 4 + 9 = 23.
    *
    * @question Find the maximum total from top to bottom in [triangle.txt @asset p067_triangle.txt], a 15K text file containing a triangle with one-hundred rows.
+   * @guide
+   * This is exactly the same problem and solution as problem 18, but with a larger triangle.
    */
   e67() {
     const rows = fs.readFileSync(path.join(__dirname, './p067_triangle.txt'))
@@ -556,6 +584,8 @@ module.exports = {
    * @image p068_2.png
    *
    * @question Using the numbers 1 to 10, and depending on arrangements, it is possible to form 16- and 17-digit strings. What is the maximum 16-digit string for a "magic" 5-gon ring?
+   * @guide
+   * The solution works by inputting every single permutation of numbers in the ring, and check if it gives a valid solution. More details are given in comments in the code.
    */
   e68() {
     // The first step consists of generating the list of permutations of digits in the inner and outer ring
@@ -663,24 +693,24 @@ module.exports = {
    * For n ≤ 10, n = 6 produces a maximum n/φ(n).
    *
    * @question Find the value of n ≤ 1,000,000 for which n/φ(n) is a maximum.
+   * @guide
+   * We use the Euler's formula for the totient function for all n <= 1 million.
+   * For each n and for each prime p divisible by n, we multiply by ((p - 1) / p).
+   * 
+   * The intuition is as follows:
+   * Let's take the number 60, which has prime divisors 2, 3, 5.
+   * 1. We first extract the numbers NOT divisible by 2: p = 2 => 60 * 1/2 = 30. ie. there are 30 numbers NOT divisible by 2.
+   * 2. Of those numbers, we extract numbers NOT divisible by 3: p = 3 => 30 * 2/3 = 20.
+   * 3. finally, we extract from the previous result numbers not divisible by 5: 20 * 4/5 = 16.
+   * Indeed, the numbers relatively prime to 60 are the numbers which are not divisible by 2, 3, or 5, and there are 16 of them.
+   * 
+   * We also use a heuristic to cut down a majority of numbers to test:
+   * Since we want to maximize n/phi(n), we want to minimize phi(n), we need to find a number which is highly divisible.
+   * We do that by MAXIMIZING the number of PRIME divisors, and by MINIMIZING the number n itself.
+   * Therefore, we search incrementally with products of prime numbers from smallest to largest, and we stop if the product exceeds 1 million.
+   * ie. 2, 2*3, 2*3*5, 2*3*5*7, etc.
    */
   e69() {
-    // we use the Euler's formula for the totient function for all n <= 1 million
-    // we start with n, and for each prime p divisible by n, we multiply by ((p - 1) / p)
-    // the intuition is as follows:
-    // let's take the number 60, which has prime divisors 2, 3, 5
-    // 1. we first extract the numbers NOT divisible by 2: p = 2 => 60 * 1/2 = 30;
-    // 2. of those numbers, we extract numbers NOT divisible by 3: p = 3 => 30 * 2/3 = 20;
-    // 3. finally, we extract from the previous result numbers not divisible by 5: 20 * 4/5 = 16;
-    // indeed, the numbers (<60) relatively prime to 60
-    // are the numbers which are not divisible by 2, 3, or 5, and there are 16 of them
-
-    // we also use a heuristic to cut down a majority of numbers to test:
-    // since we want to maximize n/phi(n), we need to find a number which is highly divisible
-    // we do that by MAXIMIZING the number of PRIME divisors, and by MINIMIZING the number itself
-    // therefore, we search incrementally with products of prime numbers from smallest to largest,
-    // and we stop if the product exceeds 1 million
-    // ie. 2, 2*3, 2*3*5, 2*3*5*7, etc.
     const PRIMES_TABLE = utils.generatePrimesTable(100); // product of primes < 100 is guaranteed to exceed 1 million
     const PRIMES_ARR = Object.keys(PRIMES_TABLE).map(Number);
     let maxTotient = 0;
@@ -710,30 +740,42 @@ module.exports = {
    *
    * Interestingly, φ(87109)=79180, and it can be seen that 87109 is a permutation of 79180.
    *
-   * @question Find the value of n, 1 < n < 107, for which φ(n) is a permutation of n and the ratio n/φ(n) produces a minimum.
+   * @question Find the value of n, 1 < n < 10⁷, for which φ(n) is a permutation of n and the ratio n/φ(n) produces a minimum.
+   * @guide
+   * To minimize n/phi(n), we need to maximize phi(n), ie. we need to find n which is not highly divisible.
+   * n cannot be prime as phi(n) = n - 1, and n and n - 1 cannot have the same digits.
+   * 
+   * Let p1, p2, ... pm denote the prime factors of n.
+   * Therefore n/phi(n) := p1/(p1-1) * p2/(p2-1) * p3/(p3-1) * ... * pm/(pm-1).
+   * In order to minimize the equation above, we need to minimize the number of terms (as each term > 1).
+   * We also need to minimize each term by maximizing the value of the prime factors.
    */
   e70() {
-    // to minimize n/phi(n), we need to maximize phi(n), ie. we need to find n which is not highly divisible
-    // n cannot be prime as phi(n) = n - 1, and n and n - 1 cannot have the same digits
-
-    // NOTE:
-    // let p1, p2, ... pm denote the prime factors of n
-    // therefore n/phi(n) := p1/(p1-1) * p2/(p2-1) * p3/(p3-1) * ... * pm/(pm-1) (1)
-    // in order to minimize the equation above, we need to minimize the number of terms (as each term > 1)
-    // and also minimize each term by maximizing the value of the prime factors
     const PRIMES_TABLE = utils.generatePrimesTable(10000);
-    // this number is chosen with the confidence that the minimal ratio < 1.001
+    // the number 10000 is chosen with the confidence that we can find 2 primes such that both are relatively large (4 digits).
+
+    // our choice would fail if ALL solutions we can find consist of a prime larger than 10000 and a prime smaller than 1000.
+    // ie. there exists no number n which satisfies the following conditions:
+    // 1. n = p1 * p2
+    // 2. φ(n) and n have the same digits 
+    // 3. p1 and p2 are relatively large.
+
     const PRIMES_ARR = Object.keys(PRIMES_TABLE).reverse().map(Number);
+
     let minimalTotientRatio = 1.001; // arbitrarily large number
     let minimalTotientNumber = 0;
+
     for (let i = 0; i < PRIMES_ARR.length - 1; i++) {
       const p1 = PRIMES_ARR[i];
       const phi1 = p1 / (p1 - 1);
       if (phi1 > minimalTotientRatio) {
         break;
       }
-      for (let j = PRIMES_ARR.findIndex(x => x < 10000000 / p1); j < PRIMES_ARR.length; j++) {
+      for (let j = 0; j < PRIMES_ARR.length; j++) {
         const p2 = PRIMES_ARR[j];
+        if (p1 * p2 > 10 ** 7) {
+          continue;
+        }
         const phi2 = p2 / (p2 - 1);
         if (phi2 > minimalTotientRatio) {
           break;
