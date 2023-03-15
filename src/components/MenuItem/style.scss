@@ -29,8 +29,8 @@
     height: auto;
     padding: 10px 20px;
     font-size: 16px;
-  }
-  span.highlighted {
-    font-weight: bold;
+    &.highlighted {
+      background-color: #dfdfdf;
+    }
   }
 }

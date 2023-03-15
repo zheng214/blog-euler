@@ -20,10 +20,11 @@ module.exports = {
    * @html 805 732 524 <b>037</b> <b>331</b>
    *
    * @question Find the minimal path sum, in [matrix.txt @asset p081_matrix.txt], a text file containing a 80 by 80 matrix, from the top left to the bottom right by only moving right and down.
+   * @guide
+   * We use a memoized table where the entry [i,j] is the optimal path from 0,0 to i,j.
+   * MEM[i, j] = min(MEM[i - 1, j], MEM[i, j - 1]);
    */
   e81() {
-    // we use a memoized table where the entry [i,j] is the optimal path from 0,0 to i,j
-    // MEM[i, j] = min(MEM[i - 1, j], MEM[i, j - 1]);
     const MEM = utils.initTable(80, 80);
     const raw = fs.readFileSync(path.join(__dirname, './p081_matrix.txt')).toString();
     const MATRIX = raw.split('\n').slice(0, 80).map(row => row.split(',').map(Number));
@@ -53,10 +54,10 @@ module.exports = {
    * @html 805 732 524 037 331
    *
    * @question Find the minimal path sum, in [matrix.txt @asset p081_matrix.txt], a 31K text file containing a 80 by 80 matrix, from the left column to the right column.
+   * @guide
+   * We iterate column by column, at each step we memorize the optimal sum from the leftmost column to each element of the current column.
    */
   e82() {
-    // we iterate column by column, at each step we memorize the optimal sum from the leftmost column to
-    // each element of the current column
     const raw = fs.readFileSync(path.join(__dirname, './p081_matrix.txt')).toString();
     // parse file into a 2D array
     const MATRIX = raw.split('\n').slice(0, 80).map(row => row.split(',').map(Number));
@@ -125,13 +126,14 @@ module.exports = {
    * @html 805 732 524 <b>037</b> <b>331</b>
    *
    * @question Find the minimal path sum, in [matrix.txt @asset p081_matrix.txt], a 31K text file containing a 80 by 80 matrix, from the top left to the bottom right by moving left, right, up, and down.
+   * @guide
+   * We use the dijkstra algorithm to find the shortest path from top left to bottom right
    */
   e83() {
     const raw = fs.readFileSync(path.join(__dirname, './p083_matrix.txt')).toString();
     const MATRIX = raw.split('\n').slice(0, 80).map(row => row.split(',').map(Number));
     const size = MATRIX.length;
 
-    // we use the dijkstra algorithm to find the shortest path from top left to bottom right
     const nodes = [];
     let originalIndex = 0;
     for (let i = 0; i < size; i++) {
@@ -257,6 +259,8 @@ module.exports = {
    * Statistically it can be shown that the three most popular squares, in order, are JAIL (6.24%) = Square 10, E3 (3.18%) = Square 24, and GO (3.09%) = Square 00. So these three most popular squares can be listed with the six-digit modal string: 102400.
    *
    * @question If, instead of using two 6-sided dice, two 4-sided dice are used, find the six-digit modal string.
+   * @guide
+   * We just simulate the board game, by rolling the dice 1 million times and see on which squares we land the most.
    */
   e84() {
     const BOARD = [
@@ -424,19 +428,15 @@ module.exports = {
    * @image p085.png
    *
    * @question Although there exists no rectangular grid that contains exactly two million rectangles, find the area of the grid with the nearest solution.
+   * @guide
+   * To calculate the number of rectangles in an m x n area, we use the formula m(m+1)/2 * n(n+1)/2.
+   * This formula is derived by looking at the total number of combinations of selecting, amongst the lattices of the area, a top-left corner C1 and a bottom-left corner C2 that is not on the same row or column as C1.
+   * 
+   * We iterate over n = 1, 2, ..., at each step we solve for m, where m(m+1)/2 * n(n+1)/2 = 2,000,000.
+   * As stated by the problem statement, m cannot be integral, since n is integral, therefore we set M = round(m), and calculate the distance between M(M+1)/2 * n(n+1)/2 and 2,000,000.
+   * The pair (n, M) producing the smallest distance above is the winner
    */
   e85() {
-    // to calculate the number of rectangles in an m x n area
-    // we use the formula m(m+1)/2 * n(n+1)/2
-    // this formula is derived by looking at the total number of combinations of selecting, amongst the lattices of the area,
-    // a top-left corner C1 and a bottom-left corner C2 that is not on the same row or column as C1
-
-    // we iterate over n = 1, 2, ...
-    // at each step we solve for m, where m(m+1)/2 * n(n+1)/2 = 2,000,000
-    // at stated by the problem statement, m cannot be integral, since n is integral
-    // therefore we set M = round(m), and calculate the distance between M(M+1)/2 * n(n+1)/2 and 2,000,000
-    // the pair (n, M) producing the smallest distance above is the winner
-
     let smallestDist = Infinity;
     let valuesForSmallestDist = [];
     for (let n = 1; n <= 2000; n++) {
@@ -470,6 +470,8 @@ module.exports = {
    * This is the least value of M for which the number of solutions first exceeds two thousand; the number of solutions when M = 99 is 1975.
    *
    * @question Find the least value of M such that the number of solutions first exceeds one million.
+   * @guide
+   * Explained in the code comments
    */
   e86() {
     // We will break down the solution of this problem into different parts:

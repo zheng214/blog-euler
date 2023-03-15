@@ -65,7 +65,7 @@ module.exports = {
    * @question Find the smallest positive integer, x, such that 2x, 3x, 4x, 5x, and 6x, contain the same digits.
    * @guide
    * We search every number with a optimization in mind:
-   * 1. Let d denote the number of digits of a number, for each d = 2, 3, 4, 5, 6, 7, ..., we only need to check up to 10^d/6, ie. 166...6 as any number greater than this will overflow an extra digit.
+   * 1. Let d denote the number of digits of a number, for each d = 2, 3, 4, 5, 6, 7, ..., we only need to check up to 10^d/6, ie. 166...6 as any number greater than this will overflow an extra digit when multiplied by 6.
    * 2. We can skip numbers which ends with a 0, since if such a number is qualified, we would already have found a qualified number by dividing this number by 10.
    * 3. We can skip even numbers which do not contain 0, as multiplying by 5 will produce a 0 in the result and we can skip odd numbers which do not contain a 5, as multiplying by 5 will produce a 5 in the result.
    * 4. We can skip numbers which do not contain any digit greater than 5, as multiplying by 2 will double the digit sum of the result.

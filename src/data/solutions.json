@@ -1515,7 +1515,7 @@
     "guide": [
       "We search every number with a optimization in mind:",
       "<br />",
-      "1. Let d denote the number of digits of a number, for each d = 2, 3, 4, 5, 6, 7, ..., we only need to check up to 10^d/6, ie. 166...6 as any number greater than this will overflow an extra digit.",
+      "1. Let d denote the number of digits of a number, for each d = 2, 3, 4, 5, 6, 7, ..., we only need to check up to 10^d/6, ie. 166...6 as any number greater than this will overflow an extra digit when multiplied by 6.",
       "<br />",
       "2. We can skip numbers which ends with a 0, since if such a number is qualified, we would already have found a qualified number by dividing this number by 10.",
       "<br />",
@@ -2274,8 +2274,17 @@
     "question": [
       "By listing the set of reduced proper fractions for d ≤ 1,000,000 in ascending order, find the numerator of the fraction immediately to the left of 3/7."
     ],
-    "guide": [],
-    "solution": "// for each d <= 1,000,000, we just need to find maximal integer c such that c/d is smaller than 3/7\n// we accomplish this by multiplying d by 3/7, and taking the floor of the result\n// if the result is divisible by the floor of the result, we can skip to the next d\n// if not, the difference between the result and the floor of the result is indicative of how close the result is to 3/7\n// ie we want to minimize (d * 3/7 - floor(d * 3/7))/d\nconst FRACTION = 3 / 7;\nlet smallestDiff = 1;\nconst answer = {};\nfor (let d = 1; d <= 1000000; d++) {\n  if (d % 7 === 0) {\n    continue;\n  }\n  const res = d * FRACTION;\n  const floor = Math.floor(res);\n  const diff = (res - floor) / d;\n  if (diff < smallestDiff) {\n    smallestDiff = diff;\n    answer.numerator = floor;\n    answer.denominator = d;\n  }\n}\nreturn answer.numerator;",
+    "guide": [
+      "For each d <= 1,000,000, we need to find maximal integer c such that c/d is smaller than 3/7. This will give us the closest fraction left of 3/7 with d as its denominator.",
+      "<br />",
+      "We obtain c by multiplying d by 3/7, and taking the floor of the result.",
+      "<br />",
+      "The difference between the result and the floor of the result, relative to d, indicates of how close the result is to 3/7.",
+      "<br />",
+      "Therefore, we want to find d such that (d * 3/7 - floor(d * 3/7))/d is minimized and non-zero (that just makes it equal to 3/7).",
+      "<br />"
+    ],
+    "solution": "const FRACTION = 3 / 7;\nlet smallestDiff = 1;\nconst answer = {};\nfor (let d = 1; d <= 1000000; d++) {\n  const res = d * FRACTION;\n  const floor = Math.floor(res);\n  const diff = (res - floor) / d;\n  if (diff > 0 && diff < smallestDiff) {\n    smallestDiff = diff;\n    answer.numerator = floor;\n    answer.denominator = d;\n  }\n}\nreturn answer.numerator;",
     "utils": []
   },
   {
@@ -2297,8 +2306,19 @@
     "question": [
       "How many elements would be contained in the set of reduced proper fractions for d ≤ 1,000,000?"
     ],
-    "guide": [],
-    "solution": "// we are basically calculating phi(2) + ... + phi(1,000,000)\n// note that phi(n) = (f1 - 1) / f1 * (f2 - 1) / f2 + ... + (fm - 1) / fm\n// where f1, f2, ..., fm are the prime factors of n\n// we start by generating all prime numbers below 1000000\n// for each generated prime p, we sieve all multiples of that prime p * 2, p * 3, etc.\n// by multiplying each number by (p - 1) / p\n// eventually each integer below 1000000 will be sieved once by each of its prime factors\nconst target = 1000000;\nconst PRIME_TABLE = utils.generatePrimesTable(target);\nconst INTEGER_TABLE = { ...PRIME_TABLE };\nlet answer = 0;\nfor (let i = 2; i <= target; i++) {\n  if (PRIME_TABLE[i]) {\n    answer += i - 1;\n    for (let j = i; i * j <= target; j++) {\n      if (INTEGER_TABLE[i * j]) {\n        INTEGER_TABLE[i * j] = INTEGER_TABLE[i * j] * (i - 1) / i;\n      } else {\n        INTEGER_TABLE[i * j] = j * (i - 1);\n      }\n    }\n  } else {\n    answer += INTEGER_TABLE[i];\n  }\n}\nreturn answer;",
+    "guide": [
+      "Since a fraction appears only if the numerator and denominator are coprime, we are essentially calculating phi(d) for each d.",
+      "<br />",
+      "So the problem becomes phi(2) + ... + phi(1,000,000).",
+      "<br />",
+      "Note that phi(n) = (f1 - 1) / f1 * (f2 - 1) / f2 + ... + (fm - 1) / fm, where f1, f2, ..., fm are the prime factors of n",
+      "<br />",
+      "",
+      "<br />",
+      "We start by generating all prime numbers below 1000000, for each generated prime p, we sieve all multiples of that prime p * 2, p * 3, etc, by multiplying each number by (p - 1) / p, eventually each integer below 1000000 will be sieved once by each of its prime factors.",
+      "<br />"
+    ],
+    "solution": "const target = 1000000;\nconst PRIME_TABLE = utils.generatePrimesTable(target);\nconst INTEGER_TABLE = { ...PRIME_TABLE };\nlet answer = 0;\nfor (let i = 2; i <= target; i++) {\n  if (PRIME_TABLE[i]) {\n    answer += i - 1;\n    for (let j = i; i * j <= target; j++) {\n      if (INTEGER_TABLE[i * j]) {\n        INTEGER_TABLE[i * j] = INTEGER_TABLE[i * j] * (i - 1) / i;\n      } else {\n        INTEGER_TABLE[i * j] = j * (i - 1);\n      }\n    }\n  } else {\n    answer += INTEGER_TABLE[i];\n  }\n}\nreturn answer;",
     "utils": [
       "primes/generatePrimesTable"
     ]
@@ -2322,7 +2342,10 @@
     "question": [
       "How many fractions lie between 1/3 and 1/2 in the sorted set of reduced proper fractions for d ≤ 12,000?"
     ],
-    "guide": [],
+    "guide": [
+      "For each d ≤ 12,000, we just check each numerator one by one that is within range of 1/3 and 1/2. If the numerator and denominator are coprime, we increment our answer.",
+      "<br />"
+    ],
     "solution": "let answer = 0;\nfor (let d = 4; d <= 12000; d++) {\n  const lower = d / 3;\n  const upper = d / 2;\n  const lbNumerator = Number.isInteger(lower) ? lower + 1 : Math.ceil(lower); // proper lower bound\n  const ubNumerator = Number.isInteger(upper) ? upper - 1 : Math.floor(upper); // proper upper bound\n  if (lbNumerator > ubNumerator) {\n    continue;\n  }\n  for (let n = lbNumerator; n <= ubNumerator; n++) {\n    if (utils.gcd(n, d) === 1) {\n      answer++;\n    }\n  }\n}\nreturn answer;",
     "utils": [
       "arithmetic/gcd"
@@ -2359,8 +2382,11 @@
     "question": [
       "How many chains, with a starting number below one million, contain exactly sixty non-repeating terms?"
     ],
-    "guide": [],
-    "solution": "const FACTS = {\n  0: 1,\n  1: 1,\n  2: 2,\n  3: 6,\n  4: 24,\n  5: 120,\n  6: 720,\n  7: 5040,\n  8: 40320,\n  9: 362880,\n};\n// giant memoized table of all the numbers and their chain length\nconst MEM = {};\n// NOTE: it is true that different numbers with the same digits will have the same chain length.\n// However, it will not reduce the running time by much, as all the numbers with the same digit\n// will find their memoized entry within one depth of the recurrence.\n// Furthermore, the time saved will be recompensed by the sorting of the digits\n// (tested: on average, the sorting method is slightly slower)\n// However, this is a good method if we want to save space\nconst sumFactDigits = n => n.toString().split('').reduce((a, c) => a + FACTS[c], 0);\nfunction computePathLength(n, accMem = {}, chainLength = 0) {\n  if (MEM[n]) {\n    Object.keys(accMem).forEach((chainElem) => {\n      MEM[chainElem] = MEM[n] + chainLength - accMem[chainElem];\n    });\n    return chainLength + MEM[n];\n  }\n  if (accMem[n]) {\n    const recurrencePeriod = chainLength - accMem[n];\n    Object.keys(accMem).forEach((chainElem) => {\n      if (accMem[chainElem] < accMem[n]) {\n        MEM[chainElem] = chainLength - accMem[chainElem];\n      } else {\n        MEM[chainElem] = recurrencePeriod;\n      }\n    });\n    return chainLength;\n  }\n  const next = sumFactDigits(n);\n  if (next === n) {\n    return 1;\n  }\n  return computePathLength(next, { ...accMem, [n]: chainLength }, chainLength + 1);\n}\nlet res = 0;\nfor (let n = 1; n < 1000000; n++) {\n  const chainLength = computePathLength(n);\n  if (chainLength === 60) {\n    res++;\n  }\n}\nreturn res;",
+    "guide": [
+      "We use a giant memoized table of all the numbers and their chain length. We recursively build a path for each number below one million and store their chain length inside the table.",
+      "<br />"
+    ],
+    "solution": "const FACTS = {\n  0: 1,\n  1: 1,\n  2: 2,\n  3: 6,\n  4: 24,\n  5: 120,\n  6: 720,\n  7: 5040,\n  8: 40320,\n  9: 362880,\n};\nconst MEM = {};\n// NOTE: it is true that different numbers with the same digits will have the same chain length.\n// However, it will not reduce the running time by much, as all the numbers with the same digit\n// will find their memoized entry within one depth of the recurrence.\n// Furthermore, the time saved will be recompensed by the sorting of the digits\n// (tested: on average, the sorting method is slightly slower)\n// However, this is a good method if we want to save space\nconst sumFactDigits = n => n.toString().split('').reduce((a, c) => a + FACTS[c], 0);\nfunction computePathLength(n, accMem = {}, chainLength = 0) {\n  // if found number in our table, update table with each number encountered and return accumulated chainLength + number in table \n  if (MEM[n]) { \n    Object.keys(accMem).forEach((chainElem) => {\n      // suppose we have accMem := { a: 1, b: 2, c: 3, d: 4 } and MEM := { d: 8 }\n      // then MEM should be updated to { a: 11, b: 10, c: 9, d: 8 }\n      MEM[chainElem] = MEM[n] + chainLength - accMem[chainElem];\n    });\n    return chainLength + MEM[n];\n  }\n  // if found a cycle, update table \n  if (accMem[n]) {\n    const recurrencePeriod = chainLength - accMem[n];\n    Object.keys(accMem).forEach((chainElem) => {\n      if (accMem[chainElem] < accMem[n]) {\n        // numbers before entering the cycle\n        MEM[chainElem] = chainLength - accMem[chainElem];\n      } else {\n        // numbers inside the cycle\n        MEM[chainElem] = recurrencePeriod;\n      }\n    });\n    return chainLength;\n  }\n  const next = sumFactDigits(n);\n  if (next === n) {\n    return 1;\n  }\n  return computePathLength(next, { ...accMem, [n]: chainLength }, chainLength + 1);\n}\nlet res = 0;\nfor (let n = 1; n < 1000000; n++) {\n  const chainLength = computePathLength(n);\n  if (chainLength === 60) {\n    res++;\n  }\n}\nreturn res;",
     "utils": []
   },
   {
@@ -2390,7 +2416,14 @@
     "question": [
       "Given that L is the length of the wire, for how many values of L ≤ 1,500,000 can exactly one integer sided right angle triangle be formed?"
     ],
-    "guide": [],
+    "guide": [
+      "We use a sieving method. We first generate the table of primitive pythagorean triplets, using euclid's formula (see problem 9).",
+      "<br />",
+      "We then sieve all multiples of that perimeter.",
+      "<br />",
+      "At the end, all perimeters that have been sieved exactly once fits the condition of the problem.",
+      "<br />"
+    ],
     "solution": "// keys are the length, value are how many time it has been sieved\nconst TRIANGLE_LENGTH_TABLE = {};\nconst target = 1500000;\n// we first generate the table of primitive pythagorean triplets\nfor (let n = 1; n < 612; n++) {\n  for (let m = n + 1; m <= target; m++) {\n    const perimeter = 2 * m * (n + m);\n    if (perimeter > target) {\n      break;\n    }\n    const isCoprime = utils.gcd(m, n) === 1;\n    const isPrimitive = isCoprime && (utils.isEven(m) || utils.isEven(n));\n    if (isPrimitive) {\n      TRIANGLE_LENGTH_TABLE[perimeter] = 1;\n    }\n  }\n}\n// for each generated triplet, we sieve all the multiples of that perimeter\nconst primitivePerimeters = Object.keys(TRIANGLE_LENGTH_TABLE).map(Number);\nfor (let i = 0; i < primitivePerimeters.length; i++) {\n  const primitive = primitivePerimeters[i];\n  for (let k = 2; primitive * k <= target; k++) {\n    TRIANGLE_LENGTH_TABLE[primitive * k] = TRIANGLE_LENGTH_TABLE[primitive * k]\n      ? TRIANGLE_LENGTH_TABLE[primitive * k] + 1\n      : 1;\n  }\n}\n// at the end, for each perimeter, if it has value 1 (ie. it has been sieved exactly once), then it fits the condition\nreturn Object.keys(TRIANGLE_LENGTH_TABLE).filter(p => TRIANGLE_LENGTH_TABLE[p] === 1).length;",
     "utils": [
       "arithmetic/gcd",
@@ -2420,8 +2453,39 @@
     "question": [
       "How many different ways can one hundred be written as a sum of at least two positive integers?"
     ],
-    "guide": [],
-    "solution": "// this is similar to the change making problem\n// we have 100 coins of value 1, 2 ... 100\n// the question is how to make 100 with those coins\nconst MEM = {};\nfor (let i = 1; i <= 100; i++) {\n  // we do not have to consider j < i as there would be no way of making j with a coin i\n  // from this point, MEM[n] denotes the number of ways of making n using coins up to i\n  for (let j = i; j <= 100; j++) {\n    // the number of ways to make amount j is equal to the sum of\n    // 1. the number of ways of making j without using i,\n    // which is the number of ways of making change j using coins 1, ..., i - 1\n    // which is equal to MEM[j] of the previous iteration\n    // 2. the number of ways of making j using i,\n    // which is the number of ways of making j - i using 1, 2, ..., i\n    // if MEM[j - i] is undefined, it means  j = i, and the answer is 1\n    MEM[j] = (MEM[j] || 0) + (MEM[j - i] || 1);\n  }\n}\nreturn MEM[100] - 1;",
+    "guide": [
+      "We use a dynamic programming approach.",
+      "<br />",
+      "This is similar to the change making problem (problem 31), we have 100 coins of value 1, 2 ... 100, the question is how to make 100 with those coins.",
+      "<br />",
+      "",
+      "<br />",
+      "We start with coins of value 1. At this stage, <code>MEM[j]</code> is answering, how many ways to build j with only coins of value 1, so MEM[j] = 1 for all j.",
+      "<br />",
+      "Then we add coins of value 2. At this stage, <code>MEM[j]</code> is answering, how many ways to build j with only coins of value 1 AND 2.",
+      "<br />",
+      "The answer is equal to the sum of (ways of making j without using 2) + (ways of making j using 2)",
+      "<br />",
+      "",
+      "<br />",
+      "For example, let's ask how many ways to make 5 using 1 and 2.",
+      "<br />",
+      "The answer is the sum of ways to make 5 using only 1s, and the ways to make 3 using 1 and 2.",
+      "<br />",
+      "",
+      "<br />",
+      "Another example, let's ask how many ways to make 7 using 1, 2, and 3. (i = 3, j = 7)",
+      "<br />",
+      "The answer is the number of ways of making 7 without using 3s. Thats just MEM[7] from previous iteration (i = 2, j = 7).",
+      "<br />",
+      "We add to that the number of ways of making 4 using 3s. Thats just MEM[4] from current iteration (i = 3, j = 4).",
+      "<br />",
+      "",
+      "<br />",
+      "We loop through all i and j from 1 to 100, and MEM[100] will have our answer.",
+      "<br />"
+    ],
+    "solution": "const MEM = {};\nfor (let i = 1; i <= 99; i++) {\n  // we do not have to consider j < i as there would be no way of making j with a coin i\n  // from this point, MEM[n] denotes the number of ways of making n using coins up to i\n  for (let j = i; j <= 100; j++) {\n    // the number of ways to make amount j is equal to the sum of\n    // 1. the number of ways of making j without using i,\n    // which is the number of ways of making change j using coins 1, ..., i - 1\n    // which is equal to MEM[j] of the previous iteration, at i - 1 \n    // 2. the number of ways of making j using i,\n    // which is the number of ways of making j - i using 1, 2, ..., i\n    // if MEM[j - i] is undefined, it means  j = i, and the answer is 1, ie. how many ways to make j using j.\n    // The reason why MEM[j - i] =/= 0 when j = i is because:\n    // suppose we have i = 2, j = 4, if there is no way to make 2 using 2s, then 2 + 2 won't be counted as an answer for 4.\n    MEM[j] = (MEM[j] || 0) + (MEM[j - i] || 1);\n  }\n}\nreturn MEM[100];",
     "utils": []
   },
   {
@@ -2444,8 +2508,11 @@
     "question": [
       "What is the first value which can be written as the sum of primes in over five thousand different ways?"
     ],
-    "guide": [],
-    "solution": "// from problem above, i = 30 was sufficient to generate > 5000 partitions\n// in order to minimize space and time, we will use 46 primes as an upper bound, and increase if necessary\nconst PRIMES = Object.keys(utils.generatePrimesTable(200)).map(Number);\nlet answer = 0;\nlet I = 2;\n// each key is of the form a|b, and the value is the number of partitions of a using primes smaller or equal to b\nconst MEM = { };\nwhile (!answer) {\n  for (let i = 2; i <= I; i++) {\n    for (let j = 0; j < PRIMES.length; j++) {\n      const prime = PRIMES[j];\n      if (prime > i) {\n        MEM[`${i}|${prime}`] = MEM[`${i}|${PRIMES[j - 1]}`];\n        continue;\n      }\n      if (j === 0) {\n        MEM[`${i}|${prime}`] = utils.isEven(i) ? 1 : 0;\n        continue;\n      }\n      const usingPrime = MEM[`${i - prime}|${prime}`] || (i === prime ? 1 : 0);\n      const notUsing = MEM[`${i}|${PRIMES[j - 1]}`] || 0;\n      if (notUsing + usingPrime > 5000) {\n        MEM[`${i}|${prime}`] = notUsing + usingPrime;\n        answer = i;\n        break;\n      }\n      MEM[`${i}|${prime}`] = notUsing + usingPrime;\n    }\n    if (answer) {\n      break;\n    }\n  }\n  I++;\n}\nreturn answer;",
+    "guide": [
+      "This is almost the same as problem 76, we are just using different coin values.",
+      "<br />"
+    ],
+    "solution": "// from problem 76, i = 30 was sufficient to generate > 5000 partitions\n// in order to minimize space and time, we will use 46 primes as an upper bound, and increase if necessary\nconst PRIMES = Object.keys(utils.generatePrimesTable(200)).map(Number);\nlet answer = 0;\nlet I = 2;\n// each key is of the form a|b, and the value is the number of partitions of a using primes smaller or equal to b\nconst MEM = { };\nwhile (!answer) {\n  for (let i = 2; i <= I; i++) {\n    for (let j = 0; j < PRIMES.length; j++) {\n      const prime = PRIMES[j];\n      if (prime > i) {\n        MEM[`${i}|${prime}`] = MEM[`${i}|${PRIMES[j - 1]}`];\n        continue;\n      }\n      if (j === 0) {\n        MEM[`${i}|${prime}`] = utils.isEven(i) ? 1 : 0;\n        continue;\n      }\n      const usingPrime = MEM[`${i - prime}|${prime}`] || (i === prime ? 1 : 0);\n      const notUsing = MEM[`${i}|${PRIMES[j - 1]}`] || 0;\n      if (notUsing + usingPrime > 5000) {\n        MEM[`${i}|${prime}`] = notUsing + usingPrime;\n        answer = i;\n        break;\n      }\n      MEM[`${i}|${prime}`] = notUsing + usingPrime;\n    }\n    if (answer) {\n      break;\n    }\n  }\n  I++;\n}\nreturn answer;",
     "utils": [
       "primes/generatePrimesTable",
       "arithmetic/isEven"
@@ -2464,8 +2531,21 @@
     "question": [
       "Find the least value of n for which p(n) is divisible by one million."
     ],
-    "guide": [],
-    "solution": "// using the pentagonal number theorem, we can use the following recurrence relationship\n// let p(n) denote the number of partitions of n\n// p(n) = p(n - 1) + p(n - 2) - p(n - 5) - p(n - 7) + p(n - 12) + p(n - 17) - ...\n// the subtracted indices are defined as the generalized pentagonal numbers starting at index 1\nlet answer = 0;\nlet n = 3;\n// memoized partition list MEM[i] = p(i)\nconst MEM = [1, 1, 2];\nwhile (!answer) {\n  let i = 1;\n  let term = penta(i);\n  let currentPartition = 0;\n  // sum all terms p(n-1), p(n-2), p(n-5), etc.\n  while (term <= n) {\n    const sign = (i - 1) % 4 > 1 ? -1 : 1;\n    currentPartition += sign * MEM[n - term];\n    i++;\n    term = penta(i);\n  }\n  currentPartition %= 1000000;\n  if (currentPartition === 0) {\n    answer = n;\n    break;\n  }\n  MEM[n] = currentPartition;\n  n++;\n}\nreturn answer;\n// generalized pentagonal number generator\nfunction penta(k) {\n  if (k & 1) {\n    const m = (k + 1) / 2;\n    return m * (3 * m - 1) / 2;\n  }\n  const m = k / 2;\n  return m * (3 * m + 1) / 2;\n}",
+    "guide": [
+      "<a target=\"__blank\" href=\"https://en.wikipedia.org/wiki/Pentagonal_number_theorem#Relation_with_partitions\">Wikipedia</a>",
+      "<br />",
+      "",
+      "<br />",
+      "We use the pentagonal number theorem to derive the following recurrence relationship:",
+      "<br />",
+      "Let p(n) denote the number of partitions of n, ",
+      "<br />",
+      "p(n) = p(n - 1) + p(n - 2) - p(n - 5) - p(n - 7) + p(n - 12) + p(n - 17) - ...",
+      "<br />",
+      "The subtracted indices are defined as the generalized pentagonal numbers starting at index 1",
+      "<br />"
+    ],
+    "solution": "let answer = 0;\nlet n = 3;\n// memoized partition list MEM[i] = p(i)\nconst MEM = [1, 1, 2];\nwhile (!answer) {\n  let i = 1;\n  let term = penta(i);\n  let currentPartition = 0;\n  // sum all terms p(n-1), p(n-2), p(n-5), etc.\n  while (term <= n) {\n    const sign = (i - 1) % 4 > 1 ? -1 : 1;\n    currentPartition += sign * MEM[n - term];\n    i++;\n    term = penta(i);\n  }\n  currentPartition %= 1000000;\n  if (currentPartition === 0) {\n    answer = n;\n    break;\n  }\n  MEM[n] = currentPartition;\n  n++;\n}\nreturn answer;\n// generalized pentagonal number generator\nfunction penta(k) {\n  if (k & 1) {\n    const m = (k + 1) / 2;\n    return m * (3 * m - 1) / 2;\n  }\n  const m = k / 2;\n  return m * (3 * m + 1) / 2;\n}",
     "utils": []
   },
   {
@@ -2481,8 +2561,13 @@
     "question": [
       "Given that the three characters are always asked for in order, analyse the file so as to determine the shortest possible secret passcode of unknown length."
     ],
-    "guide": [],
-    "solution": "const passcodes = fs.readFileSync(path.join(__dirname, './p079_keylog.txt'))\n  .toString()\n  .split('\\n')\n  .filter(Boolean);\n// we can remove repeated passcodes\nconst uniqAttempts = Array.from(new Set(passcodes));\n// if we spend a minute to look at the attempts, we can see that the passcode contains no repeating digits\n// therefore the solution becomes very straightforward\n// we find the first digit of the passcode by finding the digit that is not preceded by any other digits\n// that digit can always be found, because if not, it means that there must be repeating digits\n// repeat for second, third, etc.\n// since there are no repeats, and our login attempts do not contain a 4 or 5\n// our passcode must have length 8\nconst target = 8;\nlet digitsFound = 0;\nlet answer = '';\n// the list of attempts is updated every time we find a digit, by removing the found digit from it\nlet remainingAttempts = [...uniqAttempts];\n// the list of digits yet to be pushed into our answer is updated every time we find an answer\nlet remainingDigits = [0, 1, 2, 3, 6, 7, 8, 9];\nwhile (digitsFound < target) {\n  let foundDigit;\n  // the list of remaining possible digits for a given step is updated every time we find, in each attempt,\n  // a digit which is not in the first position\n  let currentPossibilities = [...remainingDigits];\n  for (let i = 0; i < remainingAttempts.length; i++) {\n    // split each attempt into first and non-first digits (rem array)\n    const [first, ...nonFirst] = remainingAttempts[i].split('');\n    // for the possible digits remaining, keep the ones that are not included in the list of non-first digits\n    currentPossibilities = currentPossibilities.filter(x => !nonFirst.includes(`${x}`));\n    // if there is only one possible digit left, then it is the answer\n    if (currentPossibilities.length === 1) {\n      foundDigit = currentPossibilities[0];\n      // push digit into answer string\n      answer += foundDigit;\n      break;\n    }\n  }\n  // remove the found digit from the list of remaining digits\n  remainingDigits = remainingDigits.filter(x => x !== foundDigit);\n  // reset the list of remaining possible digits used for traversal through attempts\n  currentPossibilities = [...remainingDigits];\n  // remove every occurrence of the found digit from the list of attempts\n  remainingAttempts = remainingAttempts.map(\n    attempt => attempt.split('').filter(\n      digit => +digit !== foundDigit,\n    ).join(''),\n  ).filter(x => x !== '');\n  digitsFound++;\n}\nreturn answer;",
+    "guide": [
+      "If we spend a minute to look at the attempts, we can see that the passcode contains no repeating digits, and since we're after the shortest passcode, the solution becomes very straightforward:",
+      "<br />",
+      "we find the first digit of the passcode by finding the digit that is not preceded by any other digits, repeat for second, third, etc.",
+      "<br />"
+    ],
+    "solution": "const passcodes = fs.readFileSync(path.join(__dirname, './p079_keylog.txt'))\n  .toString()\n  .split('\\n')\n  .filter(Boolean);\n// we can remove repeated passcodes\nconst uniqAttempts = Array.from(new Set(passcodes));\n// since there are no repeats, and our login attempts do not contain a 4 or 5\n// our passcode must have length 8\nconst target = 8;\nlet digitsFound = 0;\nlet answer = '';\n// the list of attempts is updated every time we find a digit, by removing the found digit from it\nlet remainingAttempts = [...uniqAttempts];\n// the list of digits yet to be pushed into our answer is updated every time we find an answer\nlet remainingDigits = [0, 1, 2, 3, 6, 7, 8, 9];\nwhile (digitsFound < target) {\n  let foundDigit;\n  // the list of remaining possible digits for a given step is updated every time we find, in each attempt,\n  // a digit which is not in the first position\n  let currentPossibilities = [...remainingDigits];\n  for (let i = 0; i < remainingAttempts.length; i++) {\n    // split each attempt into first and non-first digits (rem array)\n    const [first, ...nonFirst] = remainingAttempts[i].split('');\n    // for the possible digits remaining, keep the ones that are not included in the list of non-first digits\n    currentPossibilities = currentPossibilities.filter(x => !nonFirst.includes(`${x}`));\n    // if there is only one possible digit left, then it is the answer\n    if (currentPossibilities.length === 1) {\n      foundDigit = currentPossibilities[0];\n      // push digit into answer string\n      answer += foundDigit;\n      break;\n    }\n  }\n  // remove the found digit from the list of remaining digits\n  remainingDigits = remainingDigits.filter(x => x !== foundDigit);\n  // reset the list of remaining possible digits used for traversal through attempts\n  currentPossibilities = [...remainingDigits];\n  // remove every occurrence of the found digit from the list of attempts\n  remainingAttempts = remainingAttempts.map(\n    attempt => attempt.split('').filter(\n      digit => +digit !== foundDigit,\n    ).join(''),\n  ).filter(x => x !== '');\n  digitsFound++;\n}\nreturn answer;",
     "utils": []
   },
   {
@@ -2500,8 +2585,13 @@
     "question": [
       "For the first one hundred natural numbers, find the total of the digital sums of the first one hundred decimal digits for all the irrational square roots."
     ],
-    "guide": [],
-    "solution": "let ANSWER = 0;\n// this is very similar to problem 66\n// instead of iterating until we find a solution to an equation\n// we keep iterating until we find a number for which the 100 first decimal is 'stable'\nfor (let D = 2; D <= 100; D++) {\n  // find leading digits\n  const sqrt = Math.sqrt(D);\n  const floor = Math.floor(sqrt);\n  if (sqrt === floor) {\n    continue;\n  }\n  let repetitionFound = false; // if a repetition has been found, we can exit the loop (explained below)\n  // Step 1: Sequence of leading digits\n  const leadingDigits = [];\n  let isolatedInteger = floor; // leading digit of our current iteration\n  let normalizedDenominator; // the denominator as a result of normalization\n  // the normalized and reduced denominator (by the initial numerator) of the previous iteration\n  let initialNumerator = 1;\n  // the offset found in the denominator as a result of isolating the leading integer from the previous iteration\n  let denominatorOffset = floor;\n  while (!repetitionFound) {\n    // normalize\n    normalizedDenominator = D - (denominatorOffset ** 2);\n    // isolate\n    isolatedInteger = Math.floor(initialNumerator * (floor + denominatorOffset) / normalizedDenominator);\n    leadingDigits.push(isolatedInteger);\n    if (normalizedDenominator === initialNumerator) {\n      // the initialNumerator always starts with 1\n      // if the above two variables are equal, then the next initialNumerator will be 1,\n      // which will cause the cycle to repeat\n      repetitionFound = true;\n      break;\n    }\n    // update for next iteration\n    initialNumerator = normalizedDenominator / initialNumerator;\n    denominatorOffset = Math.abs(denominatorOffset - initialNumerator * isolatedInteger);\n  }\n  // Step 2: search for solution\n  // solution verifier\n  // verify if there is a variation in the 101st decimal between the 2 fractions\n  // (ie. if the first 101 decimals are equal)\n  // we accomplish this by multiplying each numerator by 10^101 before dividing by the denominator\n  // this will truncate the 102nd digit (and everything after)\n  // if the 101th digit is the same for both fractions,\n  // we then just need to round the 100th digit to get our answer\n  const getSum100Digits = (num1, denom1, num2, denom2) => {\n    const shift = BigInt(10) ** BigInt(101);\n    const prevDigits = num1 * shift / denom1;\n    const currDigits = num2 * shift / denom2;\n    if (prevDigits === currDigits) { // stabilized, return the sum of the 100 digits\n      const digits = String(currDigits).slice(0, 100).split('');\n      return digits.map(Number).reduce((a, c) => a + c, 0);\n    }\n    return false;\n  };\n  // returns nth leading integer in the continued fraction expansion of sqrt(D)\n  const getNthLeadingInteger = n => leadingDigits[(n - 1) % leadingDigits.length];\n  // initial values\n  let target = 1;\n  let numerator = BigInt(1);\n  let denominator = BigInt(getNthLeadingInteger(target));\n  let previousNumerator;\n  let previousDenominator;\n  let stabilized = false;\n  // loop while a solution is not found\n  while (!stabilized) {\n    numerator = BigInt(1);\n    denominator = BigInt(getNthLeadingInteger(target));\n    // find the convergent at the `target` index by using backtracking\n    for (let i = target - 1; i >= 1; i--) {\n      const nextLeadingInteger = BigInt(getNthLeadingInteger(i));\n      [numerator, denominator] = [denominator, nextLeadingInteger * denominator + numerator]\n    }\n    numerator += (denominator * BigInt(floor));\n    if (target > 1) {\n      const solution = getSum100Digits(previousNumerator, previousDenominator, numerator, denominator);\n      if (solution) {\n        ANSWER += solution;\n        stabilized = true;\n        break;\n      }\n    }\n    previousNumerator = numerator;\n    previousDenominator = denominator;\n    target++;\n  }\n}\nreturn ANSWER;",
+    "guide": [
+      "This is very similar to problem 66, instead of iterating until we find a solution to an equation, we keep iterating until we find a number for which the 100 first decimal is 'stable'.",
+      "<br />",
+      "Stable means that the first 100 decimal digits do not change after iteration.",
+      "<br />"
+    ],
+    "solution": "let ANSWER = 0;\nfor (let D = 2; D <= 100; D++) {\n  // find leading digits\n  const sqrt = Math.sqrt(D);\n  const floor = Math.floor(sqrt);\n  if (sqrt === floor) {\n    continue;\n  }\n  let repetitionFound = false; // if a repetition has been found, we can exit the loop (explained below)\n  // Step 1: Sequence of leading digits\n  const leadingDigits = [];\n  let isolatedInteger = floor; // leading digit of our current iteration\n  let normalizedDenominator; // the denominator as a result of normalization\n  // the normalized and reduced denominator (by the initial numerator) of the previous iteration\n  let initialNumerator = 1;\n  // the offset found in the denominator as a result of isolating the leading integer from the previous iteration\n  let denominatorOffset = floor;\n  while (!repetitionFound) {\n    // normalize\n    normalizedDenominator = D - (denominatorOffset ** 2);\n    // isolate\n    isolatedInteger = Math.floor(initialNumerator * (floor + denominatorOffset) / normalizedDenominator);\n    leadingDigits.push(isolatedInteger);\n    if (normalizedDenominator === initialNumerator) {\n      // the initialNumerator always starts with 1\n      // if the above two variables are equal, then the next initialNumerator will be 1,\n      // which will cause the cycle to repeat\n      repetitionFound = true;\n      break;\n    }\n    // update for next iteration\n    initialNumerator = normalizedDenominator / initialNumerator;\n    denominatorOffset = Math.abs(denominatorOffset - initialNumerator * isolatedInteger);\n  }\n  // Step 2: search for solution\n  // solution verifier\n  // verify if there is a variation in the 101st decimal between the 2 fractions\n  // (ie. if the first 101 decimals are equal)\n  // we accomplish this by multiplying each numerator by 10^101 before dividing by the denominator\n  // this will truncate the 102nd digit (and everything after)\n  // if the 101th digit is the same for both fractions,\n  // we then just need to round the 100th digit to get our answer\n  const getSum100Digits = (num1, denom1, num2, denom2) => {\n    const shift = BigInt(10) ** BigInt(101);\n    const prevDigits = num1 * shift / denom1;\n    const currDigits = num2 * shift / denom2;\n    if (prevDigits === currDigits) { // stabilized, return the sum of the 100 digits\n      const digits = String(currDigits).slice(0, 100).split('');\n      return digits.map(Number).reduce((a, c) => a + c, 0);\n    }\n    return false;\n  };\n  // returns nth leading integer in the continued fraction expansion of sqrt(D)\n  const getNthLeadingInteger = n => leadingDigits[(n - 1) % leadingDigits.length];\n  // initial values\n  let target = 1;\n  let numerator = BigInt(1);\n  let denominator = BigInt(getNthLeadingInteger(target));\n  let previousNumerator;\n  let previousDenominator;\n  let stabilized = false;\n  // loop while a solution is not found\n  while (!stabilized) {\n    numerator = BigInt(1);\n    denominator = BigInt(getNthLeadingInteger(target));\n    // find the convergent at the `target` index by using backtracking\n    for (let i = target - 1; i >= 1; i--) {\n      const nextLeadingInteger = BigInt(getNthLeadingInteger(i));\n      [numerator, denominator] = [denominator, nextLeadingInteger * denominator + numerator]\n    }\n    numerator += (denominator * BigInt(floor));\n    if (target > 1) {\n      const solution = getSum100Digits(previousNumerator, previousDenominator, numerator, denominator);\n      if (solution) {\n        ANSWER += solution;\n        stabilized = true;\n        break;\n      }\n    }\n    previousNumerator = numerator;\n    previousDenominator = denominator;\n    target++;\n  }\n}\nreturn ANSWER;",
     "utils": []
   },
   {
@@ -2525,8 +2615,13 @@
     "question": [
       "Find the minimal path sum, in [matrix.txt @asset p081_matrix.txt], a text file containing a 80 by 80 matrix, from the top left to the bottom right by only moving right and down."
     ],
-    "guide": [],
-    "solution": "// we use a memoized table where the entry [i,j] is the optimal path from 0,0 to i,j\n// MEM[i, j] = min(MEM[i - 1, j], MEM[i, j - 1]);\nconst MEM = utils.initTable(80, 80);\nconst raw = fs.readFileSync(path.join(__dirname, './p081_matrix.txt')).toString();\nconst MATRIX = raw.split('\\n').slice(0, 80).map(row => row.split(',').map(Number));\nMEM[0] = MATRIX[0].map((_, i) => utils.sumArray(MATRIX[0].slice(0, i + 1)));\nfor (let row = 1; row < 80; row++) {\n  MEM[row][0] = MATRIX[0][0] + utils.sumArray(MATRIX.map(r => r[0]).slice(1, row + 1));\n  for (let col = 1; col < 80; col++) {\n    MEM[row][col] = MATRIX[row][col] + Math.min(MEM[row - 1][col], MEM[row][col - 1]);\n  }\n}\nreturn MEM[79][79];",
+    "guide": [
+      "We use a memoized table where the entry [i,j] is the optimal path from 0,0 to i,j.",
+      "<br />",
+      "MEM[i, j] = min(MEM[i - 1, j], MEM[i, j - 1]);",
+      "<br />"
+    ],
+    "solution": "const MEM = utils.initTable(80, 80);\nconst raw = fs.readFileSync(path.join(__dirname, './p081_matrix.txt')).toString();\nconst MATRIX = raw.split('\\n').slice(0, 80).map(row => row.split(',').map(Number));\nMEM[0] = MATRIX[0].map((_, i) => utils.sumArray(MATRIX[0].slice(0, i + 1)));\nfor (let row = 1; row < 80; row++) {\n  MEM[row][0] = MATRIX[0][0] + utils.sumArray(MATRIX.map(r => r[0]).slice(1, row + 1));\n  for (let col = 1; col < 80; col++) {\n    MEM[row][col] = MATRIX[row][col] + Math.min(MEM[row - 1][col], MEM[row][col - 1]);\n  }\n}\nreturn MEM[79][79];",
     "utils": [
       "common/initTable",
       "common/sumArray"
@@ -2553,8 +2648,11 @@
     "question": [
       "Find the minimal path sum, in [matrix.txt @asset p081_matrix.txt], a 31K text file containing a 80 by 80 matrix, from the left column to the right column."
     ],
-    "guide": [],
-    "solution": "// we iterate column by column, at each step we memorize the optimal sum from the leftmost column to\n// each element of the current column\nconst raw = fs.readFileSync(path.join(__dirname, './p081_matrix.txt')).toString();\n// parse file into a 2D array\nconst MATRIX = raw.split('\\n').slice(0, 80).map(row => row.split(',').map(Number));\n// initiate MEM to be the first column\nlet MEM = MATRIX.map(x => x[0]);\n// at each iteration, MEM[k] remembers the optimal sum from the leftmost column (any starting row)\n// to the kth element of the current column\nfor (let col = 1; col < MATRIX.length; col++) {\n  // extract current column\n  const column = MATRIX.map(x => x[col]);\n  // keep the data for the next column separate, as we still need the data of current column\n  const nextMEM = [];\n  // find optimal path for each element of column\n  for (let dest = 0; dest < MATRIX.length; dest++) {\n    // keep track of optimal path\n    let optimalSum = Infinity;\n    // calculate all paths from each element of previous column\n    let pathSum = 0;\n    for (let origin = 0; origin < MATRIX.length; origin++) {\n      // calculate all paths from a specific origin row to a specific destination row\n      // paths can only be: 1. go right and up, or 2. go right and down\n      // if the memorized value at `origin` index is already exceeding the optimal sum, we can ignore it\n      if (MEM[origin] > optimalSum) {\n        continue;\n      }\n      if (origin === dest) {\n        // if origin row is the same as destination row, the optimal path is just move right\n        pathSum = MEM[origin] + column[dest];\n      } else if (origin > dest) {\n        // origin is 'lower' (high index == low height) than dest in matrix, move right then up\n        pathSum = MEM[origin] + utils.sumArray(column.slice(dest, origin + 1));\n      } else {\n        // origin is 'higher' than dest in matrix, move right then down\n        pathSum = MEM[origin] + utils.sumArray(column.slice(origin, dest + 1));\n      }\n      if (pathSum < optimalSum) {\n        optimalSum = pathSum;\n      }\n    }\n    // memoize optimal sum\n    nextMEM[dest] = optimalSum;\n  }\n  // prepare for next column\n  MEM = nextMEM;\n}\n// at the last column, MEM contains all the OPTIMAL paths from the first column to each element of the last column\n// the minimal element will then be the optimal path from left to right\nreturn Math.min(...MEM);",
+    "guide": [
+      "We iterate column by column, at each step we memorize the optimal sum from the leftmost column to each element of the current column.",
+      "<br />"
+    ],
+    "solution": "const raw = fs.readFileSync(path.join(__dirname, './p081_matrix.txt')).toString();\n// parse file into a 2D array\nconst MATRIX = raw.split('\\n').slice(0, 80).map(row => row.split(',').map(Number));\n// initiate MEM to be the first column\nlet MEM = MATRIX.map(x => x[0]);\n// at each iteration, MEM[k] remembers the optimal sum from the leftmost column (any starting row)\n// to the kth element of the current column\nfor (let col = 1; col < MATRIX.length; col++) {\n  // extract current column\n  const column = MATRIX.map(x => x[col]);\n  // keep the data for the next column separate, as we still need the data of current column\n  const nextMEM = [];\n  // find optimal path for each element of column\n  for (let dest = 0; dest < MATRIX.length; dest++) {\n    // keep track of optimal path\n    let optimalSum = Infinity;\n    // calculate all paths from each element of previous column\n    let pathSum = 0;\n    for (let origin = 0; origin < MATRIX.length; origin++) {\n      // calculate all paths from a specific origin row to a specific destination row\n      // paths can only be: 1. go right and up, or 2. go right and down\n      // if the memorized value at `origin` index is already exceeding the optimal sum, we can ignore it\n      if (MEM[origin] > optimalSum) {\n        continue;\n      }\n      if (origin === dest) {\n        // if origin row is the same as destination row, the optimal path is just move right\n        pathSum = MEM[origin] + column[dest];\n      } else if (origin > dest) {\n        // origin is 'lower' (high index == low height) than dest in matrix, move right then up\n        pathSum = MEM[origin] + utils.sumArray(column.slice(dest, origin + 1));\n      } else {\n        // origin is 'higher' than dest in matrix, move right then down\n        pathSum = MEM[origin] + utils.sumArray(column.slice(origin, dest + 1));\n      }\n      if (pathSum < optimalSum) {\n        optimalSum = pathSum;\n      }\n    }\n    // memoize optimal sum\n    nextMEM[dest] = optimalSum;\n  }\n  // prepare for next column\n  MEM = nextMEM;\n}\n// at the last column, MEM contains all the OPTIMAL paths from the first column to each element of the last column\n// the minimal element will then be the optimal path from left to right\nreturn Math.min(...MEM);",
     "utils": [
       "common/sumArray"
     ]
@@ -2580,8 +2678,11 @@
     "question": [
       "Find the minimal path sum, in [matrix.txt @asset p081_matrix.txt], a 31K text file containing a 80 by 80 matrix, from the top left to the bottom right by moving left, right, up, and down."
     ],
-    "guide": [],
-    "solution": "const raw = fs.readFileSync(path.join(__dirname, './p083_matrix.txt')).toString();\nconst MATRIX = raw.split('\\n').slice(0, 80).map(row => row.split(',').map(Number));\nconst size = MATRIX.length;\n// we use the dijkstra algorithm to find the shortest path from top left to bottom right\nconst nodes = [];\nlet originalIndex = 0;\nfor (let i = 0; i < size; i++) {\n  for (let j = 0; j < size; j++) {\n    nodes.push({\n      row: i,\n      col: j,\n      dist: Infinity,\n      originalIndex: originalIndex++, // node identifier\n      value: MATRIX[i][j],\n    });\n  }\n}\n// init first node\nnodes[0].dist = nodes[0].value;\n// mark the first node\nlet markedNodes = [nodes[0]];\n// init the list of unvisited nodes\nlet unvisitedNodes = nodes.slice(1);\n// while there are unvisited nodes, find the nearest unvisited node and mark the distances of its neighbors\nwhile (unvisitedNodes.length) {\n  // find next node to visit\n  const currentNode = markedNodes.reduce(\n    (acc, curr) => (curr.dist < acc.dist ? curr : acc),\n    { dist: Infinity },\n  );\n  // remove this node from the list of unvisited nodes\n  unvisitedNodes = unvisitedNodes.filter(unvisited => unvisited.originalIndex !== currentNode.originalIndex);\n  // remove this node from the list of marked notes\n  markedNodes = markedNodes.filter(marked => marked.originalIndex !== currentNode.originalIndex);\n  // mark that node's neighbors\n  // top neighbor\n  if (currentNode.row > 0) {\n    const top = nodes[currentNode.originalIndex - size];\n    markNeighbor(top, currentNode);\n  }\n  // right neighbor\n  if (currentNode.col < size - 1) {\n    const right = nodes[currentNode.originalIndex + 1];\n    markNeighbor(right, currentNode);\n  }\n  // bottom neighbor\n  if (currentNode.row < size - 1) {\n    const bottom = nodes[currentNode.originalIndex + size];\n    markNeighbor(bottom, currentNode);\n  }\n  // left neighbor\n  if (currentNode.col > 0) {\n    const left = nodes[currentNode.originalIndex - 1];\n    markNeighbor(left, currentNode);\n  }\n}\nreturn nodes.pop().dist;\nfunction markNeighbor(neighbor, currentNode) {\n  const alreadyMarked = neighbor.dist < Infinity;\n  if (currentNode.dist + neighbor.value < neighbor.dist) {\n    neighbor.dist = currentNode.dist + neighbor.value;\n  }\n  if (!alreadyMarked) {\n    markedNodes.push(neighbor);\n  }\n}",
+    "guide": [
+      "We use the dijkstra algorithm to find the shortest path from top left to bottom right",
+      "<br />"
+    ],
+    "solution": "const raw = fs.readFileSync(path.join(__dirname, './p083_matrix.txt')).toString();\nconst MATRIX = raw.split('\\n').slice(0, 80).map(row => row.split(',').map(Number));\nconst size = MATRIX.length;\nconst nodes = [];\nlet originalIndex = 0;\nfor (let i = 0; i < size; i++) {\n  for (let j = 0; j < size; j++) {\n    nodes.push({\n      row: i,\n      col: j,\n      dist: Infinity,\n      originalIndex: originalIndex++, // node identifier\n      value: MATRIX[i][j],\n    });\n  }\n}\n// init first node\nnodes[0].dist = nodes[0].value;\n// mark the first node\nlet markedNodes = [nodes[0]];\n// init the list of unvisited nodes\nlet unvisitedNodes = nodes.slice(1);\n// while there are unvisited nodes, find the nearest unvisited node and mark the distances of its neighbors\nwhile (unvisitedNodes.length) {\n  // find next node to visit\n  const currentNode = markedNodes.reduce(\n    (acc, curr) => (curr.dist < acc.dist ? curr : acc),\n    { dist: Infinity },\n  );\n  // remove this node from the list of unvisited nodes\n  unvisitedNodes = unvisitedNodes.filter(unvisited => unvisited.originalIndex !== currentNode.originalIndex);\n  // remove this node from the list of marked notes\n  markedNodes = markedNodes.filter(marked => marked.originalIndex !== currentNode.originalIndex);\n  // mark that node's neighbors\n  // top neighbor\n  if (currentNode.row > 0) {\n    const top = nodes[currentNode.originalIndex - size];\n    markNeighbor(top, currentNode);\n  }\n  // right neighbor\n  if (currentNode.col < size - 1) {\n    const right = nodes[currentNode.originalIndex + 1];\n    markNeighbor(right, currentNode);\n  }\n  // bottom neighbor\n  if (currentNode.row < size - 1) {\n    const bottom = nodes[currentNode.originalIndex + size];\n    markNeighbor(bottom, currentNode);\n  }\n  // left neighbor\n  if (currentNode.col > 0) {\n    const left = nodes[currentNode.originalIndex - 1];\n    markNeighbor(left, currentNode);\n  }\n}\nreturn nodes.pop().dist;\nfunction markNeighbor(neighbor, currentNode) {\n  const alreadyMarked = neighbor.dist < Infinity;\n  if (currentNode.dist + neighbor.value < neighbor.dist) {\n    neighbor.dist = currentNode.dist + neighbor.value;\n  }\n  if (!alreadyMarked) {\n    markedNodes.push(neighbor);\n  }\n}",
     "utils": []
   },
   {
@@ -2641,7 +2742,10 @@
     "question": [
       "If, instead of using two 6-sided dice, two 4-sided dice are used, find the six-digit modal string."
     ],
-    "guide": [],
+    "guide": [
+      "We just simulate the board game, by rolling the dice 1 million times and see on which squares we land the most.",
+      "<br />"
+    ],
     "solution": "const BOARD = [\n  'GO', 'A1', 'CC1', 'A2', 'T1', 'R1', 'B1', 'CH1', 'B2', 'B3',\n  'JAIL', 'C1', 'U1', 'C2', 'C3', 'R2', 'D1', 'CC2', 'D2', 'D3',\n  'FP', 'E1', 'CH2', 'E2', 'E3', 'R3', 'F1', 'F2', 'U2', 'F3',\n  'G2J', 'G1', 'G2', 'CC3', 'G3', 'R4', 'CH3', 'H1', 'T2', 'H2',\n];\n// list of special squares\nconst SQUARES = {\n  GO: 0,\n  JAIL: 10,\n  C1: 11,\n  E3: 24,\n  H2: 39,\n  R1: 5,\n  R: [5, 15, 25, 35],\n  U: [12, 28],\n};\n// community chest cards\nconst COMM_CHEST = shuffle([\n  () => SQUARES.GO, // advance to GO\n  () => SQUARES.JAIL, // go to jail\n  ...Array(14),\n]);\n// chance cards\nconst CHANCE = shuffle([\n  () => SQUARES.GO, // advance to GO\n  () => SQUARES.JAIL, // go to jail\n  () => SQUARES.C1, // go to C1\n  () => SQUARES.E3, // go to E3\n  () => SQUARES.H2, // go to H2\n  () => SQUARES.R1, // go to R1\n  (square) => (SQUARES.R.find(r => r > square) || SQUARES.R[0]), // go to next R (railroad)\n  (square) => (SQUARES.R.find(r => r > square) || SQUARES.R[0]), // id.\n  (square) => (SQUARES.U.find(u => u > square) || SQUARES.U[0]), // go to next U (utility)\n  (square) => square - 3, // if square <= 2, return  40 + square - 3\n  ...Array(6),\n]);\n// shuffle an array and return the result\nfunction shuffle(arr = []) {\n  const shuffled = [];\n  let source = [...arr];\n  while (shuffled.length < arr.length) {\n    const randomIndex = Math.floor(Math.random() * source.length);\n    shuffled.push(source[randomIndex]);\n    source = [...source.slice(0, randomIndex), ...source.slice(randomIndex + 1, source.length)];\n  }\n  return shuffled;\n}\n// initialize a result table\n// {\n//   0: 0,\n//   1: 0,\n//   ...,\n//   39: 0\n// }\nconst RESULTS = Object.assign({}, ...[...Array(40)].map((_, i) => ({ [i]: 0 })));\nconst DICE_SIDES = 4;\nconst SIM_COUNT = 1000000;\n// run simulation\nrunSim(SIM_COUNT);\n// format and output result\nconst sortedSquares = Object.keys(RESULTS).sort((a, b) => RESULTS[b] - RESULTS[a]).map(x => x.padStart(2, '0'));\nreturn `${sortedSquares[0]}${sortedSquares[1]}${sortedSquares[2]}`;\n// run simulation for simCount turns, each turn may have multiple rolls due to doubles\nfunction runSim(simCount) {\n  // initial square\n  let currentSquare = 0;\n  for (let rolls = 0; rolls < simCount; rolls++) {\n    let doubles = 0;\n    let isDouble = true;\n    // keep rolling if we get a double\n    while (isDouble) {\n      // roll the dices!\n      const [r1, r2] = roll(DICE_SIDES);\n      // if we rolled a double, incr the count\n      if (r1 === r2) {\n        doubles++;\n        // if it's the third double, exit immediately\n        if (doubles === 3) {\n          currentSquare = 10;\n          RESULTS[10]++;\n          break;\n        }\n      } else {\n        // if we didnt roll a double, the loop will not execute again, go to next sim after resolving\n        isDouble = false;\n      }\n      // advance!\n      currentSquare = (currentSquare + r1 + r2) % 40;\n      // resolve any chance/comm_chest/go_to_jail events\n      const [resolvedSquare, stop] = resolveSquare(currentSquare);\n      currentSquare = resolvedSquare;\n      RESULTS[currentSquare]++;\n      if (stop) {\n        break;\n      }\n    }\n  }\n}\n// roll 2 dices, return [dice_1_result, dice_2_result]\nfunction roll(side) {\n  return [Math.ceil(Math.random() * side), Math.ceil(Math.random() * side)];\n}\n// resolve any chance/comm_chest/go_to_jail events\n// returns [resolved_square_index, stop?]\nfunction resolveSquare(square) {\n  const squareContent = BOARD[square];\n  // go to jail\n  if (squareContent === 'G2J' || squareContent === 'JAIL') {\n    return [10, true];\n  }\n  // chance\n  if (squareContent.slice(0, 2) === 'CH') {\n    // draw a card and move to that square\n    const movedTo = resolveCard(square, 'CH');\n    // recursively resolve that square\n    if (movedTo !== square) {\n      return resolveSquare(movedTo);\n    }\n  }\n  // community chest\n  if (squareContent.slice(0, 2) === 'CC') {\n    // draw a card and move to that square\n    const movedTo = resolveCard(square, 'CC');\n    // recursively resolve that square\n    if (movedTo !== square) {\n      return resolveSquare(movedTo);\n    }\n  }\n  // no G2J nor cards, just return the square\n  return [square, false];\n}\n// resolve card and return result square\nfunction resolveCard(square, type) {\n  if (type === 'CH') {\n    const card = CHANCE.shift();\n    CHANCE.push(card);\n    if (card) {\n      return card(square);\n    }\n  }\n  if (type === 'CC') {\n    const card = COMM_CHEST.shift();\n    COMM_CHEST.push(card);\n    if (card) {\n      return card(square);\n    }\n  }\n  return square;\n}",
     "utils": []
   },
@@ -2658,8 +2762,21 @@
     "question": [
       "Although there exists no rectangular grid that contains exactly two million rectangles, find the area of the grid with the nearest solution."
     ],
-    "guide": [],
-    "solution": "// to calculate the number of rectangles in an m x n area\n// we use the formula m(m+1)/2 * n(n+1)/2\n// this formula is derived by looking at the total number of combinations of selecting, amongst the lattices of the area,\n// a top-left corner C1 and a bottom-left corner C2 that is not on the same row or column as C1\n// we iterate over n = 1, 2, ...\n// at each step we solve for m, where m(m+1)/2 * n(n+1)/2 = 2,000,000\n// at stated by the problem statement, m cannot be integral, since n is integral\n// therefore we set M = round(m), and calculate the distance between M(M+1)/2 * n(n+1)/2 and 2,000,000\n// the pair (n, M) producing the smallest distance above is the winner\nlet smallestDist = Infinity;\nlet valuesForSmallestDist = [];\nfor (let n = 1; n <= 2000; n++) {\n  const nTriangle = (n * (n + 1)) / 2;\n  // solve nTriangle * m(m+1)/2 = 2,000,000 using quadratic formula\n  const m = (Math.sqrt(1 + (16000000 / nTriangle)) - 1) / 2;\n  const M = Math.round(m);\n  const roundedRectangles = (nTriangle * (M * (M + 1))) / 2;\n  const dist = Math.abs(2000000 - roundedRectangles);\n  if (dist < smallestDist) {\n    smallestDist = dist;\n    valuesForSmallestDist = [n, M];\n  }\n}\nreturn valuesForSmallestDist[0] * valuesForSmallestDist[1];",
+    "guide": [
+      "To calculate the number of rectangles in an m x n area, we use the formula m(m+1)/2 * n(n+1)/2.",
+      "<br />",
+      "This formula is derived by looking at the total number of combinations of selecting, amongst the lattices of the area, a top-left corner C1 and a bottom-left corner C2 that is not on the same row or column as C1.",
+      "<br />",
+      "",
+      "<br />",
+      "We iterate over n = 1, 2, ..., at each step we solve for m, where m(m+1)/2 * n(n+1)/2 = 2,000,000.",
+      "<br />",
+      "As stated by the problem statement, m cannot be integral, since n is integral, therefore we set M = round(m), and calculate the distance between M(M+1)/2 * n(n+1)/2 and 2,000,000.",
+      "<br />",
+      "The pair (n, M) producing the smallest distance above is the winner",
+      "<br />"
+    ],
+    "solution": "let smallestDist = Infinity;\nlet valuesForSmallestDist = [];\nfor (let n = 1; n <= 2000; n++) {\n  const nTriangle = (n * (n + 1)) / 2;\n  // solve nTriangle * m(m+1)/2 = 2,000,000 using quadratic formula\n  const m = (Math.sqrt(1 + (16000000 / nTriangle)) - 1) / 2;\n  const M = Math.round(m);\n  const roundedRectangles = (nTriangle * (M * (M + 1))) / 2;\n  const dist = Math.abs(2000000 - roundedRectangles);\n  if (dist < smallestDist) {\n    smallestDist = dist;\n    valuesForSmallestDist = [n, M];\n  }\n}\nreturn valuesForSmallestDist[0] * valuesForSmallestDist[1];",
     "utils": []
   },
   {
@@ -2683,7 +2800,10 @@
     "question": [
       "Find the least value of M such that the number of solutions first exceeds one million."
     ],
-    "guide": [],
+    "guide": [
+      "Explained in the code comments",
+      "<br />"
+    ],
     "solution": "// We will break down the solution of this problem into different parts:\n// PART 1: FINDING THE MINIMAL DISTANCE BETWEEN TWO POINTS IN A CUBOID\n// For any cuboid with given lengths (X,Y,Z)\n// (!) The three candidates for the shortest paths are: √(X²+(Y+Z)²), √(Y²+(X+Z)²), √(Z²+(X+Y)²)\n// This can be seen by unfolding the cuboid, and traversing the 3 adjacent surfaces from the starting point.\n// (!) The shortest path among the 3 is the one where the largest side is the 'isolated' square in the root\n// eg. if we have side lengths (6, 5, 3)\n// the winning candidate will be √(6² + (5 + 3)²), since 6 is the largest side, and is also the 'isolated' number\n// otoh, consider the candidate √(5² + (6 + 3)²): here 5 is the isolated number, and thus cannot be the shortest path\n// this is because we want to minimize the difference between the base of the 2 squares inside the root\n// in our case, dist(6, 8) < dist (5, 9), therefore 6² + 8² < 5² + 9²\n// PART 2: FINDING/GENERATING CUBOIDS WITH INTEGRAL SOLUTIONS\n// WLOG, assume that the minimal path for a cuboid is √(X²+(Y+Z)²)\n// (!) The minimal path is integral if and only if X and Y+Z are the 2 smallest numbers in a Pythagorean triplet\n// Using this, we can generate cuboid with integral shortest path from Pythagorean triplets\n// (!) Given a triplet A,B,C; we take A and B, and break B down into the sum of 2 integers\n// eg. Given 6,8,10; we have (6,8) => (6,6,2), (6,5,3), (6,4,4)\n// we skip (6,7,1) since 6 is not the largest side because (7,6,1) will have a shorter path\n// PART 3: INCREMENTAL GENERATION OF CUBOID SOLUTIONS\n// Given any M, we need to find the list of solutions which make a Pythagorean triple with M as one of the 2 legs\n// eg. M = 6, we have 6, 8, 10 as a triplet, the number of cuboids possible with 6 as the longest side is 3\n// eg. M = 8, we have 8, 6, 10 as a triplet, the number of cuboids with 8 as the longest side is 6 / 2 = 3\n// Obs: Let a, b be the legs of a right triangle, and a < b, then we have the following:\n// (!) 1. If M = a, then # solutions = a - ceil(b / 2) + 1\n// (!) 2. If M = b, then # solutions = floor(a / 2)\n// For each M, we need to search from 2 to 2*M, since the smallest cuboid is (M, 1, 1) and the largest is (M, M, M)\nlet answer = 0;\nlet solutions = 0;\nlet M = 1;\nwhile (!answer) {\n  // M > n\n  for (let n = 2; n < M; n++) {\n    if (Number.isInteger(Math.sqrt((M ** 2) + (n ** 2)))) {\n      solutions += Math.floor(n / 2);\n    }\n  }\n  // M < n\n  for (let n = M; n < 2 * M; n++) {\n    if (Number.isInteger(Math.sqrt((M ** 2) + (n ** 2)))) {\n      solutions += (M - Math.ceil(n / 2)) + 1;\n    }\n  }\n  if (solutions > 1000000) {\n    answer = M;\n    return answer;\n  }\n  M++;\n}",
     "utils": []
   }

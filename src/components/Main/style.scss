@@ -24,6 +24,9 @@ div {
   }
   button[type="button"] {
     @include hoverable(#4c4f44);
+    &.highlighted {
+      background-color: #4c4f44;
+    }
   }
   .page__solution {
     .description, .results, .helpers {

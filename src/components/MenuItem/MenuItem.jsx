@@ -44,9 +44,10 @@ export function Item(props) {
     <div className="e-item">
       <button
         type="button"
+        className={cn({ highlighted: props.highlighted })}
         onClick={() => props.history.push({ pathname: props.destination, origin: null })}
       >
-        <span className={cn({ highlighted: props.highlighted })}>
+        <span>
           {props.id && `${props.id}. `}
           {props.label}
         </span>

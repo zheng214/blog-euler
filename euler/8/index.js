@@ -18,24 +18,21 @@ module.exports = {
    * It can be seen that 2/5 is the fraction immediately to the left of 3/7.
    *
    * @question By listing the set of reduced proper fractions for d ≤ 1,000,000 in ascending order, find the numerator of the fraction immediately to the left of 3/7.
+   * @guide
+   * For each d <= 1,000,000, we need to find maximal integer c such that c/d is smaller than 3/7. This will give us the closest fraction left of 3/7 with d as its denominator.
+   * We obtain c by multiplying d by 3/7, and taking the floor of the result.
+   * The difference between the result and the floor of the result, relative to d, indicates of how close the result is to 3/7.
+   * Therefore, we want to find d such that (d * 3/7 - floor(d * 3/7))/d is minimized and non-zero (that just makes it equal to 3/7).
    */
   e71() {
-    // for each d <= 1,000,000, we just need to find maximal integer c such that c/d is smaller than 3/7
-    // we accomplish this by multiplying d by 3/7, and taking the floor of the result
-    // if the result is divisible by the floor of the result, we can skip to the next d
-    // if not, the difference between the result and the floor of the result is indicative of how close the result is to 3/7
-    // ie we want to minimize (d * 3/7 - floor(d * 3/7))/d
     const FRACTION = 3 / 7;
     let smallestDiff = 1;
     const answer = {};
     for (let d = 1; d <= 1000000; d++) {
-      if (d % 7 === 0) {
-        continue;
-      }
       const res = d * FRACTION;
       const floor = Math.floor(res);
       const diff = (res - floor) / d;
-      if (diff < smallestDiff) {
+      if (diff > 0 && diff < smallestDiff) {
         smallestDiff = diff;
         answer.numerator = floor;
         answer.denominator = d;
@@ -58,16 +55,14 @@ module.exports = {
    * It can be seen that there are 21 elements in this set.
    *
    * @question How many elements would be contained in the set of reduced proper fractions for d ≤ 1,000,000?
+   * @guide
+   * Since a fraction appears only if the numerator and denominator are coprime, we are essentially calculating phi(d) for each d.
+   * So the problem becomes phi(2) + ... + phi(1,000,000).
+   * Note that phi(n) = (f1 - 1) / f1 * (f2 - 1) / f2 + ... + (fm - 1) / fm, where f1, f2, ..., fm are the prime factors of n
+   * 
+   * We start by generating all prime numbers below 1000000, for each generated prime p, we sieve all multiples of that prime p * 2, p * 3, etc, by multiplying each number by (p - 1) / p, eventually each integer below 1000000 will be sieved once by each of its prime factors.
    */
   e72() {
-    // we are basically calculating phi(2) + ... + phi(1,000,000)
-    // note that phi(n) = (f1 - 1) / f1 * (f2 - 1) / f2 + ... + (fm - 1) / fm
-    // where f1, f2, ..., fm are the prime factors of n
-
-    // we start by generating all prime numbers below 1000000
-    // for each generated prime p, we sieve all multiples of that prime p * 2, p * 3, etc.
-    // by multiplying each number by (p - 1) / p
-    // eventually each integer below 1000000 will be sieved once by each of its prime factors
     const target = 1000000;
     const PRIME_TABLE = utils.generatePrimesTable(target);
     const INTEGER_TABLE = { ...PRIME_TABLE };
@@ -104,6 +99,8 @@ module.exports = {
    * It can be seen that there are 3 fractions between 1/3 and 1/2.
    *
    * @question How many fractions lie between 1/3 and 1/2 in the sorted set of reduced proper fractions for d ≤ 12,000?
+   * @guide
+   * For each d ≤ 12,000, we just check each numerator one by one that is within range of 1/3 and 1/2. If the numerator and denominator are coprime, we increment our answer.
    */
   e73() {
     let answer = 0;
@@ -150,6 +147,8 @@ module.exports = {
    * Starting with 69 produces a chain of five non-repeating terms, but the longest non-repeating chain with a starting number below one million is sixty terms.
    *
    * @question How many chains, with a starting number below one million, contain exactly sixty non-repeating terms?
+   * @guide
+   * We use a giant memoized table of all the numbers and their chain length. We recursively build a path for each number below one million and store their chain length inside the table.
    */
   e74() {
     const FACTS = {
@@ -165,7 +164,6 @@ module.exports = {
       9: 362880,
     };
 
-    // giant memoized table of all the numbers and their chain length
     const MEM = {};
     // NOTE: it is true that different numbers with the same digits will have the same chain length.
     // However, it will not reduce the running time by much, as all the numbers with the same digit
@@ -178,19 +176,25 @@ module.exports = {
     const sumFactDigits = n => n.toString().split('').reduce((a, c) => a + FACTS[c], 0);
 
     function computePathLength(n, accMem = {}, chainLength = 0) {
-      if (MEM[n]) {
+      // if found number in our table, update table with each number encountered and return accumulated chainLength + number in table 
+      if (MEM[n]) { 
         Object.keys(accMem).forEach((chainElem) => {
+          // suppose we have accMem := { a: 1, b: 2, c: 3, d: 4 } and MEM := { d: 8 }
+          // then MEM should be updated to { a: 11, b: 10, c: 9, d: 8 }
           MEM[chainElem] = MEM[n] + chainLength - accMem[chainElem];
         });
         return chainLength + MEM[n];
       }
 
+      // if found a cycle, update table 
       if (accMem[n]) {
         const recurrencePeriod = chainLength - accMem[n];
         Object.keys(accMem).forEach((chainElem) => {
           if (accMem[chainElem] < accMem[n]) {
+            // numbers before entering the cycle
             MEM[chainElem] = chainLength - accMem[chainElem];
           } else {
+            // numbers inside the cycle
             MEM[chainElem] = recurrencePeriod;
           }
         });
@@ -236,6 +240,10 @@ module.exports = {
    * 120 cm: (30,40,50), (20,48,52), (24,45,51)
    *
    * @question Given that L is the length of the wire, for how many values of L ≤ 1,500,000 can exactly one integer sided right angle triangle be formed?
+   * @guide
+   * We use a sieving method. We first generate the table of primitive pythagorean triplets, using euclid's formula (see problem 9).
+   * We then sieve all multiples of that perimeter.
+   * At the end, all perimeters that have been sieved exactly once fits the condition of the problem.
    */
   e75() {
     // keys are the length, value are how many time it has been sieved
@@ -289,27 +297,42 @@ module.exports = {
    * 1 + 1 + 1 + 1 + 1
    *
    * @question How many different ways can one hundred be written as a sum of at least two positive integers?
+   * @guide
+   * We use a dynamic programming approach.
+   * This is similar to the change making problem (problem 31), we have 100 coins of value 1, 2 ... 100, the question is how to make 100 with those coins.
+   * 
+   * We start with coins of value 1. At this stage, <code>MEM[j]</code> is answering, how many ways to build j with only coins of value 1, so MEM[j] = 1 for all j.
+   * Then we add coins of value 2. At this stage, <code>MEM[j]</code> is answering, how many ways to build j with only coins of value 1 AND 2.
+   * The answer is equal to the sum of (ways of making j without using 2) + (ways of making j using 2)
+   * 
+   * For example, let's ask how many ways to make 5 using 1 and 2.
+   * The answer is the sum of ways to make 5 using only 1s, and the ways to make 3 using 1 and 2.
+   * 
+   * Another example, let's ask how many ways to make 7 using 1, 2, and 3. (i = 3, j = 7)
+   * The answer is the number of ways of making 7 without using 3s. Thats just MEM[7] from previous iteration (i = 2, j = 7).
+   * We add to that the number of ways of making 4 using 3s. Thats just MEM[4] from current iteration (i = 3, j = 4).
+   * 
+   * We loop through all i and j from 1 to 100, and MEM[100] will have our answer.
    */
   e76() {
-    // this is similar to the change making problem
-    // we have 100 coins of value 1, 2 ... 100
-    // the question is how to make 100 with those coins
     const MEM = {};
-    for (let i = 1; i <= 100; i++) {
+    for (let i = 1; i <= 99; i++) {
       // we do not have to consider j < i as there would be no way of making j with a coin i
       // from this point, MEM[n] denotes the number of ways of making n using coins up to i
       for (let j = i; j <= 100; j++) {
         // the number of ways to make amount j is equal to the sum of
         // 1. the number of ways of making j without using i,
         // which is the number of ways of making change j using coins 1, ..., i - 1
-        // which is equal to MEM[j] of the previous iteration
+        // which is equal to MEM[j] of the previous iteration, at i - 1 
         // 2. the number of ways of making j using i,
         // which is the number of ways of making j - i using 1, 2, ..., i
-        // if MEM[j - i] is undefined, it means  j = i, and the answer is 1
+        // if MEM[j - i] is undefined, it means  j = i, and the answer is 1, ie. how many ways to make j using j.
+        // The reason why MEM[j - i] =/= 0 when j = i is because:
+        // suppose we have i = 2, j = 4, if there is no way to make 2 using 2s, then 2 + 2 won't be counted as an answer for 4.
         MEM[j] = (MEM[j] || 0) + (MEM[j - i] || 1);
       }
     }
-    return MEM[100] - 1;
+    return MEM[100];
   },
 
   /**
@@ -327,9 +350,11 @@ module.exports = {
    * 2 + 2 + 2 + 2 + 2
    *
    * @question What is the first value which can be written as the sum of primes in over five thousand different ways?
+   * @guide
+   * This is almost the same as problem 76, we are just using different coin values.
    */
   e77() {
-    // from problem above, i = 30 was sufficient to generate > 5000 partitions
+    // from problem 76, i = 30 was sufficient to generate > 5000 partitions
     // in order to minimize space and time, we will use 46 primes as an upper bound, and increase if necessary
     const PRIMES = Object.keys(utils.generatePrimesTable(200)).map(Number);
     let answer = 0;
@@ -375,12 +400,15 @@ module.exports = {
    * For example, five coins can be separated into piles in exactly seven different ways, so p(5)=7.
    *
    * @question Find the least value of n for which p(n) is divisible by one million.
+   * @guide
+   * <a target="__blank" href="https://en.wikipedia.org/wiki/Pentagonal_number_theorem#Relation_with_partitions">Wikipedia</a>
+   * 
+   * We use the pentagonal number theorem to derive the following recurrence relationship:
+   * Let p(n) denote the number of partitions of n, 
+   * p(n) = p(n - 1) + p(n - 2) - p(n - 5) - p(n - 7) + p(n - 12) + p(n - 17) - ...
+   * The subtracted indices are defined as the generalized pentagonal numbers starting at index 1
    */
   e78() {
-    // using the pentagonal number theorem, we can use the following recurrence relationship
-    // let p(n) denote the number of partitions of n
-    // p(n) = p(n - 1) + p(n - 2) - p(n - 5) - p(n - 7) + p(n - 12) + p(n - 17) - ...
-    // the subtracted indices are defined as the generalized pentagonal numbers starting at index 1
     let answer = 0;
     let n = 3;
     // memoized partition list MEM[i] = p(i)
@@ -426,6 +454,9 @@ module.exports = {
    * The text file, [keylog.txt @asset p079_keylog.txt], contains fifty successful login attempts.
    *
    * @question Given that the three characters are always asked for in order, analyse the file so as to determine the shortest possible secret passcode of unknown length.
+   * @guide
+   * If we spend a minute to look at the attempts, we can see that the passcode contains no repeating digits, and since we're after the shortest passcode, the solution becomes very straightforward:
+   * we find the first digit of the passcode by finding the digit that is not preceded by any other digits, repeat for second, third, etc.
    */
   e79() {
     const passcodes = fs.readFileSync(path.join(__dirname, './p079_keylog.txt'))
@@ -434,12 +465,6 @@ module.exports = {
       .filter(Boolean);
     // we can remove repeated passcodes
     const uniqAttempts = Array.from(new Set(passcodes));
-
-    // if we spend a minute to look at the attempts, we can see that the passcode contains no repeating digits
-    // therefore the solution becomes very straightforward
-    // we find the first digit of the passcode by finding the digit that is not preceded by any other digits
-    // that digit can always be found, because if not, it means that there must be repeating digits
-    // repeat for second, third, etc.
 
     // since there are no repeats, and our login attempts do not contain a 4 or 5
     // our passcode must have length 8
@@ -484,6 +509,7 @@ module.exports = {
       ).filter(x => x !== '');
       digitsFound++;
     }
+
     return answer;
   },
 
@@ -497,12 +523,12 @@ module.exports = {
    * The square root of two is 1.41421356237309504880..., and the digital sum of the first one hundred decimal digits is 475.
    *
    * @question For the first one hundred natural numbers, find the total of the digital sums of the first one hundred decimal digits for all the irrational square roots.
+   * @guide
+   * This is very similar to problem 66, instead of iterating until we find a solution to an equation, we keep iterating until we find a number for which the 100 first decimal is 'stable'.
+   * Stable means that the first 100 decimal digits do not change after iteration.
    */
   e80() {
     let ANSWER = 0;
-    // this is very similar to problem 66
-    // instead of iterating until we find a solution to an equation
-    // we keep iterating until we find a number for which the 100 first decimal is 'stable'
     for (let D = 2; D <= 100; D++) {
       // find leading digits
       const sqrt = Math.sqrt(D);
