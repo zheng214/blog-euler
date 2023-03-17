@@ -3,7 +3,6 @@ const initState = {
 };
 
 const rootReducer = (state = initState, action) => {
-    console.log({ state, action })
     if (action.type === 'TOGGLE_DARK') {
         const newState = { ...state };
         newState.darkMode = !state.darkMode;
