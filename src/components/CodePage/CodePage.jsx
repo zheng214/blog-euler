@@ -9,13 +9,14 @@ import './style.scss';
 export default class CodePage extends React.Component {
   renderContent() {
     const {
-      darkMode, location, history, match, solutionId, filename, utility,
+      location, history, match, solutionId, filename, utility,
     } = this.props;
+    
     if (solutionId) {
       return (
         <>
           <Navigation solutionId={solutionId} history={history} />
-          <Solution solutionId={solutionId} history={history} darkMode={darkMode} location={location} />
+          <Solution solutionId={solutionId} history={history} location={location} />
         </>
       );
     }
@@ -26,7 +27,6 @@ export default class CodePage extends React.Component {
           utility={utility}
           history={history}
           match={match}
-          darkMode={darkMode}
         />
       );
     }

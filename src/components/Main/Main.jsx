@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import './style.scss';
 import cn from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,11 +13,10 @@ import { SolutionHub, UtilityHub } from '../Hubs';
 import Topbar from '../TopBar/TopBar';
 import Home from '../Home/Home';
 
-export default class Main extends React.Component {
+class Main extends React.Component {
   state = {
     topbarHidden: false,
     ubarHidden: false,
-    darkModeOn: false,
     filename: '',
     utility: '',
   }
@@ -80,24 +80,15 @@ export default class Main extends React.Component {
     this.setState((prev) => ({ ubarHidden: !prev.ubarHidden }));
   }
 
-  toggleDark = () => {
-    this.setState(
-      (prev) => ({ darkModeOn: !prev.darkModeOn }),
-      () => {
-        document.body.style.backgroundColor = this.state.darkModeOn ? 'black' : 'white';
-      },
-    );
-  }
-
   render() {
     const {
-      ubarHidden, topbarHidden, darkModeOn, solutionId, filename, utility,
+      topbarHidden, solutionId, filename, utility,
     } = this.state;
-    const { history } = this.props;
+    const { history, darkMode } = this.props;
     return (
-      <div className={cn('main', { dark: darkModeOn })}>
+      <div className={cn('main', { dark: darkMode })}>
         <div className={cn('topbar', { hidden: topbarHidden })}>
-          <Topbar toggleDark={this.toggleDark} darkMode={darkModeOn} />
+          <Topbar />
         </div>
         <div className="main-content">
           <div className="main-content__left">
@@ -114,7 +105,6 @@ export default class Main extends React.Component {
                     <CodePage
                       match={props.match}
                       history={props.history}
-                      darkMode={darkModeOn}
                       location={props.location}
                       solutionId={solutionId}
                     />
@@ -129,7 +119,6 @@ export default class Main extends React.Component {
                     <CodePage
                       match={props.match}
                       history={props.history}
-                      darkMode={darkModeOn}
                       filename={filename}
                       utility={utility}
                     />
@@ -143,3 +132,11 @@ export default class Main extends React.Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    darkMode: state.darkMode, 
+  }
+}
+
+export default connect(mapStateToProps)(Main)

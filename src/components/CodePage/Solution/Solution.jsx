@@ -1,5 +1,6 @@
 import React from 'react';
 import cn from 'classnames';
+import { connect } from 'react-redux';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -41,7 +42,7 @@ function renderCode(content, darkMode) {
   );
 }
 
-export default class Solution extends React.Component {
+class Solution extends React.Component {
   static formatAsset(line) {
     const [before, assetInfo, after] = line.split(/\[([^[]+ @asset [^\]]+)\]/);
     const [assetName, assetPath] = assetInfo.split('@asset');
@@ -228,3 +229,11 @@ export default class Solution extends React.Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    darkMode: state.darkMode,
+  }
+}
+
+export default connect(mapStateToProps)(Solution);

@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import js from 'react-syntax-highlighter/dist/esm/languages/hljs/javascript';
@@ -31,7 +32,7 @@ function renderCode(content, darkMode) {
   );
 }
 
-export default class Utility extends React.Component {
+class Utility extends React.Component {
   static formatUtilityDescription(utilityData, darkMode) {
     const {
       description,
@@ -91,7 +92,7 @@ export default class Utility extends React.Component {
     const utilityData = UTILS[filename][utility];
 
     return (
-      <div className="page__utility">
+      <div className="page__solution">
         {!((history || {}).location || {}).origin ? null : (
           <button
             className="go-back"
@@ -124,3 +125,11 @@ export default class Utility extends React.Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    darkMode: state.darkMode,
+  }
+}
+
+export default connect(mapStateToProps)(Utility);
