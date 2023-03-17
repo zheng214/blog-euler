@@ -152,8 +152,8 @@ function listOrderedCombinations(a1, a2) {
   // insertRule := the indexes of the baseArr where to insert the elements of insertArr
   // eg. baseArr.length = 2, insertArr.length = 2;
   // insertRules = ['00', '01', '02', '10', '11', '12', '20', '21', '22']
-  // Also, since each element is considered equivalent inside their array,
-  // the '12' and '21' rules are redundant (so are '01' and '10', '20' and '02', etc.)
+  // Also, since order must be preserved inside each array,
+  // rules such as 21, 10 cannot be allowed
   for (let i = 0; i < (baseArr.length + 1) ** insertArr.length; i++) {
     const insertRule = i.toString(baseArr.length + 1);
     if (!equivalenceTable[insertRule.split('').sort().join('')]) {
