@@ -34,6 +34,7 @@ module.exports = {
     for (let fixedDigits = 1; fixedDigits <= 999; fixedDigits++) {
       // for each fixed set of digits, generate the list of combinations comprising of fixed digits and *'s
       const binomialCombinations = utils.listOrderedCombinations(fixedDigits, '***');
+
       for (let i = 0; i < binomialCombinations.length; i++) {
         const family = [];
         let composites = 0;

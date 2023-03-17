@@ -178,7 +178,10 @@ function listOrderedCombinations(a1, a2) {
     combinations.push(elevatedBase.reduce((acc, curr) => [...acc, ...curr]));
   }
 
-  return combinations;
+  // remove duplicate arrays
+  const uniqueCombinations = new Set(combinations.map(JSON.stringify));
+
+  return Array.from(uniqueCombinations, JSON.parse);
 }
 
 module.exports = {
