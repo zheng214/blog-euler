@@ -38,7 +38,7 @@ export default function UtilitiesHub() {
     <div className="utilities-hub">
       <h3 className="utilities-hub__title">Helper Functions</h3>
       <p>Many of the problems share a similar solution style. As a result, a lot of code is being reused repeatedly.</p>
-      <p>Here are listed helper functions, each categorized loosely based on their utility.</p>
+      <p>Here are listed all the helper functions, each categorized loosely based on the type of problems they solve.</p>
       <div className="utilities-hub__list">
         {rendered}
       </div>
