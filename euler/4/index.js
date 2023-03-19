@@ -48,7 +48,7 @@ module.exports = {
         // dead branch
         return 0;
       }
-      if (levelIndex === 1) {
+      if (CHANGES[levelIndex] === 2) {
         // reached leaf
         return Math.floor(amountLeft / 2) + 1;
       }
@@ -168,7 +168,7 @@ module.exports = {
    * 2. m =/= n
    */
   e33() {
-       const curiousFractions = [];
+    const curiousFractions = [];
     for (let m = 1; m <= 9; m++) {
       for (let n = 1; n <= 9; n++) {
         if (m !== n) {
@@ -404,12 +404,12 @@ module.exports = {
    *
    * @question NOTE: 2, 3, 5, and 7 are not considered to be truncatable primes.
    * @guide
-   * We start with two arrays, the append array [2, 3, 5, 7], which we will append numbers to, and the preppend array [3, 7], which we will preppend numbers to.
+   * We start with two arrays, the append array [2, 3, 5, 7], which we will append numbers to, and the prepend array [3, 7], which we will prepend numbers to.
    * After one step, the append array will become [3, 5, 7, 21, 23, 27, 29]
    * After two step, it will become [5, 7, 21, 23, 27, 29, 31, 33, 37, 39]
-   * After one step, the preppend array will become [7, 13, 23, 33, 53, 73, 93]
+   * After one step, the prepend array will become [7, 13, 23, 33, 53, 73, 93]
    * After two step, it will become [13, 23, 33, 53, 73, 93, 17, 27, 37, 57, 77, 97]
-   * A truncatable prime is valid only if we can find it in both the append array and the preppend array.
+   * A truncatable prime is valid only if we can find it in both the append array and the prepend array.
    * In the example given above, 37 is the only prime satisfying those conditions, and it is a truncatable prime.
    * We keep expanding our arrays until none of the numbers in our array are prime.
    */
@@ -419,11 +419,11 @@ module.exports = {
     // Appending an even number, or the number 5, to any number, will make that number composite.
     const validDigitsA = [1, 3, 7, 9];
 
-    // 2 and 5 are valid digit for preppending, however, they are only valid as the leading digit in a number
+    // 2 and 5 are valid digit for prepending, however, they are only valid as the leading digit in a number
     const validDigitsP = [1, 2, 3, 5, 7, 9];
 
     // we use BFS on a tree, where the root is a starting digit
-    // for each number in root, we create 2 trees, one for only appending numbers (TA), and the other preppending (TP)
+    // for each number in root, we create 2 trees, one for only appending numbers (TA), and the other prepending (TP)
     // everytime we traverse down, we can prune a number if it is not prime
 
     // a number is a valid truncated prime if it is seen once in TA and once in TP
@@ -431,7 +431,7 @@ module.exports = {
 
     // 1, 9 cannot be a root as it is not prime
     const queueA = [2, 3, 5, 7]; // queue for append
-    // queue for preppend (preppending to a 2 or 5 will automatically make a number composite)
+    // queue for prepend (prepending to a 2 or 5 will automatically make a number composite)
     const queueP = [3, 7];
 
     while (queueA.length || queueP.length) {
@@ -453,23 +453,23 @@ module.exports = {
         const nodeP = queueP.shift();
         const firstDigitOfNode = +(nodeP.toString().charAt(0));
 
-        // preppending to 2, 5 will result in a composite right truncation
-        const stopPreppend = firstDigitOfNode === 2 || firstDigitOfNode === 5;
+        // prepending to 2, 5 will result in a composite right truncation
+        const stopprepend = firstDigitOfNode === 2 || firstDigitOfNode === 5;
 
-        // preppending the same digit to the leading digit eg. 357 -> 3357
+        // prepending the same digit to the leading digit eg. 357 -> 3357
         // will result in the first 2 leading digit to be divisible by 11
-        // except when the leading digit is 1, then preppending by 1 is still fine as 11 is prime
+        // except when the leading digit is 1, then prepending by 1 is still fine as 11 is prime
         const validDigits = validDigitsP.filter(x => x === 1 || x !== firstDigitOfNode);
         if (seen[nodeP] && nodeP.toString().length > 1) {
           truncatedPrimes.push(nodeP);
-          if (!stopPreppend) {
+          if (!stopprepend) {
             validDigits.forEach((vd) => {
               queueP.push(+(`${vd}${nodeP}`));
             });
           }
         } else if (utils.isPrime(nodeP)) {
           seen[nodeP] = true;
-          if (!stopPreppend) {
+          if (!stopprepend) {
             validDigits.forEach((vd) => {
               queueP.push(+(`${vd}${nodeP}`));
             });

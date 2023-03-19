@@ -362,7 +362,7 @@ module.exports = {
     // for each prime generated we sort their digits from lower to higher, and classify them in a table
 
     // Equivalence Class table, the key represents the equivalence class number (e.g 1478)
-    // And the value will be the list of primes in that equivalence class
+    // And the value will be the list of primes in that equivalence class, ie. the list of primes which also uses those 4 digits.
     // e.g. for 1478, the value will be [ '1487', '1847', '4817', '4871', '7481', '7841', '8147', '8741' ]
     const permutationClassTable = {};
     const fourDigitPrimes = Object.keys(utils.generatePrimesTable(10000)).filter(x => x >= 1000);

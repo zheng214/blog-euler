@@ -20,6 +20,7 @@ module.exports = {
    * We observe that, by definition, a number n has an amicable pair if and only if d(d(n)) = n.
    *
    * A number cannot be an amicable pair to itself, so for each number i under 10000, we check that is not perfect, ie. d(i) = i.
+   * 
    * Then if it satisfies d(d(i)) = i, we add it to the list, and sum the list at the end.
    */
   e21() {
@@ -133,9 +134,10 @@ module.exports = {
    * @guide
    * We achieve the answer to the question in two steps. First we find the factorial number representation of one million. Second we use that representation to 'calculate' our permutation.
    * 
-   * 1. Factorial number system representation
-   * For example, let's use the number 5
+   * 1. Factorial number system representation conversion:
+   * 
    * decimal -> factorial
+   * 
    * <code>0 -> 00(fact)</code>
    * <code>1 -> 1 * 1! -> 01 (fact)</code>
    * <code>2 -> 1 * 2! + 0 * 1! -> 10(fact)</code>
@@ -239,7 +241,7 @@ module.exports = {
    * First, we can skip numbers that are divisible by 2, 3 or 5, as they are either terminating (2, 5) or have only 1 repeating digit (3).
    * For each number i in 1 to 1000, we do a manual long division on it, the way we learned in primary school.
    * At each step in the division, we will obtain a remainder, that remainder will be stored in <code>remainders</code>.
-   * We repeat until we find a remainder that we have already seen, i.e. in the array <code>remainders</code>.
+   * We repeat until we find a remainder that we have already seen in the array <code>remainders</code>.
    * At this point, the length of <code>remainders</code> will be the recurring cycle length.
    */
   e26() {
@@ -286,16 +288,20 @@ module.exports = {
    *
    * Considering quadratics of the form:
    *
-   * n^2+an+b, where |a|<1000 and |b|≤1000
+   * n²+an+b, where |a|<1000 and |b|≤1000
    *
    * @question Find the product of the coefficients, a and b, for the quadratic expression that produces the maximum number of primes for consecutive values of n, starting with n=0.
    * @guide
    * Instead of searching for every value of a and b between -999 to 999, we can observe the following:
-   * Let Q be a prime generating quadratic polynomial, for Q to be valid, b must be a prime number (as Q(0) = b).
+   * 
+   * Let Q = n²+an+b be a prime generating quadratic polynomial, for Q to be valid, b must be a prime number (as Q(0) = b).
+   * 
    * Further, we can see that Q(n) > 1, since primes all are bigger than 1.
+   * 
    * Therefore Q(1) > 1.
    * => 1 + a + b > 1
    * => a > -b
+   * 
    * So, b must be a prime and a > -b, which limits our search space.
    */
   e27() {
@@ -345,7 +351,7 @@ module.exports = {
    * @guide
    * By convenience we will say that [01] is on the 0th square.
    * We notice that the 4 corner numbers on the nth outer square are spaced apart from each other by 2*n.
-   * We can also observe that the last encountered diagonal number (top-right corner) is (2n-1)^2.
+   * We can also observe that the last encountered diagonal number (top-right corner) is (2n-1)².
    * Then the sum of diagonals of the nth square is
    * (2n-1)² + 2n + (2n-1)² + 4n + (2n-1)² + 6n + (2n-1)² + 8n
    * = 4(2n-1)² + 20n = 16n² + 4n + 4
@@ -385,7 +391,8 @@ module.exports = {
    * For example, instead of writing 32⁶, we write 2⁵⁽⁶⁾ = 2³⁰.
    * For example, instead of writing 64⁵, we write 2⁶⁽⁵⁾ = 2³⁰.
    * We reduce all powers of 2 into 2^(m * n) where 1 <= m <= 6 and 1 <= n <= 100.
-   * We then loop through all 1 <= m <= 6 and 1 <= n <= 100, calculate m * n and see how many unique values we get, that is the number of non-collisions.
+   * We then loop through all 1 <= m <= 6 and 2 <= n <= 100, calculate m * n and see how many unique values we get, that is the number of distinct powers of 2. To get the number of collisions, we substract that from 6 * 99.
+   * The same works for powers of 3, except we use 1 <= m <= 4.
    */
   e29() {
     // the power is unique if the exponent part (m * n) is also unique
@@ -424,9 +431,9 @@ module.exports = {
    * @question Find the sum of all the numbers that can be written as the sum of fifth powers of their digits.
    * @guide
    * Let N be a number that can be written as the sum of fifth powers of their digits.
-   * We first observe N cannot have more than 6 digits, as it will be too large for the sum to add up to.
+   * We first observe N cannot have more than 6 digits, as it will be too large for the sum to add up to (9⁵ = 59049).
    * N also obviously cannot have 1 digit, by quickly checking we can also see that N cannot have 2 digits, so we need to verify numbers between 3 and 6 digits.
-   * We use a few heuristics to limit our search space. For example, for numbers with 3 digits, the valid numbers that form N are 0 to 3, as 4^5 > 999
+   * We use a few heuristics to limit our search space. For example, for numbers with 3 digits, the valid numbers that form N are 0 to 3, as 4⁵ > 999
    */
   e30() {
     const fifthPowerDigits = []; // list of N's defined above

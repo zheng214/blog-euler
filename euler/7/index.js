@@ -193,7 +193,7 @@ module.exports = {
    * We then check one by one, as follows:
    * 9¹, 9², 9³, ... and stop when the number of digits in the result is less than the exponent
    * Repeat the same for 8, 7, ..., 1
-   * Each time we pass the loop, it means that the number of digits in the result is equal to the exponent, so we increment our answer.
+   * Each time we pass the loop, we verify that the number of digits in the result is equal to the exponent, and we increment our answer accordingly.
    */
   e63() {
     let answer = 0;
@@ -265,7 +265,7 @@ module.exports = {
    *
    * @question How many continued fractions for N≤10000 have an odd period?
    * @guide
-   * The code "simply" implements the procedure outlined in the question. This was very fun for me.
+   * The code "simply" implements the procedure outlined in the question for each N <= 10000. This was very fun for me.
    */
   e64() {
     const squares = [...Array(100)].reduce((acc, _, i) => {
@@ -747,7 +747,7 @@ module.exports = {
    * 
    * Let p1, p2, ... pm denote the prime factors of n.
    * Therefore n/phi(n) := p1/(p1-1) * p2/(p2-1) * p3/(p3-1) * ... * pm/(pm-1).
-   * In order to minimize the equation above, we need to minimize the number of terms (as each term > 1).
+   * In order to minimize the equation above, we need to minimize the number of terms (as each term > 1). We start by assuming that the solution has 2 terms (and luckily it does).
    * We also need to minimize each term by maximizing the value of the prime factors.
    */
   e70() {

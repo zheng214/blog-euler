@@ -25,7 +25,7 @@ class TopBar extends React.Component {
         </div>
         <div className="topbar__quick-links">
           <button className="toggle-dark" type="button" onClick={() => this.props.toggleDark(this.props.darkMode)}>
-            <FontAwesomeIcon icon={darkMode ? faSun : faMoon} />
+            <FontAwesomeIcon icon={darkMode ? faMoon : faSun} />
           </button>
           <button className="toggle-dark" type="button" onClick={() => { window.location = 'https://github.com/zheng214/blog-euler'; }}>
             <FontAwesomeIcon icon={faGithub} />

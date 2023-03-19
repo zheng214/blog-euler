@@ -142,13 +142,13 @@ module.exports = {
    * 
    * <code>{ 2: 1 }</code> 2¹ = 2 = LCM(2)
    * 
-   * <code>{ 2: 1, 3: 1 }</code> 2² * 3¹ = 6 = LCM(2, 3)
+   * <code>{ 2: 1, 3: 1 }</code> 21 * 3¹ = 6 = LCM(2, 3)
    * 
    * <code>{ 2: 2, 3: 1 }</code> 2² * 3¹ = 12 = LCM(2, 3, 4)
    * 
    * <code>{ 2: 2, 3: 1, 5: 1 }</code> 2² * 3¹ * 5¹ = 60 = LCM(2, 3, 4, 5)
    * 
-   * <code>{ 2: 2, 3: 1, 5: 1 }</code> 2² * 3¹ * 5¹ = 60 = LCM(2, 3, 4, 5, 6) Note that nothing has changed, since 2¹ and 3¹ are already inserted earlier.
+   * <code>{ 2: 2, 3: 1, 5: 1 }</code> 2² * 3¹ * 5¹ = 60 = LCM(2, 3, 4, 5, 6) Note that nothing has changed, since the prime factors of 6, 2¹ and 3¹,  are already part of the table.
    * 
    * <code>{ 2: 2, 3: 1, 5: 1, 7: 1 }</code> 2² * 3¹ * 5¹ * 7¹ = 420 = LCM(2, 3, 4, 5, 6, 7)
    * 
@@ -156,8 +156,7 @@ module.exports = {
    * 
    * etc.
    * 
-   * At step n, the product of the bases, raised to their respective exponents, will be the least common multiple of all numbers from 1 to n. In other words, it is the smallest number which is divisible by all numbers from 1 to n.
-   * After the 20th step, the array will have the information of the least common multiple of all numbers from 1 to 20.
+   * At step n, the product of the bases, raised to their respective exponents, will be the least common multiple of all numbers from 1 to n. In other words, it is the smallest number which is divisible by all numbers from 1 to n. After the 20th step, the array will have the information of the least common multiple of all numbers from 1 to 20.
    */
   e5() {
     const totalPrimeFactors = {};

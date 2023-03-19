@@ -138,7 +138,7 @@ function choose(n, p) {
  */
 function listOrderedCombinations(a1, a2) {
   const f1 = [...lang.toArray(a1)];
-  const f2 = [...lang.toArray(a2)]; // formatted
+  const f2 = [...lang.toArray(a2)]; // convert strings and numbers into array
   let baseArr = f2;
   let insertArr = f1;
   if ((f1.length + 1) ** f2.length < (f2.length + 1) ** f1.length) { // minimize loop count

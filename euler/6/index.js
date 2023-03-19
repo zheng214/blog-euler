@@ -18,14 +18,19 @@ module.exports = {
    *
    * @question Find the smallest prime which, by replacing part of the number (not necessarily adjacent digits) with the same digit, is part of an eight prime value family.
    * @guide
-   * The most important observation is that the number of digits substituted must be a multiple of 3.
+   * Define * as the "variable" part, and the rest of digits as the "fixed" part.
+   * 
+   * The most important observation is that the number of digits substituted (the number of * in the variable part) must be a multiple of 3.
    * 
    * To explain this, let's look at the sum of digits of a family. Remember that our family has 8 members.
-   * The only way to make all our 8 numbers' digits NOT sum up to a multiple of 3, is for the fixed part to NOT sum up to a multiple of 3, and for the substituted part to always sum up to a multiple of 3.
-   * That way, this will ensure that no number will have their digits sum up to a multiple of 3.
    * 
-   * If the number of digits being substituted is NOT a multiple of 3, then, within the same family, we will find a substituted part s.t. its sum will add up to all of 3k, 3k + 1, and 3k + 2 after substituting for 8 different digits.
+   * The only way to make all our 8 numbers' digits NOT sum up to a multiple of 3, is for the fixed part to NOT sum up to a multiple of 3, and for the variable part to always sum up to a multiple of 3.
+   * That way, this will ensure that not a single number within the family will have their digits sum up to a multiple of 3.
+   * 
+   * Otherwise, if the number of digits being substituted is NOT a multiple of 3, then, within the same family, we will find a variable part s.t. its sum will add up to all of 3k, 3k + 1, and 3k + 2 after substituting for 8 different digits.
    * Adding that to the sum of digits of the fixed part will guarantee that one of the numbers will have its sum of digits be a multiple of 3.
+   * 
+   * We check 6 digits numbers, with 3 digits in the fixed part and 3 digits in the variable part.
    */
   e51() {
     // define * as the "variable" part, and the rest of digits as the "fixed" part
@@ -66,9 +71,13 @@ module.exports = {
    * @question Find the smallest positive integer, x, such that 2x, 3x, 4x, 5x, and 6x, contain the same digits.
    * @guide
    * We search every number with a optimization in mind:
+   * 
    * 1. Let d denote the number of digits of a number, for each d = 2, 3, 4, 5, 6, 7, ..., we only need to check up to 10^d/6, ie. 166...6 as any number greater than this will overflow an extra digit when multiplied by 6.
+   * 
    * 2. We can skip numbers which ends with a 0, since if such a number is qualified, we would already have found a qualified number by dividing this number by 10.
+   * 
    * 3. We can skip even numbers which do not contain 0, as multiplying by 5 will produce a 0 in the result and we can skip odd numbers which do not contain a 5, as multiplying by 5 will produce a 5 in the result.
+   * 
    * 4. We can skip numbers which do not contain any digit greater than 5, as multiplying by 2 will double the digit sum of the result.
    */
   e52() {
@@ -144,9 +153,12 @@ module.exports = {
    * @question How many, not necessarily distinct, values of C(n, r) for 1 ≤ n ≤ 100, are greater than one-million?
    * @guide
    * We generate the table of 100 x 100 where each cell, row i, column j holds the result C(i, j)
+   * 
    * Instead of calculating each combination using the formula, we can use basic algebra for the follow update rules:
+   * 
    * 1. C(n + 1, r) = C(n, r) * N where N = (n+1)/(n-r+1)
    * 2. C(n, r + 1) = C(n, r) * R where R = (n-r)/(r+1) => C(n, r - 1) = C(n, r) * r/(n-r+1)
+   * 
    * We also know that C(n, r) is greater than one million for all n >= 23 and r = 10, so we don't need to check for r > 10.
    */
   e53() {
@@ -432,7 +444,7 @@ module.exports = {
    * @question Considering natural numbers of the form, a^b, where a, b < 100, what is the maximum digital sum?
    * @guide
    * To calculate the sum of digits of very large numbers, a long multiplication function is used, very tedious but I guess it's necessary.
-   * Maybe there is a trick to this problem which doesn't require it, but it eludes me.
+   * Maybe there is a trick to this problem which doesn't require it, but I haven't found it.
    */
   e56() {
     const expTable = [...Array(99)].map((x, i) => [(i + 1).toString()]); // initialize
