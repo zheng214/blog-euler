@@ -265,7 +265,7 @@ module.exports = {
    *
    * @question How many continued fractions for N≤10000 have an odd period?
    * @guide
-   * The code "simply" implements the procedure outlined in the question for each N <= 10000. This was very fun for me.
+   * The code "simply" implements the procedure outlined in the question for each N <= 10000.
    */
   e64() {
     const squares = [...Array(100)].reduce((acc, _, i) => {
