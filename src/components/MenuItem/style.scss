@@ -13,11 +13,15 @@
     }
   }
   &__nested {
-    overflow:hidden;
-    @include basic-transition;
-    height: auto;
+    overflow: hidden;
+    max-height: 1000px;
+    transition: max-height 0.3s;
     &.collapsed {
+      transition: max-height 0.3s cubic-bezier(0, 1, 0, 1);
       max-height: 0;
+    }
+    button {
+      text-align: left;
     }
   }
 }
