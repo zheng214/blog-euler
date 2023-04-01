@@ -100,7 +100,6 @@ div {
     z-index: 1729;
     background-color: $main-color;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
-    @include basic-transition;
   }
   &__center {
     padding-left: 365px;
@@ -110,7 +109,6 @@ div {
     width: 100vw;
     height: 100vh;
     overflow-x: hidden;
-    @include basic-transition;
   }
 }
 
@@ -126,7 +124,6 @@ div {
   border-radius: 25px 0 0 25px;
   box-shadow: -2px 0 1px -1px rgba(0, 0, 0, 0.2);
   z-index: 1730;
-  @include basic-transition;
   &.hidden {
     @include basic-transform(translateX(250px));
     svg {
@@ -141,7 +138,6 @@ div {
 body {
   background-color: white;
   overflow-y: scroll;
-  @include basic-transition;
 }
 
 button {
