@@ -583,5 +583,70 @@ module.exports = {
     }
 
     return sums.size;
+  },
+  /**
+   * Problem 88 Product-sum numbers
+   * A natural number, N, that can be written as the sum and product of a given set of at least two natural numbers, {a1, a2, ... , ak} is called a product-sum number: N = a1 + a2 + ... + ak = a1 × a2 × ... × ak.
+   * 
+   * For example, 6 = 1 + 2 + 3 = 1 × 2 × 3.
+   * 
+   * For a given set of size, k, we shall call the smallest N with this property a minimal product-sum number. The minimal product-sum numbers for sets of size, k = 2, 3, 4, 5, and 6 are as follows.
+   * 
+   * k=2: 4 = 2 × 2 = 2 + 2
+   * 
+   * k=3: 6 = 1 × 2 × 3 = 1 + 2 + 3
+   * 
+   * k=4: 8 = 1 × 1 × 2 × 4 = 1 + 1 + 2 + 4
+   * 
+   * k=5: 8 = 1 × 1 × 2 × 2 × 2 = 1 + 1 + 2 + 2 + 2
+   * 
+   * k=6: 12 = 1 × 1 × 1 × 1 × 2 × 6 = 1 + 1 + 1 + 1 + 2 + 6
+   * 
+   * Hence for 2≤k≤6, the sum of all the minimal product-sum numbers is 4+6+8+12 = 30; note that 8 is only counted once in the sum.
+   * 
+   * In fact, as the complete set of minimal product-sum numbers for 2≤k≤12 is {4, 6, 8, 12, 15, 16}, the sum is 61.
+   * 
+   * @question What is the sum of all the minimal product-sum numbers for 2≤k≤12000?
+   * @guide
+   * We first note that for each k, we only need to check numbers up to 2k. Since for any given k, 2k can always be decomposed as a product-sum number with k elements: 2k = 1^(k-2) * 2 * k = 1 * (k-2) + 2 + k 
+   * 
+   * So, for each number from 4 to 24000, we find every possible way it can decompose into a product-sum number, and store the result into a table. We do this by way of recursion. The recursive step will be productSum(n, product, sum, terms) = productSum(n, product/i, sum - i, terms + 1), where i is all the divisors of n.
+   */
+  e88() {
+    // keys are the number of terms in the decomposition, values are the smallest product-sum number
+    // eg. { 2: 4, 3: 6, 4: 8, 5: 8, 6: 12, ... }
+    const productSumTable = {};
+    
+    // recursion
+    function productSum(n, product, sum, terms) {
+      if (product === 1) {
+        const k = terms + sum; // sum will be decomposed as 1 + 1 + ... + 1
+        if (!productSumTable[k] || n < productSumTable[k]) {
+          productSumTable[k] = n;
+        }
+        return null;
+      }
+      const divisors = utils.listProperDivisors(product);
+      divisors.shift(); // remove 1 from the list of divisors
+      if (n !== product) {
+        divisors.push(product); // need to add the 'product' itself as a divisor since we are only list the PROPER divisors of 'product'
+      }
+      for (let d of divisors) {
+        productSum(n, product/d, sum - d, terms + 1);
+      }
+    }
+    
+    for (let n = 4; n <= 24000; n++) {
+      productSum(n, n, n, 0);
+    }
+    
+    let uniqueNumbers = new Set();
+    for (let k in productSumTable) {
+      if (k <= 12000) {
+        uniqueNumbers.add(productSumTable[k])
+      }
+    }
+    uniqueNumbers = Array.from(uniqueNumbers);
+    return utils.sumArray(uniqueNumbers);
   }
 };
