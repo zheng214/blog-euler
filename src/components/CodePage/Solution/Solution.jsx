@@ -31,6 +31,7 @@ const ASSETS = require.context('../../../assets', false, /\.(png|txt)$/);
 SyntaxHighlighter.registerLanguage('javascript', js);
 
 function renderCode(content, darkMode) {
+  console.log('rendercodeasdasdasdasdasd')
   return (
     <SyntaxHighlighter
       language="javascript"

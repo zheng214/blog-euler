@@ -2849,10 +2849,42 @@
       "Find the least value of M such that the number of solutions first exceeds one million."
     ],
     "guide": [
-      "Explained in the code comments",
+      "Solution is explained in the code comments",
       "<br />"
     ],
     "solution": "// We will break down the solution of this problem into different parts:\n// PART 1: FINDING THE MINIMAL DISTANCE BETWEEN TWO POINTS IN A CUBOID\n// For any cuboid with given lengths (X,Y,Z)\n// (!) The three candidates for the shortest paths are: √(X²+(Y+Z)²), √(Y²+(X+Z)²), √(Z²+(X+Y)²)\n// This can be seen by unfolding the cuboid, and traversing the 3 adjacent surfaces from the starting point.\n// (!) The shortest path among the 3 is the one where the largest side is the 'isolated' square in the root\n// eg. if we have side lengths (6, 5, 3)\n// the winning candidate will be √(6² + (5 + 3)²), since 6 is the largest side, and is also the 'isolated' number\n// otoh, consider the candidate √(5² + (6 + 3)²): here 5 is the isolated number, and thus cannot be the shortest path\n// this is because we want to minimize the difference between the base of the 2 squares inside the root\n// in our case, dist(6, 8) < dist (5, 9), therefore 6² + 8² < 5² + 9²\n// PART 2: FINDING/GENERATING CUBOIDS WITH INTEGRAL SOLUTIONS\n// WLOG, assume that the minimal path for a cuboid is √(X²+(Y+Z)²)\n// (!) The minimal path is integral if and only if X and Y+Z are the 2 smallest numbers in a Pythagorean triplet\n// Using this, we can generate cuboid with integral shortest path from Pythagorean triplets\n// (!) Given a triplet A,B,C; we take A and B, and break B down into the sum of 2 integers\n// eg. Given 6,8,10; we have (6,8) => (6,6,2), (6,5,3), (6,4,4)\n// we skip (6,7,1) since 6 is not the largest side because (7,6,1) will have a shorter path\n// PART 3: INCREMENTAL GENERATION OF CUBOID SOLUTIONS\n// Given any M, we need to find the list of solutions which make a Pythagorean triple with M as one of the 2 legs\n// eg. M = 6, we have 6, 8, 10 as a triplet, the number of cuboids possible with 6 as the longest side is 3\n// eg. M = 8, we have 8, 6, 10 as a triplet, the number of cuboids with 8 as the longest side is 6 / 2 = 3\n// Obs: Let a, b be the legs of a right triangle, and a < b, then we have the following:\n// (!) 1. If M = a, then # solutions = a - ceil(b / 2) + 1\n// (!) 2. If M = b, then # solutions = floor(a / 2)\n// For each M, we need to search from 2 to 2*M, since the smallest cuboid is (M, 1, 1) and the largest is (M, M, M)\nlet answer = 0;\nlet solutions = 0;\nlet M = 1;\nwhile (!answer) {\n  // M > n\n  for (let n = 2; n < M; n++) {\n    if (Number.isInteger(Math.sqrt((M ** 2) + (n ** 2)))) {\n      solutions += Math.floor(n / 2);\n    }\n  }\n  // M < n\n  for (let n = M; n < 2 * M; n++) {\n    if (Number.isInteger(Math.sqrt((M ** 2) + (n ** 2)))) {\n      solutions += (M - Math.ceil(n / 2)) + 1;\n    }\n  }\n  if (solutions > 1000000) {\n    answer = M;\n    return answer;\n  }\n  M++;\n}",
     "utils": []
+  },
+  {
+    "id": "87",
+    "title": "Prime power triples",
+    "description": [
+      "",
+      "The smallest number expressible as the sum of a prime square, prime cube, and prime fourth power is 28. In fact, there are exactly four numbers below fifty that can be expressed in such a way:",
+      "",
+      "28 = 2² + 2³ + 2⁴",
+      "",
+      "33 = 3² + 2³ + 2⁴",
+      "",
+      "49 = 5² + 2³ + 2⁴",
+      "",
+      "47 = 2² + 3³ + 2⁴",
+      ""
+    ],
+    "question": [
+      "How many numbers below fifty million can be expressed as the sum of a prime square, prime cube, and prime fourth power?"
+    ],
+    "guide": [
+      "We first generate the list of primes up until the square root of 50 million. Any prime bigger than that is unusable, as squaring it will exceed 50 million.",
+      "<br />",
+      "",
+      "<br />",
+      "We then make 3 lists, the list of squares of primes, the list of cubes of primes and the list of 4th power of primes. We iterate over each element in each list and sum the elements, and store it in a set.",
+      "<br />"
+    ],
+    "solution": "const primes = utils.generatePrimesTable(Math.floor(Math.sqrt(50000000)));\nconst squares = Object.keys(primes).map(x => x ** 2);\nconst cubes = []; // list of cubes of primes no exceeding 50000000\nfor (let prime of Object.keys(primes)) {\n  const cube = prime ** 3;\n  if (cube > 50000000) {\n    break;\n  }\n  cubes.push(cube);\n}\nconst fourthPowers = []; // list of 4th power of primes no exceeding 50000000\nfor (let prime of Object.keys(primes)) {\n  const fourthPower = prime ** 4;\n  if (fourthPower > 50000000) {\n    break;\n  }\n  fourthPowers.push(fourthPower);\n}\n\nconst sums = new Set();\nfor (let square of squares) {\n  for (let cube of cubes) {\n    for (let fourth of fourthPowers) {\n      const sum = square + cube + fourth;\n      if (sum <= 50000000) {\n        sums.add(sum);\n      }\n    }\n  }\n}\nreturn sums.size;",
+    "utils": [
+      "primes/generatePrimesTable"
+    ]
   }
 ]

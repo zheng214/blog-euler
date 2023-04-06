@@ -63,6 +63,7 @@ fs.readdir(resolve(readPath), async (err, files) => {
   await Promise.each(files, async file => generateSiteData(file));
   generateUtils();
   fs.writeFileSync(resolve(`${writePath}/solutions.json`), JSON.stringify(data, null, 2));
+  fs.copyFileSync(resolve(`${readPath}/fullResults.json`), resolve(`${writePath}/fullResults.json`));
 });
 
 function generateSiteData(file) {

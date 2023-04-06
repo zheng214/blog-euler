@@ -471,7 +471,7 @@ module.exports = {
    *
    * @question Find the least value of M such that the number of solutions first exceeds one million.
    * @guide
-   * Explained in the code comments
+   * Solution is explained in the code comments
    */
   e86() {
     // We will break down the solution of this problem into different parts:
@@ -527,4 +527,61 @@ module.exports = {
       M++;
     }
   },
+
+  /**
+   * Problem 87 Prime power triples
+   * 
+   * The smallest number expressible as the sum of a prime square, prime cube, and prime fourth power is 28. In fact, there are exactly four numbers below fifty that can be expressed in such a way:
+   * 
+   * 28 = 2² + 2³ + 2⁴
+   * 
+   * 33 = 3² + 2³ + 2⁴
+   * 
+   * 49 = 5² + 2³ + 2⁴
+   * 
+   * 47 = 2² + 3³ + 2⁴
+   * 
+   * @question How many numbers below fifty million can be expressed as the sum of a prime square, prime cube, and prime fourth power?
+   * @guide
+   * We first generate the list of primes up until the square root of 50 million. Any prime bigger than that is unusable, as squaring it will exceed 50 million.
+   * 
+   * We then make 3 lists, the list of squares of primes, the list of cubes of primes and the list of 4th power of primes. We iterate over each element in each list and sum the elements, and store it in a set.
+   */
+  e87() {
+    const primes = utils.generatePrimesTable(Math.floor(Math.sqrt(50000000)));
+
+    const squares = Object.keys(primes).map(x => x ** 2);
+
+    const cubes = []; // list of cubes of primes no exceeding 50000000
+    for (let prime of Object.keys(primes)) {
+      const cube = prime ** 3;
+      if (cube > 50000000) {
+        break;
+      }
+      cubes.push(cube);
+    }
+
+    const fourthPowers = []; // list of 4th power of primes no exceeding 50000000
+    for (let prime of Object.keys(primes)) {
+      const fourthPower = prime ** 4;
+      if (fourthPower > 50000000) {
+        break;
+      }
+      fourthPowers.push(fourthPower);
+    }
+
+    const sums = new Set();
+    for (let square of squares) {
+      for (let cube of cubes) {
+        for (let fourth of fourthPowers) {
+          const sum = square + cube + fourth;
+          if (sum <= 50000000) {
+            sums.add(sum);
+          }
+        }
+      }
+    }
+
+    return sums.size;
+  }
 };
