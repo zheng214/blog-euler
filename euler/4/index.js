@@ -92,7 +92,7 @@ module.exports = {
         }
       }
     }
-
+    
     function isPandigital(a, b, c) {
       function split(n) {
         return n.toString().split('').map(Number);
