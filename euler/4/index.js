@@ -82,72 +82,22 @@ module.exports = {
    * We just need to check values of c from 1234 to 9876, and find 1 < a <= 98 st. our condition is satisfied
    */
   e32() {
-    const DIGITS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     const pandigitalProducts = [];
-    for (let i = 1111; i <= 9876; i++) {
-      const selectionIndexes = i.toString().split('');
-      // we only check if the selection is valid
-      if (+(selectionIndexes[1]) < 9
-        && +(selectionIndexes[2]) < 8
-        && +(selectionIndexes[3]) < 7
-        && !selectionIndexes.some(x => x === '0')
-      ) {
-        let c = '';
-        let remainingDigits = [...DIGITS];
-        selectionIndexes.forEach(
-          (selectionIndex) => {
-            const selected = remainingDigits[selectionIndex - 1].toString();
-            c += selected;
-            remainingDigits = remainingDigits.filter(x => x !== remainingDigits[selectionIndex - 1]);
-          },
-        );
-
-        c = +(c);
-        const root = Math.sqrt(c);
-
-        // now assume that a has only 1 digit, check for pandigital equations
-        let a;
-        let isPandigital = false;
-        for (a = 0; a < remainingDigits.length; a++) {
-          const dividend = remainingDigits[a];
-          const b = c / dividend;
-          if (Number.isInteger(b)) {
-            if (b.toString().split('').sort().join('') === remainingDigits.filter(x => x !== dividend).join('')) {
-              pandigitalProducts.push(c);
-              isPandigital = true;
-              break;
-            }
-          }
-        }
-        if (!isPandigital) {
-          // now assume a has 2 digits, check for pandigital equations
-          for (let j = 11; j <= 54; j++) {
-            // we select 2 digits from the remaining pool of 5
-            const selectionIndexes2 = j.toString().split('');
-            if (selectionIndexes2[0] < 6 && selectionIndexes2[1] < 5 && !selectionIndexes2.some(x => x === '0')) {
-              let a2 = '';
-              let remainingDigits2 = [...remainingDigits]; // remaining digits after a second round of selection
-              selectionIndexes2.forEach(
-                (selectionIndex2) => {
-                  const selected = remainingDigits2[selectionIndex2 - 1].toString();
-                  a2 += selected;
-                  remainingDigits2 = remainingDigits2.filter(x => x !== remainingDigits2[selectionIndex2 - 1]);
-                },
-              );
-              a2 = +(a2);
-              if (a2 < root) {
-                const b = c / a2;
-                if (Number.isInteger(b)) {
-                  if (b.toString().split('').sort().join('') === remainingDigits2.join('')) {
-                    pandigitalProducts.push(c);
-                    break;
-                  }
-                }
-              }
-            }
-          }
+    for (let c = 1234; c <= 9876; c++) {
+      for (let a = 2; a <= 98; a++) {
+        let b = c / a;
+        if (Number.isInteger(b) && isPandigital(a, b, c)) {
+          pandigitalProducts.push(c)
+          break;
         }
       }
+    }
+
+    function isPandigital(a, b, c) {
+      function split(n) {
+        return n.toString().split('').map(Number);
+      }
+      return [...split(a), ...split(b), ...split(c)].sort().join('') === '123456789';
     }
     return utils.sumArray(pandigitalProducts);
   },
