@@ -56,14 +56,14 @@ export default class Sidebar extends React.Component {
   render() {
     return (
       <>
-        <div className="e-sidebar">
+        <div className="sidebar">
           <div className="sidebar-header">
             <Item label="SOLUTIONS" destination="/e" history={this.props.history} />
           </div>
           {this.generateSolutionMenu()}
         </div>
-        <div className="u-sidebar">
-          <div className="utilitybar-header">
+        <div className="sidebar">
+          <div className="sidebar-header">
             <Item label="HELPER FUNCTIONS" history={this.props.history} destination="/u" />
           </div>
           {this.generateUtilMenu()}

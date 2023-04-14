@@ -22,7 +22,7 @@ module.exports = {
    * @question Find the minimal path sum, in [matrix.txt @asset p081_matrix.txt], a text file containing a 80 by 80 matrix, from the top left to the bottom right by only moving right and down.
    * @guide
    * We use a memoized table where the entry [i,j] is the optimal path from 0,0 to i,j.
-   * MEM[i, j] = min(MEM[i - 1, j], MEM[i, j - 1]);
+   * MEM[i, j] = min(MEM[i - 1, j], MEM[i, j - 1]) + value(i, j);
    */
   e81() {
     const MEM = utils.initTable(80, 80);
