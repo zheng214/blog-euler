@@ -61,8 +61,6 @@ export default class Sidebar extends React.Component {
             <Item label="SOLUTIONS" destination="/e" history={this.props.history} />
           </div>
           {this.generateSolutionMenu()}
-        </div>
-        <div className="sidebar">
           <div className="sidebar-header">
             <Item label="HELPER FUNCTIONS" history={this.props.history} destination="/u" />
           </div>
